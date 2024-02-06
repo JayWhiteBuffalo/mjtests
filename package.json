@@ -9,19 +9,38 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.9.1",
+    "assert": "^2.1.0",
+    "flowbite-react": "^0.7.2",
+    "leaflet": "^1.9.4",
+    "leaflet-color-markers": "^0.1.0",
+    "next": "14.1.0",
+    "open-location-code": "^1.0.3",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
     "autoprefixer": "^10.0.1",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
     "postcss": "^8",
+    "postcss-nesting": "^12.0.2",
+    "prisma": "^5.9.1",
     "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0"
+    "tsx": "^4.7.0",
+    "typescript": "^5"
+  },
+  "type": "module",
+  "postcss": {
+    "plugins": {
+      "postcss-import": {},
+      "tailwindcss/nesting": "postcss-nesting",
+      "tailwindcss": {},
+      "autoprefixer": {}
+    }
   }
 }

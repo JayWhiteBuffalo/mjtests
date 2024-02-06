@@ -1,0 +1,48 @@
+.MapPane {
+  flex: 0 0 300px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+.MapPane.expanded {
+  flex-basis: 75vh;
+}
+
+.Map {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.MapOverlay {
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.MapOverlayLayer {
+  position: absolute;
+  top: 0;
+}
+
+.MapOverlayLayer img {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.ReactMarkerIcon {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.MapVendorPopup {
+  background: white;
+  border-radius: 12px;
+  min-width: 0px;
+  padding: 8px 12px;
+  width: 300px;
+  z-index: 2000;
+}

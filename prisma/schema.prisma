@@ -1,0 +1,45 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+model Product {
+  brand String?
+  concentrateType String?
+  cultivar String?
+  flags Json
+  id Int @id @default(autoincrement())
+  name String
+  potency Json
+  price Float
+  pricePerGram Float
+  productType String
+  rating Json?
+  subspecies String
+  terps Json?
+  vendor Vendor? @relation(fields: [vendorName], references: [name])
+  vendorName String
+  weight Float
+}
+
+model Vendor {
+  flags Json
+  id Int @id @default(autoincrement())
+  latLng Unsupported("geometry(Point, 4326)")?
+  location Json?
+  name String @unique
+  products Product[]
+  rating Json?
+  schedule Json
+  url String?
+
+  @@index([latLng], name: "blockgroup_idx", type: Gist)
+}
+

@@ -1,0 +1,133 @@
+.MultiDropdown > span {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.MultiDropdownPopover {
+  background: white;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: row;
+  font-size: 15px;
+  z-index: 1000;
+
+  &.large {
+    /* height: 400px; */
+  }
+
+  &.small {
+    max-height: 80vh;
+  }
+}
+
+.MultiDropdownPane {
+  padding: 12px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.MultiDropdownSearchPane {
+  border-left: 1px solid rgb(204, 204, 204);
+}
+
+.MultiDropdownKeyword {
+  max-width: 600px;
+  margin-bottom: 4px;
+}
+
+.MultiDropdownTopMenu {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.MultiDropdownMenuButton {
+  color: rgb(14 116 144);
+  font-size: 14px;
+  margin: 0 4px;
+}
+
+.MultiDropdownMenuButton:disabled {
+  color: #777;
+}
+
+@media (600px <= width) and (600px <= height) {
+  .MultiDropdownCloseButton {
+    display: none;
+  }
+}
+
+.MultiDropdownItems {
+  display: flex;
+  flex-flow: column wrap;
+  flex: 1 0 auto;
+  height: 400px;
+  margin: 0 -12px;
+  min-width: 208px;
+  overflow: auto;
+  padding: 0 4px;
+}
+
+@media (height < 600px) {
+  .MultiDropdownPopover {
+    height: 80vh;
+  }
+
+  .MultiDropdownItems {
+    height: unset;
+    flex-shrink: 1;
+  }
+}
+
+@media (width < 600px) {
+  .MultiDropdownPopover {
+    flex-direction: column;
+    height: unset;
+    max-height: 80vh;
+  }
+
+  .MultiDropdownPane {
+    min-height: 0;
+  }
+
+  .MultiDropdownSearchPane {
+    border-top: 1px solid rgb(204, 204, 204);
+    border-left: none;
+    flex: 0 0 auto;
+    height: 50vh;
+  }
+
+  .MultiDropdownItems {
+    height: unset;
+    flex-shrink: 1;
+  }
+}
+
+.MultiDropdownItem {
+  cursor: pointer;
+  hyphens: auto;
+  padding: 4px 8px;
+  text-align: left;
+  width: 200px;
+
+  &:hover {
+    background-color: rgb(243 244 246);
+  }
+
+  & > input {
+    cursor: unset;
+    vertical-align: text-bottom;
+  }
+}
+
+.MultiDropdownText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  & > .placeholder {
+    font-style: italic;
+    color: #777;
+  }
+}

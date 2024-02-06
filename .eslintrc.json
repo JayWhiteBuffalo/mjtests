@@ -1,3 +1,16 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": ["@typescript-eslint"],
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "import/no-anonymous-default-export": "off",
+    "no-mixed-operators": "off",
+    "no-restricted-globals": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  }
 }

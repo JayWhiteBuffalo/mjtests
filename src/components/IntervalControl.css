@@ -1,0 +1,15 @@
+
+
+.IntervalTextbox {
+  display: flex;
+  grid-gap: 3px;
+}
+
+.IntervalTextboxItem {
+  width: 80px;
+}
+
+.IntervalTextboxItem input {
+  text-align: center;
+  padding-right: 0;
+}
