@@ -43,6 +43,8 @@ Then open [http://localhost:3000](http://localhost:3000) with your browser to se
 npx tsx src/test/populateTestData.js
 ```
 
+Warning: This will wipe all existing records in the database.
+
 ## Notes
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
