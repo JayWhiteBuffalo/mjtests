@@ -409,7 +409,8 @@ const products = [
       'α-bisabolol': 0.0008,
       'nerolidol': 0.0007,
       'caryophyllene oxide': 0.0004,
-      'camphene': 0.0001, 
+      'camphene': 0.0001,
+
     },
     vendorName: 'Green House Dispensary',
   },
@@ -682,11 +683,13 @@ const vendors = [
   {
     name: 'Capital Dank OKC',
     location: {
-      address: '10709 N Rockwell Ave Suite A, Oklahoma City, OK 73162',
-      plus: 'H9H6+6F Eagle Lake Estates, Oklahoma City, OK',
-      phone: '+14057306152',
+      address: '10709 N Rockwell Ave Suite A\nOklahoma City, OK 73162',
+      plus: 'H9H6+6F Eagle Lake Estates\nOklahoma City, OK',
     },
-    url: 'https://linktr.ee/capitaldank',
+    contact: {
+      tel: '+14057306152',
+      url: 'https://linktr.ee/capitaldank',
+    },
     schedule: {
       all: '9-17',
       sat: '11:30-20',
@@ -700,8 +703,10 @@ const vendors = [
   {
     name: 'Classen Apothecare',
     location: {
-      address: '504 N Classen Blvd, Oklahoma City, OK 73106',
-      plus: 'FFFC+2J Midtown, Oklahoma City, OK',
+      address: '504 N Classen Blvd\nOklahoma City, OK 73106',
+      plus: 'FFFC+2J Midtown\nOklahoma City, OK',
+    },
+    contact: {
       tel: '+14056737611',
     },
     schedule: {
@@ -723,8 +728,10 @@ const vendors = [
   {
     name: 'Evergreen Cannabis Co',
     location: {
-      address: '3641 NW 63rd St, Oklahoma City, OK 73116',
-      plus: 'GCP8+RQ Central Oklahoma City, Oklahoma City, OK',
+      address: '3641 NW 63rd St\nOklahoma City, OK 73116',
+      plus: 'GCP8+RQ Central Oklahoma City\nOklahoma City, OK',
+    },
+    contact: {
       tel: '+14052426410',
     },
     schedule: {
@@ -746,11 +753,13 @@ const vendors = [
   {
     name: 'Fire Depot Dispensary',
     location: {
-      address: '7825 NE 23rd St, Oklahoma City, OK 73141',
+      address: '7825 NE 23rd St\nOklahoma City, OK 73141',
       plus: 'FJV5+HQ Spencer, Oklahoma',
-      tel: '+14054939042',
     },
-    url: 'https://firedepotdispensary.com/',
+    contact: {
+      tel: '+14054939042',
+      url: 'https://firedepotdispensary.com/',
+    },
     schedule: {
       all: '0-0',
       thanksgiving: 'closed',
@@ -760,8 +769,10 @@ const vendors = [
   {
     name: 'Ganja',
     location: {
-      address: '5401 NW 23rd St, Oklahoma City, OK 73127',
-      plus: 'F9VP+CX Central Oklahoma City, Oklahoma City, OK',
+      address: '5401 NW 23rd St\nOklahoma City, OK 73127',
+      plus: 'F9VP+CX Central Oklahoma City\nOklahoma City, OK',
+    },
+    contact: {
       tel: '+14059214302',
     },
     schedule: {
@@ -777,8 +788,10 @@ const vendors = [
   {
     name: 'Good Vibes Supply',
     location: {
-      address: '10116 NW 10th St, Oklahoma City, OK 73127',
-      plus: 'F8H2+8H Southwest Oklahoma City, Oklahoma City, OK',
+      address: '10116 NW 10th St\nOklahoma City, OK 73127',
+      plus: 'F8H2+8H Southwest Oklahoma City\nOklahoma City, OK',
+    },
+    contact: {
       tel: '+14054674621',
     },
     schedule: {
@@ -793,19 +806,19 @@ const vendors = [
   {
     name: 'Grade A Dispensary',
     location: {
-      address: '2130 NW 40th St, Oklahoma City, OK 73112',
-      plus: 'GF72+4G Central Oklahoma City, Oklahoma City, OK',
+      address: '2130 NW 40th St\nOklahoma City, OK 73112',
+      plus: 'GF72+4G Central Oklahoma City\nOklahoma City, OK',
     },
-    flags: {
-      permanentlyClosed: true,
-    },
+    operatingStatus: 'permanentlyClosed',
   },
   {
     name: 'Green House Dispensary',
     location: {
-      address: '300 NW 63rd St, Oklahoma City, OK 73116',
-      plus: 'GFPJ+JP Central Oklahoma City, Oklahoma City, OK',
-      phone: '+14056084372',
+      address: '300 NW 63rd St\nOklahoma City, OK 73116',
+      plus: 'GFPJ+JP Central Oklahoma City\nOklahoma City, OK',
+    },
+    contact: {
+      tel: '+14056084372',
     },
     schedule: {
       all: '12-0',
@@ -819,9 +832,11 @@ const vendors = [
   {
     name: 'Quality Control',
     location: {
-      address: '7221 S Western Ave, Oklahoma City, OK 73139',
-      plus: '9FV9+HJ Central Oklahoma City, Oklahoma City, OK',
-      phone: '+14054939609',
+      address: '7221 S Western Ave\nOklahoma City, OK 73139',
+      plus: '9FV9+HJ Central Oklahoma City\nOklahoma City, OK',
+    },
+    contact: {
+      tel: '+14054939609',
     },
     schedule: {
       all: '12-19:30',

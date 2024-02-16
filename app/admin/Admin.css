@@ -1,0 +1,73 @@
+
+.AdminBody {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 200px 1fr;
+  grid-template-areas:
+    'navbar navbar'
+    'sidebar main';
+  min-height: 100vh;
+  background-color: rgb(244 244 245);
+}
+
+.AdminNavbar {
+  grid-area: navbar;
+}
+
+.AdminSidebar {
+  grid-area: sidebar;
+  padding: 16px 12px;
+}
+
+.AdminSidebarList {
+  top: 12px;
+  position: sticky;
+}
+
+.AdminSidebarItem {
+  margin: 4px 0;
+}
+
+.AdminSidebarItem > a {
+  display: flex;
+  align-items: center;
+}
+
+.AdminMain {
+  grid-area: main;
+  margin-bottom: 30vh;
+}
+
+.AdminPane {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 0.875rem;
+}
+
+.AdminForm {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 0.875rem;
+
+  & textarea {
+    resize: none;
+  }
+
+  & fieldset {
+    margin: 16px 0;
+  }
+}
+
+.AdminForm h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 24px 0 16px;
+}
+
+.AdminForm input[readonly] {
+  background-color: rgb(228 228 231);
+
+  &:hover {
+    cursor: not-allowed;
+  }
+}

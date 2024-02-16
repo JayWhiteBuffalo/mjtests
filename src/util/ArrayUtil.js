@@ -60,6 +60,15 @@ const ArrayUtil = {
     }
     return ys
   },
+
+  splice(xs, start, deleteCount, ...items) {
+    return [...xs.slice(0, start), ...items, ...xs.slice(start + deleteCount)]
+  },
+
+  async asyncFilter(xs, pred) {
+    const tests = await Promise.all(xs.map(x => pred(x)))
+    return xs.filter((_, i) => tests[i])
+  },
 }
 
 export default ArrayUtil

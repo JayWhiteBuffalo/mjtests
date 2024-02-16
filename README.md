@@ -1,6 +1,5 @@
 
 
-
 ## Run locally
 
 1. Clone this repo, and then run `npm install` to install dependencies:
@@ -13,7 +12,7 @@ npm install
 `npm install` will need to be rerun whenever the new dependencies are added or removed.
 
 2. Set up your local PostgreSQL instance
-* 2a. Download and install PostgreSQL 16, then start it. 
+* 2a. Download and install PostgreSQL 16, then start it.
 
     Windows: https://www.postgresql.org/download/windows/
 
@@ -30,7 +29,6 @@ npx prisma db push
 ```
 to initialize tables used by treemap. This command will need to be rerun whenever the schema changes in the future.
 
-
 3. Start the dev server:
 
 ```bash
@@ -38,12 +36,7 @@ npm run dev
 ```
 Then open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-4. *(Optional)* Add test data to the database
-```bash
-npx tsx src/test/populateTestData.js
-```
-
-Warning: This will wipe all existing records in the database.
+4. *(Optional)* Grant yourself admin role, and populate the db with test products via the development interface at http://localhost:3000/admin/dev .
 
 ## Notes
 

@@ -1,6 +1,8 @@
 import './IntervalControl.css'
+import clsx from 'clsx'
+import {orEmpty} from '@util/ValidationUtil'
 import {TextInput} from 'flowbite-react'
-import {useState} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 
 type IntervalTextboxProps = {
   id: string,
@@ -36,17 +38,18 @@ export const IntervalLabel = ({bound, value, labelFn}) => {
 
 const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   const [focus, setFocus] = useState(false)
-  const [text, setText] = useState('')
+  const [text, setText] = useState(orEmpty(value))
 
-  const valueToText = value => value !== undefined ? value.toString() : ''
-  if (!focus) {
-    const newText = valueToText(value)
-    if (text !== newText) {
-      setText(newText)
+  useEffect(() => {
+    if (!focus) {
+      const newText = orEmpty(value)
+      if (text !== newText) {
+        setText(newText)
+      }
     }
-  }
+  }, [value, focus, text])
 
-  const validate = xString => {
+  const validate = useCallback(xString => {
     if (xString === '') {
       return undefined
     }
@@ -61,59 +64,63 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
     } else {
       return undefined
     }
-  }
+  }, [bound])
+
+  const onBlur = useCallback(event => {
+    setFocus(false)
+    const x = validate(event.target.value)
+    if (x !== value) {
+      onChange(x)
+    }
+  }, [value, validate, onChange])
+
+  const onKeyDown = useCallback(event => {
+    if (event.key === 'Enter') {
+      const x = validate(event.target.value)
+      setText(orEmpty(x))
+      onChange(x)
+    }
+  }, [validate, onChange])
+
+  const onInputChange = useCallback(event => {
+    setText(event.target.value)
+    const x = +event.target.value
+    if (bound[0] <= x && x <= bound[1]) {
+      onChange(x)
+    }
+  }, [bound, onChange])
 
   return (
     <TextInput
       {...rest}
       className="IntervalTextboxItem"
-      min={bound[0]}
       max={bound[1]}
+      min={bound[0]}
+      onBlur={onBlur}
+      onChange={onInputChange}
+      onFocus={useCallback(() => setFocus(true), [])}
+      onKeyDown={onKeyDown}
       type="number"
       value={text}
-      onFocus={() => setFocus(true)}
-      onBlur={e => {
-        setFocus(false)
-        const x = validate(e.target.value)
-        if (x !== value) {
-          onChange(x)
-        }
-      }}
-      onKeyPress={e => {
-        if (e.key === 'Enter') {
-          const x = validate(e.target.value)
-          setText(valueToText(x))
-          onChange(x)
-        }
-      }}
-      onChange={e => {
-        setText(e.target.value)
-        const x = +e.target.value
-        if (bound[0] <= x && x <= bound[1]) {
-          onChange(x)
-        }
-      }} />
+      />
   )
 }
 
-export const IntervalTextbox = ({id, className, bound, value, step, onChange}: IntervalTextboxProps) => {
-  return (
-    <div className={`IntervalTextbox ${className}`}>
-      <IntervalTextboxItem
-        id={id + '.min'}
-        placeholder="MIN"
-        bound={bound}
-        step={step || 1}
-        value={value[0]}
-        onChange={x => onChange([x, value[1]])} />
-      <IntervalTextboxItem 
-        id={id + '.max'}
-        placeholder="MAX"
-        bound={bound}
-        step={step || 1}
-        value={value[1]}
-        onChange={x => onChange([value[0], x])} />
-    </div>
-  )
-}
+export const IntervalTextbox = ({id, className, bound, value, step, onChange}: IntervalTextboxProps) =>
+  <div className={clsx('IntervalTextbox', className)}>
+    <IntervalTextboxItem
+      id={id + '.min'}
+      placeholder="MIN"
+      bound={bound}
+      step={step ?? 1}
+      value={value[0]}
+      onChange={x => onChange([x, value[1]])} />
+    <IntervalTextboxItem
+      id={id + '.max'}
+      placeholder="MAX"
+      bound={bound}
+      step={step ?? 1}
+      value={value[1]}
+      onChange={x => onChange([value[0], x])} />
+  </div>
 

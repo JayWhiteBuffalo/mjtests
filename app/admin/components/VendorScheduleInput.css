@@ -1,0 +1,31 @@
+.VendorScheduleInput {
+  display: grid;
+  grid-template-columns: auto min-content max-content max-content;
+  grid-gap: 8px;
+  align-items: center;
+  margin: 16px 0;
+
+  & > .FieldError {
+    grid-column-end: -1;
+  }
+}
+
+.VendorScheduleInputHeader {
+  display: contents;
+  font-weight: bold;
+
+  & > :first-child {
+    grid-column: span 2;
+  }
+}
+
+.VendorScheduleInputItem {
+  display: contents;
+  & > :nth-child(2) {
+    margin-right: 16px;
+  }
+}
+
+.TimeOfDayInput {
+  width: 90px;
+}

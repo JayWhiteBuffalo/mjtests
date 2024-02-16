@@ -11,7 +11,7 @@ const FlagsUtil = {
     return ys
   },
 
-  set(xs, keys, value) {
+  setAll(xs, keys, value) {
     const ys = {...xs}
     for (const key of keys) {
       if (value) {
@@ -22,6 +22,14 @@ const FlagsUtil = {
     }
 
     return ys
+  },
+
+  mutableSet(xs, key, value) {
+    if (value) {
+      xs[key] = true
+    } else {
+      delete xs[key]
+    }
   },
 
   fromIterable(xs, getKey) {

@@ -1,5 +1,6 @@
 import ArrayUtil from '@util/ArrayUtil'
 import MathUtil from '@util/MathUtil'
+import StringUtil from '@util/StringUtil'
 import {OpenLocationCode} from 'open-location-code'
 import {VendorSchedule} from '@util/VendorSchedule'
 
@@ -7,13 +8,16 @@ const geocoder = new OpenLocationCode()
 
 export const VendorUtil = {
   read(vendor) {
-    vendor.flags = vendor.flags || {}
+    vendor.contact ??= {}
+    vendor.flags ??= {}
+    vendor.license ??= {}
+    vendor.location ??= {}
+    vendor.license.state ??= 'Oklahoma'
+    vendor.signupStatus ??= {}
+    vendor.slug ??= vendor.name ? VendorUtil.autoSlug(vendor) : null
+    vendor.operatingStatus ??= 'open'
 
-    vendor.schedule = vendor.schedule || {}
-    vendor.schedule.all = vendor.schedule.all || 'unknown'
-    for (const key in vendor.schedule) {
-      vendor.schedule[key] = VendorSchedule.parseDaySchedule(vendor.schedule[key])
-    }
+    vendor.schedule = VendorSchedule.readSchedule(vendor.schedule ?? {})
 
     if (vendor.rating) {
       VendorUtil.readRating(vendor.rating)
@@ -25,6 +29,7 @@ export const VendorUtil = {
       vendor.latLng = [decoded.latitudeCenter, decoded.longitudeCenter]
       vendor.location._latLng = vendor.latLng
     }
+    return vendor
   },
 
   readRating(rating) {
@@ -33,9 +38,25 @@ export const VendorUtil = {
       || MathUtil.dot(ArrayUtil.range(1, 6), rating.counts) / rating.count
   },
 
+  autoSlug(vendor) {
+    const words = StringUtil.wordsFromSpaced(vendor.name)
+    return StringUtil.wordsToKebab(words).substring(0, 48)
+  },
+
   populate(vendor) {
     vendor.key = vendor.name
     vendor.openStatus = VendorSchedule.getStatus(vendor.schedule)
-    vendor.latLng = vendor.location._latLng
+    vendor.latLng ??= vendor.location._latLng
+    return vendor
+  },
+
+  ommaNumberPattern: /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
+
+  parsePartialOmmaNumber(x) {
+    x = x.replace(/[^\w]/g, '')
+    return [x.substring(0, 4), x.substring(4, 8), x.substring(8)]
+      .filter(segment => segment !== '')
+      .join('-')
+      .toUpperCase()
   },
 }

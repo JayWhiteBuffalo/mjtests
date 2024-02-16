@@ -24,10 +24,9 @@ const productTypes = [
 ]
 
 productTypes.forEach((props, ix) => {
-  props.key = props.key || StringUtil.toLowerCamelCase(props.name)
+  props.key ??= StringUtil.toLowerCamel(props.name)
   props.index = ix
 })
-
 
 const subspecies = [
   {
@@ -54,13 +53,11 @@ const subspecies = [
 ]
 
 subspecies.forEach((props, ix) => {
-  props.key = props.key || StringUtil.toLowerCamelCase(props.name)
+  props.key ??= StringUtil.toLowerCamel(props.name)
   props.index = ix
 })
 
 const filterableSubspecies = subspecies.filter(x => x.filterable)
-
-
 
 const concentrateTypes = [
   {
@@ -138,11 +135,9 @@ const concentrateTypes = [
 ]
 
 concentrateTypes.forEach((props, ix) => {
-  props.key = props.key || StringUtil.toLowerCamelCase(props.name)
+  props.key ??= StringUtil.toLowerCamel(props.name)
   props.index = ix
 })
-
-
 
 /*
 Sources:

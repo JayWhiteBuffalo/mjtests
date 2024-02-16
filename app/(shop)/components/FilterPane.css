@@ -1,0 +1,63 @@
+
+.FilterPane {
+  border-top: 1px solid #ccc;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 auto;
+  max-width: 976px;
+}
+
+@media (width < 616px) {
+  .FilterPane {
+    grid-template-columns: 1fr;
+  }
+}
+
+.FilterPaneColumn {
+  padding: 12px 8px;
+  /*
+  min-width: 300px;
+  max-width: 480px;
+  */
+}
+
+.FilterPaneSection {
+  border-top: 1px solid #777;
+  margin: 12px 0;
+}
+
+.FilterPaneSection > header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.FilterPaneItem {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  margin: 4px 0;
+}
+
+.FilterPaneItem > label {
+  padding: 0.625rem 0;
+}
+
+.FilterPaneItem > .MultiDropdown {
+  width: 163px;
+}
+
+.FilterPaneItemLabel {
+  flex: 1 1;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    margin-top: -10px;
+    opacity: 0.5;
+  }
+
+  to {
+    margin-top: 0;
+    opacity: 1;
+  }
+}

@@ -32,7 +32,6 @@ export const CheckboxGroup = ({items, values, onChange}: CheckboxGroupProps) => 
   return <div className="CheckboxGroup">{items.map(CheckboxItem)}</div>
 }
 
-
 export const ButtonCbGroup = ({items, values, onChange}: CheckboxGroupProps) => {
   const Item = item =>
     <Button

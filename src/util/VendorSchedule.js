@@ -1,7 +1,7 @@
 import DateUtil from '@util/DateUtil'
 import ObjectUtil from '@util/ObjectUtil'
 
-const daysOfWeek = [
+const daysOfWeek = ([
   'Sunday',
   'Monday',
   'Tuesday',
@@ -9,7 +9,15 @@ const daysOfWeek = [
   'Thursday',
   'Friday',
   'Saturday',
-]
+]).map((name, index) => {
+  const abbr = name.toLowerCase().substring(0, 3)
+  return {
+    abbr,
+    index,
+    key: abbr,
+    name,
+  }
+})
 
 const namedDays = [
   {key: 'newYears', name: 'New Year\'s', holiday: true},
@@ -17,7 +25,7 @@ const namedDays = [
   {key: 'presidents', name: 'Presidents\' Day', holiday: true},
   {key: 'memorial', name: 'Memorial Day', holiday: true},
   {key: 'juneteenth', name: 'Juneteenth', holiday: true},
-  {key: 'july4th', name: 'Independence Day', holiday: true},
+  {key: 'july4th', name: 'July 4th', holiday: true},
   {key: 'labor', name: 'Labor Day', holiday: true},
   {key: 'columbus', name: 'Columbus Day', holiday: true},
   {key: 'veterans', name: 'Veterans Day', holiday: true},
@@ -33,8 +41,10 @@ const namedDays = [
 
 const enDash = '–'
 export const VendorSchedule = {
-  namedDays: ObjectUtil.fromIterable(namedDays, x => x.key),
+  namedDays,
+  namedDaysByKey: ObjectUtil.fromIterable(namedDays, x => x.key),
   daysOfWeek,
+  daysOfWeekByAbbr: ObjectUtil.fromIterable(daysOfWeek, x => x.abbr),
 
   getCurrentWeek(schedule) {
     const now = new Date()
@@ -52,27 +62,40 @@ export const VendorSchedule = {
   },
 
   getDay(day, schedule) {
-    return schedule[day]
-      || schedule[VendorSchedule.getNamedDay(day) || '']
-      || schedule[daysOfWeek[new Date(day).getUTCDay()].substring(0, 3).toLowerCase()]
-      || schedule.all
+    return schedule.special[day]
+      ?? schedule.special[VendorSchedule.getNamedDay(day) ?? '']
+      ?? schedule.week[new Date(day).getUTCDay()]
   },
 
-  parseDaySchedule(dayScheduleSpec) {
-    const parseTime = x => {
-      const parts = x.split(':')
-      return +parts[0] * 3600 + +(parts[1] || 0) * 60
-    }
+  readDaySchedule(dayScheduleSpec) {
     if (dayScheduleSpec === 'closed') {
       return 'closed'
-    } else if (!dayScheduleSpec.includes('-')) {
+    }
+    const daySchedule = dayScheduleSpec.split('-').map(DateUtil.parseAmPm)
+    if (daySchedule.length !== 2 || daySchedule.some(time => time == null)) {
       return 'unknown'
     }
-    const daySchedule = dayScheduleSpec.split('-').map(parseTime)
     if (daySchedule[1] <= daySchedule[0]) {
       daySchedule[1] += 24 * 3600
     }
     return daySchedule
+  },
+
+  readSchedule(spec) {
+    const week = VendorSchedule.daysOfWeek.map(({abbr}) =>
+      (spec[abbr] && VendorSchedule.readDaySchedule(spec[abbr]))
+        ?? (spec.all && VendorSchedule.readDaySchedule(spec.all))
+        ?? 'unknown'
+    )
+
+    const special = {}
+    for (const key in spec) {
+      if (key !== 'all' && !VendorSchedule.daysOfWeekByAbbr[key]) {
+        special[key] = VendorSchedule.readDaySchedule(spec[key])
+      }
+    }
+
+    return {week, special}
   },
 
   // https://en.wikipedia.org/wiki/Federal_holidays_in_the_United_States
@@ -84,24 +107,34 @@ export const VendorSchedule = {
     const month = date.getUTCMonth() + 1
 
     if (day.endsWith('-01-01')) return 'newYears'
-    if (dayOfWeek === 1 && nthDayOfMonth === 2) return 'mlk'
+    if (month === 1 && dayOfWeek === 1 && nthDayOfMonth === 2) return 'mlk'
     if (month === 2 && dayOfWeek === 1 && nthDayOfMonth === 2) return 'presidents'
-    if (month === 5 && (31 - 7) <= dayOfMonth) return 'memorial'
+    if (month === 5 && dayOfWeek === 1 && (31 - 7) <= dayOfMonth) return 'memorial'
     if (day.endsWith('-06-19')) return 'juneteenth'
     if (day.endsWith('-07-04')) return 'july4th'
     if (month === 9 && dayOfWeek === 1 && nthDayOfMonth === 0) return 'labor'
     if (month === 10 && dayOfWeek === 1 && nthDayOfMonth === 1) return 'columbus'
     if (day.endsWith('-11-11')) return 'veterans'
     if (month === 11 && dayOfWeek === 4 && nthDayOfMonth === 3) return 'thanksgiving'
-    if (month === 11 && dayOfWeek === 5 && nthDayOfMonth === 3) return 'thanksgiving+1'
-    if (month === 11 && dayOfWeek === 6 && nthDayOfMonth === 3) return 'thanksgiving+2'
-    if (month === 11 && dayOfWeek === 0 && nthDayOfMonth === 4) return 'thanksgiving+3'
-    if (month === 11 && dayOfWeek === 1 && nthDayOfMonth === 4) return 'thanksgiving+4'
     if (day.endsWith('-12-24')) return 'christmas-1'
     if (day.endsWith('-12-25')) return 'christmas'
     if (day.endsWith('-12-31')) return 'newYears-1'
 
     return undefined
+  },
+
+  getNamedDaysForYear(startDay) {
+    startDay ??= DateUtil.todayYmd()
+
+    const items = []
+    for (let i = 0; i < 366; i += 1) {
+      const day = DateUtil.addYmd(startDay, i)
+      const key = VendorSchedule.getNamedDay(day)
+      if (key) {
+        items.push({key, day})
+      }
+    }
+    return items
   },
 
   formatDaySchedule(daySchedule) {
@@ -110,7 +143,7 @@ export const VendorSchedule = {
     } else if (daySchedule === 'unknown') {
       return 'Contact store for hours'
     } else if (daySchedule instanceof Array) {
-      return daySchedule.map(DateUtil.formatAmPm).join(` ${enDash} `)
+      return daySchedule.map(DateUtil.formatShortAmPm).join(` ${enDash} `)
     } else {
       return daySchedule
     }
@@ -135,7 +168,7 @@ export const VendorSchedule = {
 
     if (todaySchedule instanceof Array) {
       if (todaySchedule[0] <= timeOfDay && timeOfDay < todaySchedule[1]) {
-        const abuts = todaySchedule[1] === 24 * 3600 
+        const abuts = todaySchedule[1] === 24 * 3600
           && tomorrowSchedule instanceof Array && tomorrowSchedule[0] === 0
         return {
           isOpen: true,
@@ -143,7 +176,8 @@ export const VendorSchedule = {
           closes: todaySchedule[1],
           alwaysOpen: todaySchedule[0] === 0 && abuts,
         }
-      } 
+      }
+
     }
 
     if (todaySchedule === 'unknown') {
@@ -162,11 +196,6 @@ export const VendorSchedule = {
   },
 
   hasSchedule(schedule) {
-    for (const x in schedule) {
-      if (x !== 'all' || schedule[x] !== 'unknown') {
-        return true
-      }
-    }
-    return false
+    return schedule.week.some(daySchedule => daySchedule !== 'unknown')
   },
 }

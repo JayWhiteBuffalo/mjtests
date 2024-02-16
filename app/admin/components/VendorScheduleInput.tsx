@@ -1,0 +1,197 @@
+import './VendorScheduleInput.css'
+import ArrayUtil from '@util/ArrayUtil'
+import clsx from 'clsx'
+import DateUtil from '@util/DateUtil'
+import ObjectUtil from '@util/ObjectUtil'
+import {Fragment, forwardRef, useRef, useState, useCallback, useEffect} from 'react'
+import {TextInput} from 'flowbite-react'
+import {FieldError, LabeledCheckbox, RecursiveErrors} from '@components/Form'
+import {VendorSchedule} from '@util/VendorSchedule'
+
+const timeToText = time => time != null ? DateUtil.formatAmPm(time) : ''
+
+export const TimeOfDay = forwardRef(({value, onChange, className, ...rest}, ref) => {
+  const [text, setText] = useState(timeToText(value))
+
+  useEffect(() => setText(timeToText(value)), [value])
+
+  const validate = useCallback(x => {
+    const time = DateUtil.parseAmPm(x.trim())
+    if (time !== value) {
+      onChange(time)
+    }
+    setText(timeToText(time))
+  }, [onChange, value])
+
+  const onBlur = useCallback(event => validate(event.target.value), [validate])
+  const onKeyDown = useCallback(event => {
+    if (event.key === 'Enter') {
+      validate(event.target.value)
+    }
+  }, [validate])
+  const onInputChange = useCallback(event => setText(event.target.value), [])
+
+  return (
+    <TextInput
+      {...rest}
+      className={clsx('TimeOfDayInput', className)}
+      onBlur={onBlur}
+      onChange={onInputChange}
+      onKeyDown={onKeyDown}
+      ref={ref}
+      value={text}
+      />
+  )
+})
+TimeOfDay.displayName = 'TimeOfDay'
+
+const valueToRange = value => {
+  if (value === 'unknown') {
+    return [undefined, undefined]
+  } else if (value instanceof Array) {
+    return [value[0], value[1] % (24 * 3600)]
+  } else {
+    return undefined
+  }
+}
+
+const rangeToValue = range => {
+  if (range[0] == null || range[1] == null) {
+    return 'unknown'
+  } else {
+    if (range[0] >= range[1]) {
+      return [range[0], range[1] + 24 * 3600]
+    } else {
+      return range
+    }
+  }
+}
+
+export const DaySchedule = ({value, disabled, onChange}) => {
+  const [range, setRange] = useState(valueToRange(value) ?? [undefined, undefined])
+
+  useEffect(() => {
+    if (!ObjectUtil.equals(rangeToValue(range), value)) {
+      setRange(range => valueToRange(value) ?? range)
+    }
+  }, [value, range])
+
+  return (
+    <>
+      <LabeledCheckbox
+        checked={value !== 'closed'}
+        disabled={disabled}
+        onChange={event => {
+          if (event.target.checked) {
+            onChange(rangeToValue(range))
+          } else {
+            onChange('closed')
+          }
+        }}>
+        Open
+      </LabeledCheckbox>
+      <TimeOfDay
+        disabled={value === 'closed' || disabled}
+        onChange={time => {
+          setRange([time, range[1]])
+          onChange(rangeToValue([time, range[1]]))
+        }}
+        value={range[0]}
+        />
+      <TimeOfDay
+        disabled={value === 'closed' || disabled}
+        onChange={time => {
+          setRange([range[0], time])
+          onChange(rangeToValue([range[0], time]))
+        }}
+        value={range[1]}
+        />
+    </>
+  )
+}
+
+const Header = ({title}) =>
+  <div className="VendorScheduleInputHeader">
+    <p>{title}</p>
+    <p>Opens at</p>
+    <p>Closes at</p>
+  </div>
+
+const WeekHours = ({week, errors, onChange}) =>
+  <div className="VendorScheduleInput">
+    <Header title="Weekly Hours" />
+    {VendorSchedule.daysOfWeek.map((dayOfWeek, ix) =>
+      <Fragment key={ix}>
+        <div className="VendorScheduleInputItem">
+          <div>{dayOfWeek.name}</div>
+          <DaySchedule
+            onChange={daySchedule =>
+              onChange(ArrayUtil.splice(week, ix, 1, daySchedule)
+            )}
+            value={week[ix]}
+            />
+        </div>
+        <RecursiveErrors errors={errors?.[ix]} />
+      </Fragment>
+    )}
+  </div>
+
+const HolidayHours = ({special, errors, onChange}) => {
+  const daySchedules = useRef(special)
+
+  useEffect(() =>
+    Object.assign(daySchedules.current, special)
+    [special]
+  )
+
+  return (
+    <div className="VendorScheduleInput">
+      <Header title="Holiday Hours" />
+      {VendorSchedule.getNamedDaysForYear().map(({key, day}) =>
+        <Fragment key={key}>
+          <div className="VendorScheduleInputItem">
+            <LabeledCheckbox
+              checked={key in special}
+              onChange={event => {
+                if (event.target.checked) {
+                  onChange({...special, [key]: daySchedules.current[key]})
+                } else {
+                  onChange(ObjectUtil.delete(special, key))
+                }
+              }}>
+              <time>{day} {VendorSchedule.namedDaysByKey[key].name}</time>
+            </LabeledCheckbox>
+            <DaySchedule
+              disabled={!(key in special)}
+              onChange={daySchedule => {
+                daySchedules.current[key] = daySchedule
+                onChange({...special, [key]: daySchedule})
+              }}
+              value={special[key] ?? daySchedules[key] ?? 'unknown'}
+              />
+          </div>
+          <RecursiveErrors errors={errors?.[key]} />
+        </Fragment>
+      )}
+    </div>
+  )
+}
+
+//const SpecialHours = ({special, errors, onChange}) =>
+
+export const VendorScheduleInput = ({schedule, errors, onChange}) =>
+  <>
+    <WeekHours
+      week={schedule.week}
+      onChange={week => onChange({...schedule, week})}
+      errors={errors?.week}
+      />
+    <FieldError error={errors?.week} />
+    <HolidayHours
+      special={schedule.special}
+      onChange={special => onChange({...schedule, special})}
+      errors={errors?.special}
+      />
+    <FieldError error={errors?.special} />
+  </>
+

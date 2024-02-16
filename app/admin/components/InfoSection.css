@@ -1,0 +1,31 @@
+
+.InfoSection {
+  margin: 1rem 0;
+
+  & > header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+
+.InfoSection > dl {
+  padding: 4px 0;
+
+  & > dt {
+    display: inline;
+    vertical-align: top;
+  }
+
+  & > dd {
+    display: inline;
+  }
+
+  & > dt:not(:first-child)::before {
+    content: '\A';
+    white-space: pre;
+  }
+
+  & > dt::after {
+    content: ': ';
+  }
+}

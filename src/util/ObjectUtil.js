@@ -1,6 +1,9 @@
 
 const ObjectUtil = {
   getByPath(obj, path) {
+    if (typeof path === 'string') {
+      path = path.split('.')
+    }
     for (const x of path) {
       if (typeof obj === 'object' && obj[x] != null) {
         obj = obj[x]
@@ -23,7 +26,15 @@ const ObjectUtil = {
   mapKey(xs, f) {
     const ys = {}
     for (const xKey in xs) {
-      ys[f(xKey)] = xs[xKey]
+      ys[f(xKey, xs[xKey])] = xs[xKey]
+    }
+    return ys
+  },
+
+  mapValue(xs, f) {
+    const ys = {}
+    for (const xKey in xs) {
+      ys[xKey] = f(xs[xKey], xKey)
     }
     return ys
   },
@@ -38,7 +49,7 @@ const ObjectUtil = {
     }
 
     for (const xKey in xs) {
-      if (!ObjectUtil.deepEquals(xs[xKey], ys[xKey])) {
+      if (!(xKey in ys) || !ObjectUtil.deepEquals(xs[xKey], ys[xKey])) {
         return false
       }
     }
@@ -53,8 +64,16 @@ const ObjectUtil = {
   },
 
   equals(xs, ys) {
+    if (Object.is(xs, ys)) {
+      return true
+    }
+
+    if (!(typeof xs === 'object' && typeof ys === 'object')) {
+      return false
+    }
+
     for (const xKey in xs) {
-      if (!Object.is(xs[xKey], ys[xKey])) {
+      if (!(xKey in ys) || !Object.is(xs[xKey], ys[xKey])) {
         return false
       }
     }
@@ -90,9 +109,11 @@ const ObjectUtil = {
     return count
   },
 
-  delete(xs, key) {
+  delete(xs, ...keys) {
     const ys = {...xs}
-    delete ys[key]
+    for (const key of keys) {
+      delete ys[key]
+    }
     return ys
   },
 
@@ -110,6 +131,18 @@ const ObjectUtil = {
       xs[k] = v
     }
     return xs
+  },
+
+  dfs: function*(xs, path = []) {
+    if (typeof xs === 'object') {
+      yield [xs, path]
+
+      for (const key in xs) {
+        if (typeof xs[key] === 'object') {
+          yield* ObjectUtil.dfs(xs[key], [...path, key])
+        }
+      }
+    }
   },
 }
 

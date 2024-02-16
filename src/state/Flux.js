@@ -1,6 +1,8 @@
+'use client'
 import {useEffect, useState} from 'react'
 import assert from 'assert'
 import ObjectUtil from '@util/ObjectUtil'
+import ReObjectUtil from '@util/ReObjectUtil'
 
 export class BaseFluxStore {
   constructor() {
@@ -24,21 +26,24 @@ export class BaseFluxStore {
 }
 
 export class FluxStore extends BaseFluxStore {
+  constructor() {
+    super()
+    this.value = {}
+  }
+
   get() {
     return this.value
   }
 
   set(changes) {
-    let changed = false
-    for (const key in changes) {
-      if (!ObjectUtil.deepEquals(this.value[key], changes[key])) {
-        this.value[key] = changes[key]
-        changed = true
-      }
-    }
+    const newValue = ReObjectUtil.merge(this.value, changes)
 
-    if (changed) {
+    if (this.value !== newValue) {
+      this.value = newValue
       this.notify()
+      return true
+    } else {
+      return false
     }
   }
 }
@@ -75,8 +80,7 @@ export class ComputedStore extends BaseFluxStore {
 export const FluxContainer = (fluxStores, C) => {
   return () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    fluxStores.forEach(useFluxStore)
-    return C(...fluxStores.map(store => store.get()))
+    return C(...fluxStores.map(useFluxStore))
   }
 }
 
@@ -89,6 +93,8 @@ export const useFluxStore = fluxStore => {
     const increamentDirty = () => setDirty(dirty => dirty + 1)
     return fluxStore.subscribe(increamentDirty)
   }, [fluxStore])
+
+  return fluxStore.get()
 }
 
 export class Dispatcher {

@@ -1,5 +1,6 @@
 export default {
   identity: x => x,
+  void: _ => void 0,
 
   memoize(f) {
     const map = new Map()

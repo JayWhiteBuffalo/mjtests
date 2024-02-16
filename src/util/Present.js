@@ -1,4 +1,3 @@
-import assert from 'assert'
 
 export class Present {
   constructor(status, valueOrError) {
@@ -42,16 +41,43 @@ export class Present {
   rejected() { return this.status === 'error'}
   pending() { return this.status === 'pending'}
 
-  get() { return this.status === 'done' ? this.value : undefined }
+  get() {
+    if (this.status === 'done') {
+      return this.value
+    } else if (this.status === 'error') {
+      throw this.error
+    } else {
+      return undefined
+    }
+  }
   getError() { return this.status === 'error' ? this.error : undefined }
-  defined() { assert(this.status === 'done'); return this.value }
+  defined() {
+    if (this.status === 'done') {
+      return this.value
+    } else if (this.status === 'error') {
+      throw this.error
+    } else {
+      throw new Error('Unresolved present')
+    }
+  }
   orElse(y, z) {
     if (this.status === 'done') {
       return this.value
     } else if (this.status === 'error') {
-      return y()
+      return typeof y === 'function' ? y(this.error) : y
     } else {
-      return arguments.length === 2 ? z() : y()
+      return arguments.length === 2
+        ? (typeof z === 'function' ? z() : z)
+        : (typeof y === 'function' ? y() : y)
+    }
+  }
+  orLoading(z) {
+    if (this.status === 'done') {
+      return this.value
+    } else if (this.status === 'error') {
+      throw this.error
+    } else {
+      return typeof z === 'function' ? z() : z
     }
   }
 
