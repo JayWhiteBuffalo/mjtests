@@ -1,14 +1,5 @@
-.CheckboxGroup {
-}
 
-.CheckboxGroupItem {
-  display: inline-flex;
-  margin: 2px 5px;
-  user-select: none;
-  align-items: center;
-}
-
-.CheckboxGroupItem > input {
+.CheckboxGroupItemBox {
   transition: 0.2s;
 
   &:focus:hover {
@@ -20,22 +11,8 @@
   }
 }
 
-.CheckboxGroupItemBox {
-  margin-right: 4px;
-  vertical-align: text-bottom;
-}
-
-.ButtonCbGroup {
-  display: flex;
-  flex-flow: row wrap;
-}
-
 .ButtonCbGroupItem {
-  border-radius: 0;
   margin-left: -1px;
-  border-color: rgb(209 213 219);
-  transition-property: border-color, background-color;
-  transition-duration: 0.2s;
 
   &:first-child {
     border-radius: 8px 0 0 8px;
@@ -44,11 +21,5 @@
 
   &:last-child {
     border-radius: 0 8px 8px 0;
-  }
-
-  &.checked {
-    z-index: 20;
-    background-color: rgb(240 249 255);
-    border-color: rgb(2 132 199);
   }
 }

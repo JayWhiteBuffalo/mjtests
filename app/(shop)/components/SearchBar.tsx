@@ -1,10 +1,10 @@
 import './SearchBar.css'
 import {BsGrid, BsGrid3X3} from 'react-icons/bs'
 import {CgSearch} from 'react-icons/cg'
-import {dispatch} from '../state/Action'
+import {ErrorBoundary} from '@components/Error'
 import {FiDollarSign} from 'react-icons/fi'
 import {FilterStore, LayoutStore, MapStore} from '../state/UIStore'
-import {FluxContainer} from '@/state/Flux'
+import {useFluxStore, dispatch} from '@/state/Flux'
 import {GiPathDistance} from 'react-icons/gi'
 import {HiOutlineChevronDoubleUp, HiOutlineChevronDoubleDown, HiOutlineChevronDown, HiLocationMarker} from 'react-icons/hi'
 import {LocationTypeaheadStore} from '../state/DataStore'
@@ -54,13 +54,15 @@ const SortDropdown = ({sortBy, onChange}) => {
   )
 }
 
-const SortDropdownContainer = FluxContainer(
-  [FilterStore],
-  (filter) =>
+const SortDropdownContainer = () => {
+  const filter = useFluxStore(FilterStore)
+  return (
     <SortDropdown
       sortBy={filter.sortBy}
-      onChange={sortBy => dispatch({type: 'filter.set', filter: {sortBy}})} />
-)
+      onChange={sortBy => dispatch({type: 'filter.set', filter: {sortBy}})}
+    />
+  )
+}
 
 const ToggleFilterPane = ({showFilterPane, onClick}) =>
   <Button
@@ -75,13 +77,15 @@ const ToggleFilterPane = ({showFilterPane, onClick}) =>
     }
   </Button>
 
-const ToggleFilterPaneContainer = FluxContainer(
-  [LayoutStore],
-  (layout) =>
+const ToggleFilterPaneContainer = () => {
+  const layout = useFluxStore(LayoutStore)
+  return (
     <ToggleFilterPane
       showFilterPane={layout.showFilterPane}
-      onClick={() => dispatch({type: 'layout.set', layout: {showFilterPane: !layout.showFilterPane}})} />
-)
+      onClick={() => dispatch({type: 'layout.set', layout: {showFilterPane: !layout.showFilterPane}})}
+    />
+  )
+}
 
 const modeItemProps = [
   {
@@ -120,13 +124,15 @@ const ProductListModeSelector = ({mode, onChange}) => {
   )
 }
 
-const ProductListModeSelectorContainer = FluxContainer(
-  [LayoutStore],
-  (layout) =>
+const ProductListModeSelectorContainer = () => {
+  const layout = useFluxStore(LayoutStore)
+  return (
     <ProductListModeSelector
       mode={layout.productListMode}
-      onChange={mode => dispatch({type: 'layout.set', layout: {productListMode: mode}})} />
-)
+      onChange={mode => dispatch({type: 'layout.set', layout: {productListMode: mode}})}
+    />
+  )
+}
 
 const FilterKeyword = ({keyword, onChange}) =>
   <TextInput
@@ -137,15 +143,17 @@ const FilterKeyword = ({keyword, onChange}) =>
     placeholder="Search products"
     type="search"
     value={keyword}
-    />
+  />
 
-const FilterKeywordContainer = FluxContainer(
-  [FilterStore],
-  filter => <FilterKeyword
-    keyword={filter.keyword}
-    onChange={keyword => dispatch({type: 'filter.set', filter: {keyword}})}
+const FilterKeywordContainer = () => {
+  const filter = useFluxStore(FilterStore)
+  return (
+    <FilterKeyword
+      keyword={filter.keyword}
+      onChange={keyword => dispatch({type: 'filter.set', filter: {keyword}})}
     />
-)
+  )
+}
 
 const MapKeywordItem = forwardRef(({children, className, active, ...rest}, ref) =>
   <button
@@ -225,6 +233,40 @@ const MapKeyword = ({keyword, items, exact, onChangeKeyword, geolocationInProgre
 
   const onClick = useCallback(() => setOpen(true), [])
 
+  const Floating = () =>
+    <div
+      {...getFloatingProps()}
+      className="MapKeywordPopup shadow"
+      ref={refs.setFloating}
+      style={floatingStyles}>
+      <MapKeywordItem
+        {...getItemProps({onClick: onClickItem(0)})}
+        active={activeIndex === 0}
+        className="flex justify-between place-items-center"
+        ref={node => listRef.current[0] = node}>
+        <div className="flex place-items-center">
+          <HiLocationMarker className="h-4 w-4 mr-2" />
+          Current Location
+        </div>
+        {geolocationInProgress
+          ? <Spinner className="spinner" aria-label="Geolocation in progress" size="sm" />
+          : undefined
+        }
+      </MapKeywordItem>
+
+      <div className="divider" />
+
+      {items.map((item, index) =>
+        <MapKeywordItem
+          {...getItemProps({onClick: onClickItem(index + 1)})}
+          active={activeIndex === index + 1}
+          key={item.name}
+          ref={node => listRef.current[index + 1] = node}>
+          {item.name}
+        </MapKeywordItem>
+      )}
+    </div>
+
   return (
     <>
       <TextInput
@@ -238,50 +280,22 @@ const MapKeyword = ({keyword, items, exact, onChangeKeyword, geolocationInProgre
         ref={refs.setReference}
         type="search"
         value={keyword}
-        />
+      />
       {open &&
         <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
-          <div
-            {...getFloatingProps()}
-            className="MapKeywordPopup shadow"
-            ref={refs.setFloating}
-            style={floatingStyles}>
-            <MapKeywordItem
-              {...getItemProps({onClick: onClickItem(0)})}
-              active={activeIndex === 0}
-              className="flex justify-between place-items-center"
-              ref={node => listRef.current[0] = node}>
-              <div className="flex place-items-center">
-                <HiLocationMarker className="h-4 w-4 mr-2" />
-                Current Location
-              </div>
-              {geolocationInProgress
-                ? <Spinner className="spinner" aria-label="Geolocation in progress" size="sm" />
-                : undefined
-              }
-            </MapKeywordItem>
-
-            <div className="divider" />
-
-            {items.map((item, index) =>
-              <MapKeywordItem
-                {...getItemProps({onClick: onClickItem(index + 1)})}
-                active={activeIndex === index + 1}
-                key={item.name}
-                ref={node => listRef.current[index + 1] = node}>
-                {item.name}
-              </MapKeywordItem>
-            )}
-          </div>
+          <ErrorBoundary>
+            {Floating()}
+          </ErrorBoundary>
         </FloatingFocusManager>
       }
     </>
   )
 }
 
-const MapKeywordContainer = FluxContainer(
-  [MapStore, LocationTypeaheadStore],
-  (map, _) =>
+const MapKeywordContainer = () => {
+  const map = useFluxStore(MapStore)
+  useFluxStore(LocationTypeaheadStore)
+  return (
     <MapKeyword
       exact={map.keyword === map.city?.name}
       geolocationInProgress={map.geolocationInProgress}
@@ -290,19 +304,24 @@ const MapKeywordContainer = FluxContainer(
       onChangeKeyword={keyword => dispatch({type: 'map.changeKeyword', keyword})}
       onGeolocate={() => dispatch({type: 'map.geolocate'})}
       onSelectCity={item => dispatch({type: 'map.selectCity', city: item})}
-      />
-)
+    />
+  )
+}
 
 const SearchBar = () =>
   <div className="SearchBar">
     <search className="SearchBarLeft">
-      <FilterKeywordContainer />
-      <MapKeywordContainer />
+      <ErrorBoundary>
+        <FilterKeywordContainer />
+        <MapKeywordContainer />
+      </ErrorBoundary>
     </search>
     <div className="SearchBarRight">
-      <SortDropdownContainer />
-      <ToggleFilterPaneContainer />
-      <ProductListModeSelectorContainer />
+      <ErrorBoundary>
+        <SortDropdownContainer />
+        <ToggleFilterPaneContainer />
+        <ProductListModeSelectorContainer />
+      </ErrorBoundary>
     </div>
   </div>
 

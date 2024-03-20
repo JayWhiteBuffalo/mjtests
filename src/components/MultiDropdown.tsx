@@ -1,11 +1,13 @@
 import './MultiDropdown.css'
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
-import FlagsUtil from '@util/FlagsUtil'
+import FlagObjectUtil from '@util/FlagObjectUtil'
 import FnUtil from '@util/FnUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {Button, Checkbox, TextInput} from 'flowbite-react'
 import {CgSearch} from 'react-icons/cg'
+import {DropdownMenuButton} from '@components/Dropdown'
+import {ErrorBoundary} from '@components/Error'
 import {HiOutlineChevronDown} from "react-icons/hi"
 import {useFloating, useClick, useDismiss, useRole, useInteractions, useListNavigation, useTypeahead, flip, offset, shift, size, FloatingPortal, FloatingFocusManager} from '@floating-ui/react'
 import {useFluxStore} from '@/state/Flux'
@@ -26,8 +28,14 @@ const MultiDropdownButton = forwardRef(({placeholder, values, className, ...rest
       {...rest}
       className={clsx('MultiDropdown', className)}
       color="light"
-      ref={ref}>
-      <span className="MultiDropdownText">{text}</span>
+      ref={ref}
+      theme={{
+        inner: {base: 'flex items-stretch items-center justify-between w-full transition-all duration-200'},
+      }}>
+      <span
+        className="text-ellipsis overflow-hidden whitespace-nowrap text-gray-500 italic">
+        {text}
+      </span>
       <HiOutlineChevronDown className="ml-2 h-4 w-4" />
     </Button>
   )
@@ -37,27 +45,35 @@ MultiDropdownButton.displayName = 'MultiDropdownButton'
 const Items = forwardRef(({className, items, values, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
     {...rest}
-    className={clsx('MultiDropdownItems', className)}
+    className={clsx(
+      'MultiDropdownItems', 
+      'flex flex-col flex-wrap flex-auto shrink-0 h-[400px] -mx-3 overflow-auto px-1',
+      'min-w-[208px]',
+      className,
+    )}
     ref={ref}>
     {items.map((item, index) =>
       <li key={item.key}>
         <button
           {...getItemProps({
-            onClick: () => onChange(FlagsUtil.toggle(values, item.key)),
+            onClick: () => onChange(FlagObjectUtil.toggle(values, item.key)),
           })}
           aria-selected={values[item.key] || false}
-          className={clsx('MultiDropdownItem', values[item.key] && 'selected')}
+          className={clsx(
+            'cursor-pointer hyphens-auto px-2 py-1 text-left w-[200px]',
+            'hover:bg-gray-100'
+          )}
           ref={node => listRef.current[index] = node}
           role="option"
           tabIndex={activeIndex === index ? 0 : -1}
           type="button">
           <Checkbox
             checked={values[item.key] || false}
-            className="mr-1"
+            className="mr-1 cursor-unset align-text-bottom"
             onChange={FnUtil.void}
             role="presentation"
             tabIndex={-1}
-            />
+          />
           {item.name}
         </button>
       </li>
@@ -81,31 +97,26 @@ const commonMiddleware = () =>
   ]
 
 const SmallMultiDropdownTopMenu = ({values, items, onChange, onClose}) =>
-  <div className="MultiDropdownTopMenu">
+  <div className="flex justify-between items-end">
     {items.length &&
       <div>
-        <button
-          className="MultiDropdownMenuButton"
+        <DropdownMenuButton
           disabled={items.every(item => values[item.key])}
-          onClick={() => onChange(FlagsUtil.fromIterable(items, x => x.key))}
-          type="button">
+          onClick={() => onChange(FlagObjectUtil.fromIterable(items, x => x.key))}>
           Select All
-        </button>
-        <button
-          className="MultiDropdownMenuButton"
+        </DropdownMenuButton>
+        <DropdownMenuButton
           disabled={ObjectUtil.isEmpty(values)}
-          onClick={() => onChange({})}
-          type="button">
+          onClick={() => onChange({})}>
           Clear Selection
-        </button>
+        </DropdownMenuButton>
       </div>
     }
-    <button
-      className="MultiDropdownMenuButton MultiDropdownCloseButton"
-      onClick={onClose}
-      type="button">
+    <DropdownMenuButton
+      className="MultiDropdownCloseButton"
+      onClick={onClose}>
       Done
-    </button>
+    </DropdownMenuButton>
   </div>
 
 type SmallMultiDropdownProps = {
@@ -161,25 +172,35 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
           <div
             {...getFloatingProps()}
             aria-multiselectable="true"
-            className={`MultiDropdownPopover shadow small`}
+            className={clsx(
+              `MultiDropdownPopover shadow`,
+              'bg-white border border-gray-300 flex flex-row z-20',
+              'max-h-[80vh]',
+            )}
             ref={refs.setFloating}
             style={isMobile ? mobileFloatingStyles : floatingStyles}>
-            <div className="MultiDropdownPane MultiDropdownItemsPane">
-              <SmallMultiDropdownTopMenu
-                items={props.items}
-                onChange={props.onChange}
-                onClose={onClose}
-                values={props.values}
+            <ErrorBoundary>
+              <div 
+                className={clsx(
+                  'MultiDropdownPane MultiDropdownItemsPane',
+                  'flex flex-1 flex-col p-3',
+                )}>
+                <SmallMultiDropdownTopMenu
+                  items={props.items}
+                  onChange={props.onChange}
+                  onClose={onClose}
+                  values={props.values}
                 />
-              <Items
-                activeIndex={activeIndex}
-                getItemProps={getItemProps}
-                items={props.items}
-                listRef={listRef}
-                onChange={props.onChange}
-                values={props.values}
+                <Items
+                  activeIndex={activeIndex}
+                  getItemProps={getItemProps}
+                  items={props.items}
+                  listRef={listRef}
+                  onChange={props.onChange}
+                  values={props.values}
                 />
-            </div>
+              </div>
+            </ErrorBoundary>
           </div>
         </FloatingFocusManager>
       </FloatingPortal>
@@ -194,7 +215,8 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
         id={props.id}
         placeholder={props.placeholder}
         ref={refs.setReference}
-        values={props.values} />
+        values={props.values}
+      />
       {expanded && Floating()}
     </>
   )
@@ -202,7 +224,7 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
 
 const Search = ({id, keyword, onChange}) =>
   <TextInput
-    className="MultiDropdownKeyword"
+    className="max-w-[600px] mb-1"
     icon={CgSearch}
     id={id}
     onChange={e => onChange(e.target.value)}
@@ -210,10 +232,13 @@ const Search = ({id, keyword, onChange}) =>
     tabIndex={0}
     type="search"
     value={keyword}
-    />
+  />
 
 const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClose}: MultiDropdownProps) => {
-  const selectedItems = ArrayUtil.sortBy(Object.keys(values).map(TypeaheadStore.getByKey), x => x.name)
+  const selectedItems = ArrayUtil.sortBy(
+    TypeaheadStore.getByKeys(Object.keys(values)),
+    x => x.name
+  )
 
   const [focused, setFocused] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -234,25 +259,27 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
   ])
 
   return (
-    <div className="MultiDropdownPane MultiDropdownSelectedPane">
-      <div className="MultiDropdownTopMenu">
+    <div 
+      className={clsx(
+        'MultiDropdownPane MultiDropdownSelectedPane',
+        'flex flex-1 flex-col p-3',
+      )}>
+      <div className="flex justify-between items-end">
         <div>
           <span className="text-sm mr-4">Selected</span>
-          <button
-            className="MultiDropdownMenuButton"
+          <DropdownMenuButton
             disabled={ObjectUtil.isEmpty(values)}
-            onClick={() => onChange({})}
-            type="button">
+            onClick={() => onChange({})}>
             Clear Selection
-          </button>
+          </DropdownMenuButton>
         </div>
-        <button
-          className="MultiDropdownMenuButton MultiDropdownCloseButton"
-          onClick={onClose}
-          type="button">
+        <DropdownMenuButton
+          className="MultiDropdownCloseButton"
+          onClick={onClose}>
           Done
-        </button>
+        </DropdownMenuButton>
       </div>
+      
       <Items
         {...getFloatingProps({
           onFocus: () => setFocused(true),
@@ -266,9 +293,8 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
         items={selectedItems}
         listRef={listRef}
         onChange={onChange}
-
         values={values}
-        />
+      />
     </div>
   )
 }
@@ -295,7 +321,11 @@ const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDr
   ])
 
   return (
-    <div className="MultiDropdownPane MultiDropdownSearchPane">
+    <div 
+      className={clsx(
+        'MultiDropdownPane MultiDropdownSearchPane',
+        'flex flex-1 flex-col p-3 border-gray-300 border-l',
+      )}>
       <Search onChange={setKeyword} keyword={keyword} id={`${id}.keyword`} />
       <Items
         {...getFloatingProps({
@@ -311,7 +341,7 @@ const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDr
         onChange={onChange}
         ref={refs.setFloating}
         values={values}
-        />
+      />
     </div>
   )
 }
@@ -354,10 +384,17 @@ export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
           <dialog
             {...getFloatingProps()}
             ref={refs.setFloating}
-            className={`MultiDropdownPopover shadow large`}
+            className={clsx(
+              `MultiDropdownPopover shadow`,
+              'bg-white border border-gray-300 flex flex-row z-20',
+            )}
             style={isMobile ? mobileFloatingStyles : floatingStyles}>
-            <MultiDropdownSelectedPane {...props} onClose={onClose} />
-            <MultiDropdownSearchPane {...props} onClose={onClose} />
+            <ErrorBoundary>
+              <MultiDropdownSelectedPane {...props} onClose={onClose} />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <MultiDropdownSearchPane {...props} onClose={onClose} />
+            </ErrorBoundary>
           </dialog>
         </FloatingFocusManager>
       </FloatingPortal>
@@ -372,7 +409,8 @@ export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
         id={props.id}
         placeholder={props.placeholder}
         ref={refs.setReference}
-        values={props.values} />
+        values={props.values}
+      />
       {expanded && Floating()}
     </>
   )

@@ -1,46 +1,35 @@
 import ArrayUtil from '@util/ArrayUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {FilterStore} from '../state/UIStore'
-import {FluxStore, ComputedStore} from '@/state/Flux'
+import {FluxFieldStore, ComputedStore} from '@/state/Flux'
 import {jsonOnOk} from '@util/FetchUtil'
 import {Present} from '@util/Present'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
+import {RecordStore} from '@/state/RecordStore'
+import {SerialFetcher} from '@/state/SerialFetcher'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {UrlUtil} from '@util/UrlUtil'
-import {RecordStore} from '@/state/RecordStore'
 
-class FilteredProductsFetcher {
-  fetch(filter) {
-    if (this.aborter) {
-      this.aborter.abort()
-    }
-    this.aborter = new AbortController()
-
-    const query = ProductFilterUtil.toQuery(filter)
-    const url = UrlUtil.makeUrl('/api/products', query)
-    return fetch(url, {
-      signal: this.aborter.signal,
-    })
-      .finally(() => delete this.aborter)
-      .then(jsonOnOk)
-  }
-}
-
-export const FilteredProductStore = new class extends FluxStore {
+export const FilteredProductStore = new class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {}
-    this.fetcher = new FilteredProductsFetcher()
+    this.fetcher = new SerialFetcher((filter, signal) => {
+      const query = ProductFilterUtil.toQuery(filter)
+      const url = UrlUtil.makeUrl('/api/products', query)
+      return fetch(url, {signal})
+    })
     FilterStore.subscribe(this.notify.bind(this))
   }
 
   get() {
     const filter = FilterStore.get()
     if (!ObjectUtil.deepEquals(filter, this.value.filter)) {
-      this.set({filter, products: Present.pend})
+      this.value = {filter, products: Present.pend}
 
       if (typeof window !== 'undefined') {
         this.fetcher.fetch(filter)
+          .then(jsonOnOk)
           .then(products =>
             this.set({filter, products: Present.resolve(products)})
           )

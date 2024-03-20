@@ -56,7 +56,9 @@ const UserDto = {
     } else {
       return {
         loggedIn: false,
+        producers: [],
         roles: [],
+        vendors: [],
       }
     }
   },

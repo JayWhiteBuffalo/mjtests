@@ -1,18 +1,19 @@
 import './Map.css'
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
+import clsx from 'clsx'
 import Image from 'next/Image'
 import ObjectUtil from '@util/ObjectUtil'
 import {createRoot} from 'react-dom/client'
-import {dispatch} from '../state/Action'
 import {FilteredVendorStore} from '../state/DataStore'
-import {FluxContainer} from '@/state/Flux'
+import {useFluxStore, dispatch} from '@/state/Flux'
 import {MapStore, LayoutStore} from '../state/UIStore'
 import {RiExpandUpDownLine, RiContractUpDownLine} from 'react-icons/ri'
 import {TbPin, TbPinned} from 'react-icons/tb'
 import {useFloating, useHover, useFocus, useDismiss, useInteractions, safePolygon, flip, offset, shift, FloatingPortal} from '@floating-ui/react'
 import {useState, useRef, useEffect, useCallback, forwardRef} from 'react'
 import {VendorPopupContentContainer} from './VendorPopup'
+import {useLastPresent} from '@util/useLastPresent'
 
 const blueIcon = {
   iconUrl: require('leaflet-color-markers/img/marker-icon-2x-blue.png'),
@@ -87,28 +88,32 @@ const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
 
   return (
     <>
-      <div className="Map" ref={containerRef} />
+      <div
+        className="w-full h-full z-0"
+        ref={containerRef}
+      />
       {map ? <MapOverlay vendors={vendors} map={map} /> : undefined}
     </>
   )
 }
 
-export const MapContainer = FluxContainer(
-  [MapStore, FilteredVendorStore, LayoutStore],
-  (map, vendors, layout) =>
+export const MapContainer = () => {
+  const map = useFluxStore(MapStore)
+  const vendors = useLastPresent(useFluxStore(FilteredVendorStore))
+  const layout = useFluxStore(LayoutStore)
+
+  const onChange = useCallback(map => dispatch({type: 'map.panAndZoom', map}), [])
+
+  return (
     <Map
       center={map.center}
       zoom={map.zoom}
       vendors={vendors.orElse(() => [])}
       expandMapPane={layout.expandMapPane}
-      onChange={useCallback(map => dispatch({type: 'map.panAndZoom', map}), [])} />
-)
-
-export const MapPaneContainer = FluxContainer([LayoutStore], layout =>
-  <div className={`MapPane ${layout.expandMapPane ? 'expanded' : ''}`}>
-    <MapContainer />
-  </div>
-)
+      onChange={onChange}
+    />
+  )
+}
 
 const ReactMarkerIcon = forwardRef(({type, options, style, alt, ...rest}, ref) => {
   const anchor = options[`${type}Anchor`] || options.iconAnchor
@@ -118,7 +123,7 @@ const ReactMarkerIcon = forwardRef(({type, options, style, alt, ...rest}, ref) =
       {...rest}
       alt={alt}
       ref={ref}
-      className={`ReactMarkerIcon leaflet-zoom-hide`}
+      className={`absolute pointer-events-auto leaflet-zoom-hide`}
       src={options[`${type}RetinaUrl`] || options[`${type}Url`]}
       style={{
         ...style,
@@ -127,7 +132,8 @@ const ReactMarkerIcon = forwardRef(({type, options, style, alt, ...rest}, ref) =
         width: `${size[0]}px`,
         height: `${size[1]}px`,
         zIndex: type === 'icon' ? 200 : 100,
-      }} />
+      }}
+    />
   )
 })
 ReactMarkerIcon.displayName = 'ReactMarkerIcon'
@@ -143,13 +149,13 @@ const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) =>
       role="button"
       style={style}
       options={iconOptions}
-      />
+    />
     <ReactMarkerIcon
       type="shadow"
       alt=""
       style={style}
       options={iconOptions}
-      />
+    />
   </>
 )
 ReactMarker.displayName = 'ReactMarker'
@@ -191,13 +197,14 @@ const VendorMarker = ({vendor, map}) => {
         alt={vendor.name}
         style={{
           transform: `translate(${pos.x}px, ${pos.y}px)`,
-        }} />
+        }}
+      />
       {showPopup
         ? <FloatingPortal>
             <div
               {...getFloatingProps()}
               ref={refs.setFloating}
-              className="MapVendorPopup shadow"
+              className="bg-white rounded-xl min-w-0 px-3 py-2 z-[2000] w-[300px] shadow"
               style={floatingStyles}>
                 <VendorPopupContentContainer vendorId={vendor.id} />
             </div>
@@ -230,8 +237,12 @@ const MapOverlay = ({vendors, map}) => {
   }, [map])
 
   return (
-    <div className={`MapOverlay ${anim ? 'leaflet-zoom-anim' : ''}`}>
-      <div className="MapOverlayLayer" ref={layerRef}>
+    <div 
+      className={clsx(
+        'absolute inset-0 overflow-hidden pointer-events-none',
+        anim ? 'leaflet-zoom-anim' : undefined,
+      )}>
+      <div className="MapOverlayLayer absolute t-0" ref={layerRef}>
         {vendors.map(vendor =>
           <VendorMarker
             map={map}
@@ -257,7 +268,6 @@ const ControlWrapper = L.Control.extend({
 })
 
 const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) =>
-
   <div className="leaflet-bar leafle-control">
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a
@@ -295,9 +305,13 @@ const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) =>
     </a>
   </div>
 
-export const LayoutButtonsContainer = FluxContainer([LayoutStore], layout =>
-  <LayoutButtons
-    expandMapPane={layout.expandMapPane}
-    pinMapPane={layout.pinMapPane}
-    onChange={layout => dispatch({type: 'layout.set', layout})} />
-)
+export const LayoutButtonsContainer = () => {
+  const layout = useFluxStore(LayoutStore)
+  return (
+    <LayoutButtons
+      expandMapPane={layout.expandMapPane}
+      pinMapPane={layout.pinMapPane}
+      onChange={layout => dispatch({type: 'layout.set', layout})}
+    />
+  )
+}

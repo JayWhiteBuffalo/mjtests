@@ -6,24 +6,41 @@ import {Present} from '@util/Present'
 export class RecordStore extends FluxStore {
   constructor(fieldName) {
     super()
-    this.byId = {}
+    this.promisesById = {}
+    this.presentsById = {}
     this.fieldName = fieldName
   }
 
-  get = id => {
-    if (id == null) {
-      return Present.pend
-    }
+  get = () => this.promisesById
 
-    if (!this.byId[id]) {
-      fetch(`/api/${this.fieldName}/${id}/`)
-        .then(jsonOnOk)
-        .then(record => {
-          this.byId[id] = Present.resolve(record)
-          this.notify()
-        })
-      this.byId[id] = Present.pend
+  fetch(id) {
+    return fetch(`/api/${this.fieldName}/${id}/`)
+      .then(jsonOnOk)
+  }
+
+  getById = id => this.getPresentById(id).get()
+
+  getPromiseById = id => {
+    if (!this.promisesById[id]) {
+      this.promisesById[id] = this.fetch(id)
     }
-    return this.byId[id]
+    return this.promisesById[id]
+  }
+
+  getPresentById = id => {
+    if (!this.presentsById[id]) {
+      Present.xferFromPromise(
+        this.getPromiseById(id),
+        present => this.presentsById[id] = present
+      )
+        .finally(() => this.notify())
+    }
+    return this.presentsById[id]
+  }
+
+  invalidate(id) {
+    delete this.presentsById[id]
+    delete this.promisesById[id]
+    this.notify()
   }
 }

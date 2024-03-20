@@ -7,6 +7,19 @@ import {setRef} from '@util/ReactUtil'
 import {useFluxStore} from '@/state/Flux'
 import {useState, useRef, useCallback, useEffect, forwardRef} from 'react'
 
+export const DropdownMenuButton = ({className, disabled, children, ...rest}) =>
+  <button
+    className={clsx(
+      'px-1 text-sm', 
+      disabled ? 'text-gray-500' : 'text-cyan-700',
+      className,
+    )}
+    disabled={disabled}
+    type="button"
+    {...rest}>
+    {children}
+  </button>
+
 type DropdownItem = {
   key: string,
   name: string,
@@ -15,14 +28,22 @@ type DropdownItem = {
 const Items = forwardRef(({className, items, value, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
     {...rest}
-    className={clsx('DropdownItems', className)}
+    className={clsx(
+      'DropdownItems', 
+      'max-h-[480px] min-w-[208px]',
+      'flex flex-col flex-1 shrink-0 overflow-auto -m-3',
+      className,
+    )}
     ref={ref}>
     {items.map((item, index) =>
       <li
         {...getItemProps({
           onClick: () => onChange(item.key),
         })}
-        className={clsx('DropdownItem', value === item.key && 'selected', index === activeIndex && 'active')}
+        className={clsx(
+          'cursor-pointer hyphens-auto px-2 py-1 text-left hover:bg-gray-100',
+          index === activeIndex && 'bg-gray-100',
+        )}
         key={item.key}
         ref={node => listRef.current[index] = node}
         tabIndex={-1}>
@@ -49,13 +70,12 @@ const commonMiddleware = ({padding = 8} = {}) =>
   ]
 
 const DropdownTopMenu = ({onClose}) =>
-  <div className="DropdownTopMenu">
-    <button
-      className="DropdownMenuButton DropdownCloseButton"
-      type="button"
+  <div className="flex justify-between items-end">
+    <DropdownMenuButton
+      className="DropdownCloseButton"
       onClick={onClose}>
       Done
-    </button>
+    </DropdownMenuButton>
   </div>
 
 const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...rest}, ref) => {
@@ -81,6 +101,9 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
         'dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:enabled:hover:bg-gray-700 dark:enabled:hover:border-gray-700 dark:focus:ring-gray-700',
       ),
     },
+    inner: {
+      base: 'flex items-stretch items-center justify-between w-full transition-all duration-200',
+    },
   }
 
   return (
@@ -88,9 +111,14 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
       color="light"
       {...rest}
       theme={theme}
-      className={clsx('Dropdown', readOnly && 'readonly', className)}
+      className={clsx(
+        'Dropdown', 
+        'w-full max-w-[300px]',
+        readOnly && 'bg-zinc-200 cursor-not-allowed', 
+        className,
+      )}
       ref={ref}>
-      <span className="DropdownText">{text}</span>
+      <span className="DropdownText overflow-hidden text-ellipsis whitespace-nowrap">{text}</span>
       {!readOnly ? <HiOutlineChevronDown className="ml-2 h-4 w-4" /> : undefined}
     </Button>
   )
@@ -167,7 +195,12 @@ export const Dropdown = forwardRef(({value, items, disabled, readOnly, onChange,
         <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
           <div
             {...getFloatingProps({})}
-            className={`DropdownPopover DropdownPane shadow small`}
+            className={clsx(
+              `DropdownPopover DropdownPane shadow`,
+              'bg-white border border-gray-300 z-20',
+              'max-h-[80vh]',
+              'flex flex-1 px-3 flex-col',
+            )}
             ref={refs.setFloating}
             style={isMobile ? mobileFloatingStyles : floatingStyles}>
             <DropdownTopMenu onClose={onClose} />
@@ -178,7 +211,7 @@ export const Dropdown = forwardRef(({value, items, disabled, readOnly, onChange,
               listRef={listRef}
               onChange={onChangeItem}
               value={value}
-              />
+            />
           </div>
         </FloatingFocusManager>
       </FloatingPortal>
@@ -290,7 +323,12 @@ export const Typeahead = forwardRef(({value, TypeaheadStore, onChange, ...rest}:
         <div
           {...getFloatingProps()}
           ref={refs.setFloating}
-          className={clsx('DropdownPopover DropdownPane large', !items.length && 'invisible')}
+          className={clsx(
+            'DropdownPopover DropdownPane', 
+            'bg-white border border-gray-300 z-20',
+            !items.length && 'invisible',
+            'flex flex-1 px-3 flex-col',
+          )}
           style={floatingStyles}>
           <DropdownTopMenu onClose={onClose} />
           <Items
@@ -300,7 +338,7 @@ export const Typeahead = forwardRef(({value, TypeaheadStore, onChange, ...rest}:
             listRef={listRef}
             onChange={onChangeItem}
             value={value}
-            />
+          />
         </div>
       </FloatingFocusManager>
     </FloatingPortal>

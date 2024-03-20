@@ -1,13 +1,15 @@
 'use client'
 import Link from 'next/link'
+import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueExternalLink} from '@components/Link'
 import {Button} from 'flowbite-react'
-import {None, Unknown, InfoSection, AuditingSection} from '@app/admin/components/InfoSection'
+import {None, Unknown, InfoSection} from '@components/InfoSection'
 import {PhoneLink, VendorPopupContent} from '@app/(shop)/components/VendorPopup'
 import {VendorUtil} from '@util/VendorUtil'
+import {AdminPane} from '@app/admin/components/Pane'
 
 export const VendorPane = ({vendor, canEdit}) =>
-  <div className="AdminPane">
+  <AdminPane>
     <div className="flex justify-end gap-2">
       {
         canEdit
@@ -123,8 +125,7 @@ export const VendorPane = ({vendor, canEdit}) =>
       </header>
       <PreviewContainer vendor={vendor} />
     </InfoSection>
-
-  </div>
+  </AdminPane>
 
 export const PreviewContainer = ({vendor}) =>
   <div className="flex gap-4 flex-wrap items-center">

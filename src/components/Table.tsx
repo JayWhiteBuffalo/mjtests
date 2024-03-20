@@ -1,5 +1,4 @@
 'use client'
-import './Table.css'
 import ObjectUtil from '@util/ObjectUtil'
 import {BlueLink} from '@components/Link'
 import {Checkbox} from 'flowbite-react'

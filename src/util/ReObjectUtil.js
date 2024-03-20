@@ -1,5 +1,6 @@
 import ObjectUtil from '@util/ObjectUtil'
 
+// Utility methods that act on objects and preserve referential equality
 const ReObjectUtil = {
   merge(xs, ys) {
     let changed = false

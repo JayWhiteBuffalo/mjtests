@@ -1,5 +1,4 @@
 import {FilterStore, MapStore, LayoutStore, RouteStore} from '../state/UIStore'
-import {Dispatcher} from '@/state/Flux'
 
 const RouteActions = {
   initialize: ({pathname, query}) => {
@@ -64,6 +63,3 @@ export const Actions = {
   map: MapActions,
   route: RouteActions,
 }
-
-export const dispatcher = new Dispatcher(Actions)
-export const dispatch = dispatcher.dispatch.bind(dispatcher)

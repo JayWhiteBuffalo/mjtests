@@ -1,30 +1,36 @@
 import './TerpeneSelector.css'
+import clsx from 'clsx'
 import {Button} from 'flowbite-react'
 import {forwardRef, useState, useCallback, useRef} from 'react'
 import {HiOutlineChevronDown} from "react-icons/hi"
 import {Treemap} from '@/Treemap'
 import {useFloating, useClick, useDismiss, useRole, useListNavigation, useTypeahead, useInteractions, flip, offset, shift, size, FloatingFocusManager, FloatingPortal} from '@floating-ui/react'
 
-export const TerpeneSelectorItem = forwardRef(({terp, onClick, showDetails, ...props}, ref) =>
+export const TerpeneSelectorItem = forwardRef(({terp, disabled, onClick, showDetails, ...props}, ref) =>
   <li>
     <button
       {...props}
-      className="TerpeneSelectorItem"
+      className={clsx(
+        'TerpeneSelectorItem',
+        'block border-t-2 text-gray-700 text-sm w-full text-left pb-1',
+         disabled ? 'opacity-70 bg-green-300' : 'hover:bg-gray-100',
+      )}
+      disabled={disabled}
       onClick={() => onClick && onClick(terp.name)}
       ref={ref}
       style={{borderColor: terp.color}}
       type="button">
-      <div className="TerpeneSelectorName" style={{color: terp.color}}>
+      <p className="text-xl leading-tight capitalize" style={{color: terp.color}}>
         {terp.name}
-      </div>
+      </p>
       {
         showDetails && terp.scents
-          ? <div className="TerpeneSelectorScents">Scents: {terp.scents}</div>
+          ? <p>Scents: {terp.scents}</p>
           : undefined
       }
       {
         showDetails && terp.properties && terp.properties.length
-          ? <div className="TerpeneSelectorProperties">Properties: {terp.properties.join(', ')}</div>
+          ? <p className="leading-tight">Properties: {terp.properties.join(', ')}</p>
           : undefined
       }
     </button>
@@ -91,9 +97,12 @@ export const TerpeneSelector = ({onSelect, disabledTerps = {}}) => {
             {...getFloatingProps()}
             open={true}
             ref={refs.setFloating}
-            className="shadow TerpeneSelectorPopover"
+            className={clsx(
+              'shadow TerpeneSelectorPopover',
+              'bg-white border border-gray-300 max-h-[80vh] overflow-scroll p-3 z-20',
+            )}
             style={isMobile ? mobileFloatingStyles : floatingStyles}>
-            <ol className="TerpeneSelectorList">
+            <ul className="TerpeneSelectorList grid text-xs gap-x-2">
               {terpProps.map((terp, index) =>
                 <TerpeneSelectorItem
                   {...getItemProps()}
@@ -104,7 +113,7 @@ export const TerpeneSelector = ({onSelect, disabledTerps = {}}) => {
                   tabIndex={activeIndex === index ? 0 : -1}
                   terp={terp} />
               )}
-            </ol>
+            </ul>
           </dialog>
         </FloatingFocusManager>
       </FloatingPortal>

@@ -1,16 +1,15 @@
-import {dispatch} from '../state/Action'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
-import {FluxStore} from '@/state/Flux'
+import {FluxFieldStore, dispatch} from '@/state/Flux'
 import {UrlUtil} from '@util/UrlUtil'
 
-export const RouteStore = new class extends FluxStore {
+export const RouteStore = new class extends FluxFieldStore {
   replace(query) {
     const url = UrlUtil.makeUrl(this.value.pathname, {...this.value.query, ...query})
     window.history.replaceState(null, '', url.toString())
   }
 }()
 
-export const FilterStore = new class extends FluxStore {
+export const FilterStore = new class extends FluxFieldStore {
   constructor() {
     super()
     this.value = ProductFilterUtil.defaultFilter()
@@ -29,7 +28,7 @@ export const FilterStore = new class extends FluxStore {
   }
 }()
 
-export const LayoutStore = new class extends FluxStore {
+export const LayoutStore = new class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {
@@ -37,7 +36,7 @@ export const LayoutStore = new class extends FluxStore {
       pinMapPane: false,
       productListMode: 'full',
       showFilterPane: true,
-      showMapPane: false,
+      showMapPane: true,
     }
   }
 
@@ -46,7 +45,7 @@ export const LayoutStore = new class extends FluxStore {
   }
 }()
 
-export const MapStore = new class extends FluxStore {
+export const MapStore = new class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {

@@ -125,14 +125,6 @@ const ObjectUtil = {
     return ys
   },
 
-  fromEntries(entries) {
-    const xs = {}
-    for (const [k, v] of entries) {
-      xs[k] = v
-    }
-    return xs
-  },
-
   dfs: function*(xs, path = []) {
     if (typeof xs === 'object') {
       yield [xs, path]
@@ -143,6 +135,44 @@ const ObjectUtil = {
         }
       }
     }
+  },
+
+  deepClone(xs) {
+    const ys = {}
+    for (const key in xs) {
+      const xValue = xs[key]
+      ys[key] = typeof xValue === 'object'
+        ? ObjectUtil.deepClone(xValue)
+        : xValue
+    }
+    return ys
+  },
+
+  deepMergeInto(xs, ys) {
+    for (const yKey in ys) {
+      const xValue = xs[yKey]
+      const yValue = ys[yKey]
+      xs[yKey] = typeof xValue === 'object' && typeof yValue === 'object'
+        ? ObjectUtil.deepMergeInto(xValue, yValue)
+        : yValue
+    }
+    return xs
+  },
+
+  deepDeleteWith(xs, ys) {
+    for (const yKey in ys) {
+      const xValue = xs[yKey]
+      const yValue = ys[yKey]
+      if (typeof xValue === 'object' && typeof yValue === 'object') {
+        ObjectUtil.deepDeleteWith(xValue, yValue)
+        if (ObjectUtil.isEmpty(xValue)) {
+          delete xs[yKey]
+        }
+      } else {
+        delete xs[yKey]
+      }
+    }
+    return xs
   },
 }
 

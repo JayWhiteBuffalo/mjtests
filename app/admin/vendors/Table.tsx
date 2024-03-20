@@ -31,7 +31,7 @@ export const VendorTable = ({vendors}) => {
   return (
     <>
       <ActionBar />
-      <TMTable columns={columns} items={producers} />
+      <TMTable columns={columns} items={vendors} />
     </>
   )
 }

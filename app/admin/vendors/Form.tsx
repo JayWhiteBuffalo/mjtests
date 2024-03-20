@@ -18,7 +18,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
   })
 
   return (
-    <form className="AdminForm" action={handleSubmit(action)} onKeyDown={e => console.log(e)}>
+    <form className="AdminForm" action={handleSubmit(action)}>
       <section>
         <h2>Store</h2>
 

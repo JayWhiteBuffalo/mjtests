@@ -1,4 +1,3 @@
-import './Form.css'
 import clsx from 'clsx'
 import ObjectUtil from '@util/ObjectUtil'
 import {CgClose} from 'react-icons/cg'
@@ -43,7 +42,7 @@ export const RecursiveErrors = ({errors, showPath}) =>
   </>
 
 export const FieldDesc = ({children, id}) =>
-  <p id={id} className="FieldDesc">{children}</p>
+  <p id={id} className="text-gray-600">{children}</p>
 
 export const useTreemapForm = options => {
   const methods = useForm(options)
@@ -92,7 +91,7 @@ export const FormError = ({errors}) =>
   <RecursiveErrors errors={errors?.root} />
 
 export const FormField = ({children}) =>
-  <div className="FormField">
+  <div className="my-4">
     {children}
   </div>
 

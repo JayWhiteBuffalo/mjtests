@@ -1,17 +1,19 @@
 'use client'
 import Link from 'next/link'
 import MathUtil from '@util/MathUtil'
+import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueLink} from '@components/Link'
 import {Button, Spinner} from 'flowbite-react'
-import {None, Unknown, InfoSection, AuditingSection} from '@app/admin/components/InfoSection'
+import {None, Unknown, InfoSection} from '@components/InfoSection'
 import {Present} from '@util/Present'
 import {Product} from '@app/(shop)/components/ProductList'
 import {Treemap} from '@/Treemap'
 import {useFluxStore} from '@/state/Flux'
 import {VendorStore} from '@app/admin/state/DataStore'
+import {AdminPane} from '@app/admin/components/Pane'
 
 export const ProductPane = ({product, canEdit}) =>
-  <div className="AdminPane">
+  <AdminPane>
     <div className="flex justify-end gap-2">
       {
         canEdit
@@ -174,12 +176,12 @@ export const ProductPane = ({product, canEdit}) =>
       </header>
       <PreviewContainer product={product} />
     </InfoSection>
-  </div>
+  </AdminPane>
 
 export const PreviewContainer = ({product}) => {
   useFluxStore(VendorStore)
   const vendorPresent = product.vendorId
-    ? VendorStore.get(product.vendorId)
+    ? VendorStore.getPresentById(product.vendorId)
     : Present.resolve(null)
 
   return vendorPresent
@@ -199,6 +201,6 @@ export const PreviewContainer = ({product}) => {
         </ul>
       </div>
     )
-    .orLoading(() => <Spinner />)
+    .orPending(() => <Spinner />)
 }
 

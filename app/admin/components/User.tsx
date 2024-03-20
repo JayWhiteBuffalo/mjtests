@@ -4,7 +4,7 @@ import {useFluxStore} from '@/state/Flux'
 
 export const UserLinkContainer = ({userId}) => {
   useFluxStore(UserStore)
-  const text = UserStore.get(userId)
+  const text = UserStore.getPresentById(userId)
     .then(user => `<${user.email}>`)
     .orElse(() => `<user:${userId}>`)
   return (

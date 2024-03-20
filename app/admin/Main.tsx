@@ -14,8 +14,8 @@ export const makeMain = ({getRoute, Page}) => async ({params}) => {
     redirect('/business')
   }
   const route = await getRoute(params)
-  const rootPageKey = route[1].segment
-  if (!canUseRootPage(user, rootPageKey)) {
+  const rootPageKey = route[1]?.segment
+  if (rootPageKey && !canUseRootPage(user, rootPageKey)) {
     return <UnauthorizedPage />
   }
   return (

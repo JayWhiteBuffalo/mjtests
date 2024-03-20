@@ -1,8 +1,10 @@
 'use client'
 import clsx from 'clsx'
+import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueLink} from '@components/Link'
 import {Button} from 'flowbite-react'
-import {None, InfoSection, AuditingSection} from '@app/admin/components/InfoSection'
+import {None, InfoSection} from '@components/InfoSection'
+import {AdminPane} from '@app/admin/components/Pane'
 
 export const VendorSection = ({vendor}) =>
   <InfoSection>
@@ -35,8 +37,7 @@ export const ProducerSection = ({producer}) =>
   </InfoSection>
 
 export const RequestPane = ({request, canEdit, approve, reject}) =>
-  <div className="AdminPane">
-
+  <AdminPane>
     {
       canEdit
         ? <div className="flex justify-end gap-2">
@@ -73,4 +74,4 @@ export const RequestPane = ({request, canEdit, approve, reject}) =>
     {request.producer ? <ProducerSection producer={request.producer} /> : undefined}
 
     <AuditingSection record={request} isAdmin={true} />
-  </div>
+  </AdminPane>

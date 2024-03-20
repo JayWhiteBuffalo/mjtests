@@ -1,4 +1,3 @@
-import './VendorPopup.css'
 import ArrayUtil from '@util/ArrayUtil'
 import DateUtil from '@util/DateUtil'
 import {BlueExternalLink} from '@components/Link'
@@ -98,10 +97,10 @@ const VendorHours = ({schedule}) => {
 
     return (
       <Fragment key={dayOfWeek}>
-        <dt className={dayOfWeek === nowDayOfWeek ? 'today' : ''}>
+        <dt className={dayOfWeek === nowDayOfWeek ? 'font-bold' : ''}>
           <time dateTime={day}>{VendorSchedule.daysOfWeek[dayOfWeek].name}</time>
         </dt>
-        <dd className={dayOfWeek === nowDayOfWeek ? 'today' : ''}>
+        <dd className={dayOfWeek === nowDayOfWeek ? 'font-bold' : ''}>
           {VendorSchedule.formatDaySchedule(daySchedule)}
           {namedDay && namedDay.holiday ? ` (${namedDay.name})` : undefined}
         </dd>
@@ -112,7 +111,11 @@ const VendorHours = ({schedule}) => {
   return (
     <>
       <div className="font-bold">Store Hours</div>
-      <dl className="VendorHours">
+      <dl
+        className="grid mb-1 leading-tight"
+        style={{
+          gridTemplateColumns: '100px 1fr',
+        }}>
         {lines}
       </dl>
     </>
@@ -129,8 +132,8 @@ export const VendorRating = ({rating}) =>
 
 export const VendorPopupContent = ({vendor}) => {
   return (
-    <div className="VendorPopupContent">
-      <div className="VendorPopupName">{vendor.name}</div>
+    <div className="text-left text-sm">
+      <div className="text-base font-bold">{vendor.name}</div>
       {vendor.location ? <VendorLocation location={vendor.location} /> : undefined}
       <VendorOperatingStatus status={vendor.operatingStatus} />
       {vendor.openStatus ? <OpenStatus status={vendor.openStatus} /> : undefined}
@@ -143,7 +146,7 @@ export const VendorPopupContent = ({vendor}) => {
 
 export const VendorPopupContentContainer = ({vendorId}) => {
   useFluxStore(VendorStore)
-  return VendorStore.get(vendorId)
+  return VendorStore.getPresentById(vendorId)
     .then(vendor => <VendorPopupContent vendor={vendor} />)
     .orElse(() => <Spinner />)
 }

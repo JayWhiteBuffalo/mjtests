@@ -46,7 +46,9 @@ export const BusinessFooter = () =>
           </div>
         </div>
       </div>
+
       <Footer.Divider />
+
       <div className="w-full sm:flex sm:items-center sm:justify-between">
         <Footer.Copyright href="#" by="Treemap" year={2024} />
         <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">

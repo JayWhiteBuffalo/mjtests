@@ -11,4 +11,11 @@ export default {
       return map.get(x)
     }
   },
+
+  // Memoized variant of the Y combinator
+  memoizeY(f) {
+    let yf
+    yf = FnUtil.memoize(x => f(x, yf))
+    return yf
+  },
 }

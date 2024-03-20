@@ -1,6 +1,6 @@
-'use server'
-import {HiHome} from 'react-icons/hi'
 import {Breadcrumb} from '@app/admin/components/Breadcrumb'
+import {HiHome} from 'react-icons/hi'
+import {makeMain} from '@app/admin/Main'
 
 export const getRoute = async () => [{
   Icon: HiHome,
@@ -8,12 +8,10 @@ export const getRoute = async () => [{
   segment: 'admin'
 }]
 
-export default async ({}) => {
+const Page = async ({user}) => {
   return (
-    <>
-      <Breadcrumb items={await getRoute()} />
-      <div>Welcome to AdminApp</div>
-    </>
+    <div>Welcome to AdminApp</div>
   )
 }
 
+export default makeMain({Page, getRoute})

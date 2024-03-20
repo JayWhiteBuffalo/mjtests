@@ -27,7 +27,7 @@ export const ProductTable = ({products}) => {
   return (
     <>
       <ActionBar />
-      <TMTable columns={columns} items={producers} />
+      <TMTable columns={columns} items={products} />
     </>
   )
 }

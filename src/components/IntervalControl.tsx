@@ -1,4 +1,3 @@
-import './IntervalControl.css'
 import clsx from 'clsx'
 import {orEmpty} from '@util/ValidationUtil'
 import {TextInput} from 'flowbite-react'
@@ -93,7 +92,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   return (
     <TextInput
       {...rest}
-      className="IntervalTextboxItem"
+      className="w-[80px]"
       max={bound[1]}
       min={bound[0]}
       onBlur={onBlur}
@@ -101,26 +100,35 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
       onFocus={useCallback(() => setFocus(true), [])}
       onKeyDown={onKeyDown}
       type="number"
+      theme={{
+        field: {
+          input: {
+            base: 'text-center !pr-0 w-full',
+          },
+        },
+      }}
       value={text}
-      />
+    />
   )
 }
 
 export const IntervalTextbox = ({id, className, bound, value, step, onChange}: IntervalTextboxProps) =>
-  <div className={clsx('IntervalTextbox', className)}>
+  <div className={clsx('flex gap-1', className)}>
     <IntervalTextboxItem
       id={id + '.min'}
       placeholder="MIN"
       bound={bound}
       step={step ?? 1}
       value={value[0]}
-      onChange={x => onChange([x, value[1]])} />
+      onChange={x => onChange([x, value[1]])}
+    />
     <IntervalTextboxItem
       id={id + '.max'}
       placeholder="MAX"
       bound={bound}
       step={step ?? 1}
       value={value[1]}
-      onChange={x => onChange([value[0], x])} />
+      onChange={x => onChange([value[0], x])}
+    />
   </div>
 

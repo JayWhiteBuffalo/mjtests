@@ -1,13 +1,15 @@
 'use client'
 import Link from 'next/link'
+import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueExternalLink} from '@components/Link'
 import {Button} from 'flowbite-react'
 import {Image} from '@components/Image'
-import {None, Unknown, InfoSection, AuditingSection} from '@app/admin/components/InfoSection'
+import {None, Unknown, InfoSection} from '@components/InfoSection'
 import {PhoneLink} from '@app/(shop)/components/VendorPopup'
+import {AdminPane} from '@app/admin/components/Pane'
 
 export const ProducerPane = ({producer, canEdit}) =>
-  <div className="AdminPane">
+  <AdminPane>
     <div className="flex justify-end gap-2">
       {
         canEdit
@@ -80,7 +82,7 @@ export const ProducerPane = ({producer, canEdit}) =>
             <div className="w-24 h-18">
               <Image 
                 alt="Logo of producer"
-                className="object-fit" 
+                className="object-cover" 
                 fill={true} 
                 publicId={producer.mainImageRefId} 
                 />
@@ -107,5 +109,5 @@ export const ProducerPane = ({producer, canEdit}) =>
     </InfoSection>
 
     <AuditingSection record={producer} isAdmin={true} />
-  </div>
+  </AdminPane>
 

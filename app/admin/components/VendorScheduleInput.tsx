@@ -1,4 +1,3 @@
-import './VendorScheduleInput.css'
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import DateUtil from '@util/DateUtil'
@@ -34,13 +33,13 @@ export const TimeOfDay = forwardRef(({value, onChange, className, ...rest}, ref)
   return (
     <TextInput
       {...rest}
-      className={clsx('TimeOfDayInput', className)}
+      className={clsx('w-[90px]', className)}
       onBlur={onBlur}
       onChange={onInputChange}
       onKeyDown={onKeyDown}
       ref={ref}
       value={text}
-      />
+    />
   )
 })
 TimeOfDay.displayName = 'TimeOfDay'
@@ -97,7 +96,7 @@ export const DaySchedule = ({value, disabled, onChange}) => {
           onChange(rangeToValue([time, range[1]]))
         }}
         value={range[0]}
-        />
+      />
       <TimeOfDay
         disabled={value === 'closed' || disabled}
         onChange={time => {
@@ -105,36 +104,47 @@ export const DaySchedule = ({value, disabled, onChange}) => {
           onChange(rangeToValue([range[0], time]))
         }}
         value={range[1]}
-        />
+      />
     </>
   )
 }
 
 const Header = ({title}) =>
-  <div className="VendorScheduleInputHeader">
-    <p>{title}</p>
+  <div className="contents font-bold">
+    <p className="col-span-2">{title}</p>
     <p>Opens at</p>
     <p>Closes at</p>
   </div>
 
+const VendorScheduleGrid = ({children}) =>
+  <div 
+    className="grid gap-2 items-center my-4"
+    style={{
+      gridTemplateColumns: 'auto min-content max-content max-content',
+    }}>
+    {children}
+  </div>
+
 const WeekHours = ({week, errors, onChange}) =>
-  <div className="VendorScheduleInput">
+  <VendorScheduleGrid>
     <Header title="Weekly Hours" />
+    
     {VendorSchedule.daysOfWeek.map((dayOfWeek, ix) =>
       <Fragment key={ix}>
-        <div className="VendorScheduleInputItem">
-          <div>{dayOfWeek.name}</div>
-          <DaySchedule
-            onChange={daySchedule =>
-              onChange(ArrayUtil.splice(week, ix, 1, daySchedule)
-            )}
-            value={week[ix]}
-            />
-        </div>
-        <RecursiveErrors errors={errors?.[ix]} />
+        <div>{dayOfWeek.name}</div>
+
+        <DaySchedule
+          className="mr-4"
+          onChange={daySchedule =>
+            onChange(ArrayUtil.splice(week, ix, 1, daySchedule)
+          )}
+          value={week[ix]}
+        />
+
+        <RecursiveErrors className="col-span-full" errors={errors?.[ix]} />
       </Fragment>
     )}
-  </div>
+  </VendorScheduleGrid>
 
 const HolidayHours = ({special, errors, onChange}) => {
   const daySchedules = useRef(special)
@@ -145,35 +155,37 @@ const HolidayHours = ({special, errors, onChange}) => {
   )
 
   return (
-    <div className="VendorScheduleInput">
+    <VendorScheduleGrid>
       <Header title="Holiday Hours" />
+
       {VendorSchedule.getNamedDaysForYear().map(({key, day}) =>
         <Fragment key={key}>
-          <div className="VendorScheduleInputItem">
-            <LabeledCheckbox
-              checked={key in special}
-              onChange={event => {
-                if (event.target.checked) {
-                  onChange({...special, [key]: daySchedules.current[key]})
-                } else {
-                  onChange(ObjectUtil.delete(special, key))
-                }
-              }}>
-              <time>{day} {VendorSchedule.namedDaysByKey[key].name}</time>
-            </LabeledCheckbox>
-            <DaySchedule
-              disabled={!(key in special)}
-              onChange={daySchedule => {
-                daySchedules.current[key] = daySchedule
-                onChange({...special, [key]: daySchedule})
-              }}
-              value={special[key] ?? daySchedules[key] ?? 'unknown'}
-              />
-          </div>
-          <RecursiveErrors errors={errors?.[key]} />
+          <LabeledCheckbox
+            checked={key in special}
+            onChange={event => {
+              if (event.target.checked) {
+                onChange({...special, [key]: daySchedules.current[key]})
+              } else {
+                onChange(ObjectUtil.delete(special, key))
+              }
+            }}>
+            <time>{day} {VendorSchedule.namedDaysByKey[key].name}</time>
+          </LabeledCheckbox>
+
+          <DaySchedule
+            className="mr-4"
+            disabled={!(key in special)}
+            onChange={daySchedule => {
+              daySchedules.current[key] = daySchedule
+              onChange({...special, [key]: daySchedule})
+            }}
+            value={special[key] ?? daySchedules[key] ?? 'unknown'}
+          />
+
+          <RecursiveErrors className="col-span-full" errors={errors?.[key]} />
         </Fragment>
       )}
-    </div>
+    </VendorScheduleGrid>
   )
 }
 
@@ -185,13 +197,13 @@ export const VendorScheduleInput = ({schedule, errors, onChange}) =>
       week={schedule.week}
       onChange={week => onChange({...schedule, week})}
       errors={errors?.week}
-      />
+    />
     <FieldError error={errors?.week} />
     <HolidayHours
       special={schedule.special}
       onChange={special => onChange({...schedule, special})}
       errors={errors?.special}
-      />
+    />
     <FieldError error={errors?.special} />
   </>
 

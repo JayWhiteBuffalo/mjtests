@@ -1,22 +1,24 @@
 import './ProductList.css'
 import ArrayUtil from '@util/ArrayUtil'
+import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
 import {BlueButton} from '@components/Link'
 import {Button, Dropdown, Spinner} from 'flowbite-react'
-import {Image} from '@components/Image'
+import {ErrorBoundary} from '@components/Error'
 import {FilteredProductStore} from '../state/DataStore'
-import {FluxContainer} from '@/state/Flux'
 import {Fragment, useState, useRef} from 'react'
+import {Image} from '@components/Image'
 import {LayoutStore} from '../state/UIStore'
 import {TerpeneSelectorItem} from '@components/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {useFloating, useClick, useDismiss, useInteractions, flip, offset, shift, FloatingArrow, arrow} from '@floating-ui/react'
+import {useFluxStore} from '@/state/Flux'
 import {VendorPopupContentContainer, OpenStatus, VendorRating} from './VendorPopup'
 
 const emDash = '—'
 
 const ProductTypeLabel = ({product}) =>
-  <div className="ProductTypeLabel">
+  <div className="text-gray-500 text-sm font-bold leading-none uppercase">
     {Treemap.productTypesByKey[product.productType]?.name}
     {
       product.productType === 'concentrate'
@@ -28,7 +30,7 @@ const ProductTypeLabel = ({product}) =>
 const Pill = props =>
   <Button
     {...props}
-    className={`p-0 ${props.className} Pill`}
+    className={`p-0 ${props.className}`}
     pill
     size="xs">
     {props.label}
@@ -36,7 +38,7 @@ const Pill = props =>
 
 const ProductPills = ({product}) =>
   // openNow, closing soon
-  <div className="ProductPills">
+  <div className="flex flex-wrap gap-1 mb-1">
     {
       product.subspecies
         ? <Pill label={Treemap.subspeciesByKey[product.subspecies].name} />
@@ -68,32 +70,37 @@ const VendorNameButton = ({vendor}) =>
   <Dropdown
     inline
     placement="top"
-    renderTrigger={() =><BlueButton>{vendor.name}</BlueButton>}>
-    <Dropdown.Item><VendorPopupContentContainer vendorId={vendor.id} /></Dropdown.Item>
+    renderTrigger={() =><BlueButton>{vendor.name}</BlueButton>}
+  >
+    <Dropdown.Item>
+      <ErrorBoundary>
+        <VendorPopupContentContainer vendorId={vendor.id} />
+      </ErrorBoundary>
+    </Dropdown.Item>
   </Dropdown>
 
 const ProductSubheader = ({product}) =>
   product.vendor
-    ? <div className="ProductSubheader">
-        <span className="ProductVendor">
+    ? <div className="flex justify-between">
+        <span className="text-sm">
           Sold by <VendorNameButton vendor={product.vendor} />
           &nbsp;
           {
             product.distance != null
-              ? <span className="ProductDistance">({MathUtil.roundTo(product.distance / 1609.34, 1)} mi)</span>
+              ? <span className="inline-block">({MathUtil.roundTo(product.distance / 1609.34, 1)} mi)</span>
               : undefined
           }
         </span>
         {
           product.pricePerGram != null
-            ? <span className="ProductPricePerGram">(${MathUtil.roundTo(product.pricePerGram, 1)}/g)</span>
+            ? <span className="text-sm">(${MathUtil.roundTo(product.pricePerGram, 1)}/g)</span>
             : undefined
         }
       </div>
     : undefined
 
 export const ProductAttributeList = ({product}) =>
-  <dl className="ProductAttributeList">
+  <dl className="ProductAttributeList py-1 border-t border-gray-400">
     {
       product.brand
         ? <>
@@ -140,9 +147,7 @@ export const ProductAttributeList = ({product}) =>
     }
   </dl>
 
-const TerpItem = ({enabled, terpName, value}) => {
-  enabled = !!enabled
-
+const TerpItem = ({enabled = false, terpName, value}) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const arrowRef = useRef()
   const {refs, floatingStyles, context} = useFloating({
@@ -174,7 +179,7 @@ const TerpItem = ({enabled, terpName, value}) => {
       {showTooltip &&
         <div
           {...getFloatingProps()}
-          className="TerpTooltip shadow"
+          className="TerpTooltip bg-white border border-gray-400 w-[300px] shadow"
           ref={refs.setFloating}
           style={floatingStyles}>
           <TerpeneSelectorItem terp={terpProps} />
@@ -189,23 +194,31 @@ export const Product = ({product, mode}) => {
   const terpEntries = ArrayUtil.sortBy(Object.entries(product.terps || []), ([_, x]) => -x)
 
   return (
-    <li className={`Product ${mode}`}>
+    <li
+      className={clsx(
+        `Product ${mode}`,
+        'p-2 border-gray-400 border text-base transition',
+      )}>
       {
         product.mainImageRefId
-          ? <div className="ProductImageWrapper">
+          ? <div 
+              className={clsx(
+                'relative',
+                mode === 'full' ? 'h-[240px]' : 'h-[100px]',
+              )}>
               <Image
                 alt="Product"
-                className="ProductImage"
+                className="mx-auto object-contain"
                 fill={true}
                 publicId={product.mainImageRefId}
                 sizes="360px"
-               />
+              />
             </div>
           : undefined
       }
       <ProductTypeLabel product={product} />
-      <div className="ProductHeader">
-        <h5 className="ProductName">{product.name}</h5>
+      <div className="flex justify-between">
+        <h5 className="flex-1 font-bold">{product.name}</h5>
         {
           product.price != null
             ? <span className="ProductPrice">${product.price}</span>
@@ -220,7 +233,7 @@ export const Product = ({product, mode}) => {
       {mode === 'full' ? <ProductAttributeList product={product} /> : undefined}
       {
         terpEntries.length && mode === 'full'
-          ? <ul className="ProductTerpList">
+          ? <ul className="py-1 border-gray-400 border-t flex flex-col items-start">
               {terpEntries.map(([terpName, value]) =>
                 <TerpItem key={terpName} terpName={terpName} value={value} />
               )}
@@ -231,21 +244,56 @@ export const Product = ({product, mode}) => {
   )
 }
 
-const ProductListPane = ({products, mode}) =>
-  <div className="ProductListPane">
-    <ul className={`ProductList ${mode}`}>
-      {products
-        .then(products =>
-          products.length !== 0
-            ? products.map(product => <Product key={product.id} product={product} mode={mode} />)
-            : <span className="EmptyList">No products match your filter criteria</span>
-        )
-        .orElse(() => <Spinner />)
-      }
+const ProductList = ({products, mode}) =>
+  <>
+    <ul 
+      className={clsx(
+        `ProductList ${mode}`,
+        'grid p-2 min-h-0 justify-center',
+        mode === 'full' ? 'gap-3' : undefined,
+      )}>
+      {products.map(product => 
+        <ErrorBoundary key={product.id}>
+          <Product
+            mode={mode} 
+            product={product} 
+          />
+        </ErrorBoundary>
+      )}
     </ul>
+    {products.length === 0
+      ? <p className="text-gray-400 italic my-2 text-center">
+          No products match your filter criteria
+        </p>
+      : undefined
+    }
+  </>
+
+const ProductListPane = ({products, mode}) =>
+  <div 
+    className={clsx(
+      'ProductListPane border-t border-gray-300 flex-1 basis-[400px]',
+      'flex flex-col items-stretch',
+    )}>
+    <ErrorBoundary>
+      {products
+        .then(products => <ProductList products={products} mode={mode} />)
+        .orPending(() => 
+          <div className="flex justify-center">
+            <Spinner size="xl" className="mt-6" />
+          </div>
+        )
+      }
+    </ErrorBoundary>
   </div>
 
-export const ProductListPaneContainer = FluxContainer(
-  [FilteredProductStore, LayoutStore],
-  (products, layout) => <ProductListPane products={products} mode={layout.productListMode} />
-)
+export const ProductListPaneContainer = () => {
+  const products = useFluxStore(FilteredProductStore)
+  const layout = useFluxStore(LayoutStore)
+  return (
+    <ProductListPane 
+      mode={layout.productListMode}
+      products={products} 
+    />
+  )
+}

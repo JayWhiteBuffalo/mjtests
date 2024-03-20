@@ -1,10 +1,9 @@
 'use client'
 import {useEffect, useState} from 'react'
-import assert from 'assert'
 import ObjectUtil from '@util/ObjectUtil'
 import ReObjectUtil from '@util/ReObjectUtil'
 
-export class BaseFluxStore {
+export class FluxStore {
   constructor() {
     this.listenerId = 0
     this.listeners = {}
@@ -25,30 +24,7 @@ export class BaseFluxStore {
   }
 }
 
-export class FluxStore extends BaseFluxStore {
-  constructor() {
-    super()
-    this.value = {}
-  }
-
-  get() {
-    return this.value
-  }
-
-  set(changes) {
-    const newValue = ReObjectUtil.merge(this.value, changes)
-
-    if (this.value !== newValue) {
-      this.value = newValue
-      this.notify()
-      return true
-    } else {
-      return false
-    }
-  }
-}
-
-export class ComputedStore extends BaseFluxStore {
+export class ComputedStore extends FluxStore {
   constructor(fluxStores, f) {
     super()
     this.fluxStores = fluxStores
@@ -77,35 +53,65 @@ export class ComputedStore extends BaseFluxStore {
   }
 }
 
-export const FluxContainer = (fluxStores, C) => {
-  return () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return C(...fluxStores.map(useFluxStore))
+export class FluxFieldStore extends FluxStore {
+  constructor() {
+    super()
+    this.value = {}
+  }
+
+  get() {
+    return this.value
+  }
+
+  set(changes) {
+    const newValue = ReObjectUtil.merge(this.value, changes)
+
+    if (this.value !== newValue) {
+      this.value = newValue
+      this.notify()
+      return true
+    } else {
+      return false
+    }
   }
 }
 
+export const FluxContainer = (fluxStores, C) => () =>
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  C(...fluxStores.map(useFluxStore))
+
 export const useFluxStore = fluxStore => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [_, setDirty] = useState(0)
+  const [_, forceUpdate] = useState({})
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    const increamentDirty = () => setDirty(dirty => dirty + 1)
-    return fluxStore.subscribe(increamentDirty)
+    return fluxStore.subscribe(() => forceUpdate({}))
   }, [fluxStore])
 
   return fluxStore.get()
 }
 
 export class Dispatcher {
-  constructor(actions) {
-    this.actions = actions
+  constructor() {
+    this.actions = {}
   }
 
   dispatch(action) {
     const actionFn = ObjectUtil.getByPath(this.actions, action.type.split('.'))
-    assert(actionFn, 'Invalid action.type %s', action.type)
-    console.log(action)
-    actionFn(action)
+    if (typeof actionFn === 'function') {
+      console.log(action)
+      actionFn?.(action)
+    } else {
+      console.warn(`Invalid action with type=${action.type}`, action)
+    }
+  }
+
+  registerActions(actions) {
+    ObjectUtil.deepMergeInto(this.actions, ObjectUtil.deepClone(actions))
+    return () => ObjectUtil.deepDeleteWith(this.actions, actions)
   }
 }
+
+export const dispatcher = new Dispatcher()
+export const dispatch = dispatcher.dispatch.bind(dispatcher)

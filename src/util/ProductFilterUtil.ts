@@ -1,4 +1,4 @@
-import FlagsUtil from '@util/FlagsUtil'
+import FlagObjectUtil from '@util/FlagObjectUtil'
 import FnUtil from '@util/FnUtil'
 import MathUtil from '@util/MathUtil'
 import ObjectUtil from '@util/ObjectUtil'
@@ -153,7 +153,7 @@ export const ProductFilterUtil = {
 
   flagsFromUrl(urlValue) {
     return urlValue != null
-      ? FlagsUtil.fromIterable(urlValue.split(','))
+      ? FlagObjectUtil.fromIterable(urlValue.split(','))
       : {}
   },
 

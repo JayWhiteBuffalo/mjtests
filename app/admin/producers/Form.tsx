@@ -28,7 +28,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               aria-describedby="name.desc"
               autoComplete="off"
               readOnly={!isAdmin}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc id="name.desc" isAdmin={isAdmin} />
         </FormField>
@@ -45,7 +45,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               autoComplete="street-address"
               id="location.address"
               readOnly={!isAdmin}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc id="location.address.desc2" isAdmin={isAdmin} />
         </FormField>
@@ -61,7 +61,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               {...register('contact.tel')}
               autoComplete="tel"
               id="contact.tel"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -75,7 +75,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               autoComplete="email"
               id="contact.email"
               placeholder="contact@acmejoint.com"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -86,7 +86,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               {...register('contact.url')}
               autoComplete="url"
               id="contact.url"
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -109,7 +109,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
                   imageRefs={imageRefs}
                   mainImageRefId={field.value}
                   onChange={field.onChange}
-                  />
+                />
               }
               />
           </FormField>
@@ -143,7 +143,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               format={orEmpty}
               id="license.number"
               parse={VendorUtil.parsePartialOmmaNumber}
-              />
+            />
           </InputWithError>
           <FieldDesc id="license.number.desc2">
 

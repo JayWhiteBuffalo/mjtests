@@ -1,16 +1,5 @@
-import './InfoSection.css'
+import {Unknown, InfoSection} from '@components/InfoSection'
 import {UserLinkContainer} from './User'
-
-export const None = () =>
-  <span className="text-gray-400">(none)</span>
-
-export const Unknown = () =>
-  <span className="text-gray-400">(unknown)</span>
-
-export const InfoSection = ({children}) =>
-  <section className="InfoSection">
-    {children}
-  </section>
 
 export const AuditingFields = ({record, isAdmin}) =>
   <>

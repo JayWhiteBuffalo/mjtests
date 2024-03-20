@@ -1,9 +1,8 @@
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import {cloudinaryCloudName} from '@/api'
-import {Image} from '@components/Image'
+import {FixedHeightImage} from '@components/Image'
 import {Dropzone, IMAGE_MIME_TYPE} from '@mantine/dropzone';
-import {Group, Text, rem} from '@mantine/core';
 import {RecursiveErrors} from '@components/Form'
 import {TbUpload, TbPhoto, TbX, TbTrash} from 'react-icons/tb';
 import {useCallback, useState} from 'react'
@@ -21,28 +20,60 @@ const upload = async file => {
 }
 
 const Item = ({publicId, selected, onDelete, ...rest}) =>
-  <li className="relative">
+  <li className="relative flex-none group">
     <button
       {...rest}
       type="button"
       className={clsx(
-        'box-content w-[360px] h-60 border-4 rounded-lg overflow-hidden',
+        'box-content border-4 rounded-lg overflow-hidden',
         selected ? 'border-blue-400' : 'border-transparent',
     )}>
-      <Image
+      <FixedHeightImage
         alt="Uploaded image"
-        width={360}
         height={240}
-        sizes="360px"
         publicId={publicId}
        />
     </button>
-    <button type="button" className="absolute right-2 top-2" onClick={onDelete}>
+    <button
+      className="absolute right-2 top-2 group-hover:opacity-100 opacity-0 group-hover:visible invisible"
+      onClick={onDelete}
+      type="button">
       <TbTrash className="w-6 h-6" />
     </button>
   </li>
 
-export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors, imageRefFields, onChange, ...rest}) => {
+export const ImageDropzone = ({onDrop, ...rest}) =>
+  <Dropzone
+    onDrop={onDrop}
+    onReject={files => console.warn('DropzoneInput rejected files', files)}
+    accept={IMAGE_MIME_TYPE}
+    maxSize={10 << 20}
+    {...rest}
+  >
+    <Dropzone.Idle>
+      <TbPhoto className="w-12 h-12 dimmed mt-2" strokeWidth={2} />
+    </Dropzone.Idle>
+    <Dropzone.Accept>
+      <TbUpload className="w-12 h-12 text-blue-600 mt-2" strokeWidth={2} />
+    </Dropzone.Accept>
+    <Dropzone.Reject>
+      <TbX className="w-12 h-12 text-red-600 mt-2" strokeWidth={2} />
+    </Dropzone.Reject>
+
+    <div>
+      <p className="text-lg">
+        Drag images here, or click to select
+      </p>
+      <p className="text-sm text-neutral-400">
+        Supported formats: .png / .gif / .jpeg / .webp / .avif / .heic
+      </p>
+      <p className="text-sm text-neutral-400">
+        Max 10mb
+      </p>
+    </div>
+  </Dropzone>
+
+export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors, imageRefFields, onChange}) => {
   const [imageRefs, setImageRefs] = useState(initialImageRefs)
 
   const onDrop = useCallback(async files => {
@@ -82,45 +113,9 @@ export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors,
 
   return (
     <>
-      <Dropzone
-        onDrop={onDrop}
-        onReject={files => console.warn('DropzoneInput rejected files', files)}
-        maxSize={5 * 1024 ** 2}
-        accept={IMAGE_MIME_TYPE}
-        {...rest}
-      >
-        <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-          <Dropzone.Accept>
-            <TbUpload
-              style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-              stroke={1.5}
-            />
-          </Dropzone.Accept>
-          <Dropzone.Reject>
-            <TbX
-              style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-              stroke={1.5}
-            />
-          </Dropzone.Reject>
-          <Dropzone.Idle>
-            <TbPhoto
-              style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
-              stroke={1.5}
-            />
-          </Dropzone.Idle>
+      <ImageDropzone onDrop={onDrop} />
 
-          <div>
-            <Text size="xl" inline>
-              Drag images here or click to select files
-            </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed 5mb
-            </Text>
-          </div>
-        </Group>
-      </Dropzone>
-
-      <ul className="flex overflow-x-scroll">
+      <ul className="flex overflow-x-scroll gap-2 p-2">
         {imageRefs.map(({publicId}, ix) =>
           <Item
             key={publicId}

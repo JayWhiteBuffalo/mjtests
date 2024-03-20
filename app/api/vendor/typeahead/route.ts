@@ -5,7 +5,6 @@ export async function GET(request: Request) {
   const keyword = url.searchParams.get('keyword')
 
   const vendors = await VendorDto.findMany({
-    select: {name: true},
     where: {
       name: {
         contains: keyword,

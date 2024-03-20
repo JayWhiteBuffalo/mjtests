@@ -1,6 +1,7 @@
 import FnUtil from '@util/FnUtil'
 
-const FlagsUtil = {
+// Utility module for objects whose values are `true`.
+const FlagObjectUtil = {
   toggle(xs, key) {
     const ys = {...xs}
     if (ys[key]) {
@@ -43,4 +44,4 @@ const FlagsUtil = {
   },
 }
 
-export default FlagsUtil
+export default FlagObjectUtil

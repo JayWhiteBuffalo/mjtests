@@ -1,6 +1,6 @@
 'use client'
 import {Button} from 'flowbite-react'
-import {InfoSection} from '@app/admin/components/InfoSection'
+import {InfoSection} from '@components/InfoSection'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 
