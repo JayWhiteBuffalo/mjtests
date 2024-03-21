@@ -86,8 +86,8 @@ const ProductSubheader = ({product}) =>
           Sold by <VendorNameButton vendor={product.vendor} />
           &nbsp;
           {
-            product.distance != null
-              ? <span className="inline-block">({MathUtil.roundTo(product.distance / 1609.34, 1)} mi)</span>
+            product.vendor.distance != null
+              ? <span className="inline-block">({MathUtil.roundTo(product.vendor.distance / 1609.34, 1)} mi)</span>
               : undefined
           }
         </span>

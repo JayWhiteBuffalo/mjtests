@@ -43,7 +43,7 @@ export const FilteredProductStore = new class extends FluxFieldStore {
 export const FilteredVendorStore = new ComputedStore([FilteredProductStore], productsPresent =>
   productsPresent.then(products => {
     const byName = ObjectUtil.map(products, (_, product) => [product.vendor.name, product.vendor])
-    return ArrayUtil.sortBy(Object.values(byName), x => [x.distance, x.name])
+    return ArrayUtil.sortBy(Object.values(byName), vendor => [vendor.distance ?? Infinity, vendor.name])
   })
 )
 

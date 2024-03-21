@@ -100,6 +100,7 @@ const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
 export const MapContainer = () => {
   const map = useFluxStore(MapStore)
   const vendors = useLastPresent(useFluxStore(FilteredVendorStore))
+    .then(vendors => vendors.filter(vendor => vendor.latLng))
   const layout = useFluxStore(LayoutStore)
 
   const onChange = useCallback(map => dispatch({type: 'map.panAndZoom', map}), [])
@@ -247,7 +248,8 @@ const MapOverlay = ({vendors, map}) => {
           <VendorMarker
             map={map}
             vendor={vendor}
-            key={vendor.key} />
+            key={vendor.key}
+          />
         )}
       </div>
     </div>

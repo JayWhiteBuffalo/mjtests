@@ -59,10 +59,7 @@ export const ProductUtil = {
     return StringUtil.wordsToKebab(words).substring(0, 48)
   },
 
-  populateDistance(product, center) {
-    product.distance = product.vendor.latLng
-      ? MathUtil.earthDistance(product.vendor.latLng, center)
-      : undefined
+  populateFlags(product) {
     product.flags.openNow = product.vendor.openStatus.isOpen
   },
 }

@@ -73,6 +73,10 @@ const VendorDto = {
 
     if (vendorId) {
       assert(await VendorDto.canEdit(user, vendorId))
+      if (vendor.location) {
+        vendor.location._latLng ??= vendor.latLng
+        vendor.latLng ??= vendor.location._latLng
+      }
       await prisma.vendor.update({
         where: {id: vendorId},
         data: {

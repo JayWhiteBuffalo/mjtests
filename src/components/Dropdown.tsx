@@ -25,7 +25,7 @@ type DropdownItem = {
   name: string,
 }
 
-const Items = forwardRef(({className, items, value, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
+const Items = forwardRef(({className, items, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
     {...rest}
     className={clsx(
@@ -210,7 +210,6 @@ export const Dropdown = forwardRef(({value, items, disabled, readOnly, onChange,
               items={items}
               listRef={listRef}
               onChange={onChangeItem}
-              value={value}
             />
           </div>
         </FloatingFocusManager>
@@ -337,7 +336,6 @@ export const Typeahead = forwardRef(({value, TypeaheadStore, onChange, ...rest}:
             items={items}
             listRef={listRef}
             onChange={onChangeItem}
-            value={value}
           />
         </div>
       </FloatingFocusManager>

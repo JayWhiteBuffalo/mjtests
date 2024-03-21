@@ -50,6 +50,12 @@ export const VendorUtil = {
     return vendor
   },
 
+  populateDistance(vendor, center) {
+    vendor.distance = vendor.latLng
+      ? MathUtil.earthDistance(vendor.latLng, center)
+      : undefined
+  },
+
   ommaNumberPattern: /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
 
   parsePartialOmmaNumber(x) {

@@ -69,9 +69,8 @@ export const ProductFilterUtil = {
   },
 
   testLocationFilter(filterLocation, product) {
-    const distance = MathUtil.earthDistance(product.vendor.latLng, filterLocation.center)
     return filterLocation.distance === undefined
-      || distance <= filterLocation.distance * 1609.34
+      || (product.vendor.distance ?? Infinity) <= filterLocation.distance * 1609.34
   },
 
   testFlagsFilter(filterFlags, product) {

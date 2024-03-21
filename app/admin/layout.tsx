@@ -8,7 +8,7 @@ import UserDto from '@data/UserDto'
 import {AdminNavbar} from './components/Navbar'
 import {AdminSidebar} from './components/Sidebar'
 import {ColorSchemeScript} from '@mantine/core'
-import {createTheme, MantineProvider} from '@mantine/core';
+import {MantineProvider} from '@mantine/core';
 import {Inter} from 'next/font/google'
 import {siteName} from '@components/Site'
 

@@ -1,4 +1,3 @@
-import {Breadcrumb} from '@app/admin/components/Breadcrumb'
 import {HiHome} from 'react-icons/hi'
 import {makeMain} from '@app/admin/Main'
 
@@ -8,7 +7,7 @@ export const getRoute = async () => [{
   segment: 'admin'
 }]
 
-const Page = async ({user}) => {
+const Page = async ({}) => {
   return (
     <div>Welcome to AdminApp</div>
   )

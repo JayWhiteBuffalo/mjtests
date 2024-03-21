@@ -61,7 +61,8 @@ const ProductDto = {
 
     for (const product of products) {
       VendorUtil.populate(product.vendor)
-      ProductUtil.populateDistance(product, filter.location.center)
+      VendorUtil.populateDistance(product.vendor, filter.location.center)
+      ProductUtil.populateFlags(product)
     }
 
     if (filter.flags.openNow) {
@@ -73,7 +74,7 @@ const ProductDto = {
     }
 
     if (filter.sortBy === 'distance') {
-      ArrayUtil.sortInPlaceBy(products, x => [x.distance, x.name])
+      ArrayUtil.sortInPlaceBy(products, x => [x.vendor.distance ?? Infinity, x.name])
     }
 
     return products
