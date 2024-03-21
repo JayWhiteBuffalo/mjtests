@@ -7,6 +7,7 @@ import {prisma} from '@/db'
 import {z} from 'zod'
 
 export const config = {
+  trustHost: true,
   theme: {
     logo: 'https://next-auth.js.org/img/logo/logo-sm.png',
   },
