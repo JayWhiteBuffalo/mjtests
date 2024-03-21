@@ -16,7 +16,7 @@ const Page = async ({}) =>
       populate={populate}
       truncateData={truncateData}
       truncateUser={truncateUser}
-      />
+    />
   </div>
 
 export default makeMain({Page, getRoute})

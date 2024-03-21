@@ -60,7 +60,9 @@ export const ProductUtil = {
   },
 
   populateDistance(product, center) {
-    product.distance = MathUtil.earthDistance(product.vendor.latLng, center)
+    product.distance = product.vendor.latLng
+      ? MathUtil.earthDistance(product.vendor.latLng, center)
+      : undefined
     product.flags.openNow = product.vendor.openStatus.isOpen
   },
 }

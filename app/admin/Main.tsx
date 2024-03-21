@@ -27,4 +27,4 @@ export const makeMain = ({getRoute, Page}) => async ({params}) => {
 }
 
 export const UnauthorizedPage = () =>
-  <div className="UnauthorizedPage">This feature is currently unavailable.</div>
+  <div className="text-gray-800">This feature is currently unavailable.</div>
