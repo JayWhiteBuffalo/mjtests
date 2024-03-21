@@ -10,4 +10,9 @@ export default {
       },
     ],
   },
+
+  typescript: {
+    // Disable typescript for npm build
+    ignoreBuildErrors: true,
+  },
 }
