@@ -79,7 +79,9 @@ const pagesCanUse = {
     if (user.roles.includes('admin')) {
       return true
     }
-    if (user.loggedIn && process.env.NODE_ENV === 'development') {
+
+    //if (user.loggedIn && process.env.NODE_ENV === 'development') {
+    if (user.loggedIn) {
       return true
     }
     return false
