@@ -21,7 +21,7 @@ export class TypeaheadStore extends FluxStore {
       this.lastKeyword = keyword
     }
 
-    if (!this.valid) {
+    if (!this.valid && typeof window !== 'undefined') {
       this.valid = true
       this.searchFetcher.fetch(keyword)
         .then(jsonOnOk)
