@@ -2,14 +2,15 @@
 
 ## Run locally
 
-1. Clone this repo, and then run `npm install` to install dependencies:
+1. Clone this repo, and then run `pnpm install` to install dependencies:
 ```bash
 cd ~/src
 git clone git@github.com:dhe128/treemap-three.git
 cd treemap-three
-npm install
+npm install -g pnpm
+pnpm install
 ```
-`npm install` will need to be rerun whenever the new dependencies are added or removed.
+`pnpm install` will need to be rerun whenever the new dependencies are added or removed.
 
 2. Set up your local PostgreSQL instance
 * 2a. Download and install PostgreSQL 16, then start it.

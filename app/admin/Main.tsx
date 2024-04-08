@@ -1,7 +1,7 @@
 import UserDto from '@data/UserDto'
 import {Breadcrumb} from '@app/admin/components/Breadcrumb'
 import {canUseRootPage, canUseAdmin} from './RootPage'
-import {getPathname} from 'next-impl-getters/get-pathname'
+import {getPathname} from '@nimpl/getters/get-pathname'
 import {redirect} from 'next/navigation'
 import {signIn} from '@/auth'
 
