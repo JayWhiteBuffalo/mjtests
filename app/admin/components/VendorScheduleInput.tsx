@@ -32,13 +32,13 @@ export const TimeOfDay = forwardRef(({value, onChange, className, ...rest}, ref)
 
   return (
     <TextInput
-      {...rest}
       className={clsx('w-[90px]', className)}
       onBlur={onBlur}
       onChange={onInputChange}
       onKeyDown={onKeyDown}
       ref={ref}
       value={text}
+      {...rest}
     />
   )
 })

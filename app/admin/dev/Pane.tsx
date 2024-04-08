@@ -10,14 +10,14 @@ const DevActionButton = ({action, children, ...rest}) => {
 
   return (
     <Button
-      {...rest}
       isProcessing={isLoading}
       onClick={async () => {
         setIsLoading(true)
         await action()
         setIsLoading(false)
         router.refresh()
-      }}>
+      }}
+      {...rest}>
       {children}
     </Button>
   )

@@ -39,7 +39,7 @@ export const RecursiveErrors = ({errors, showPath}) =>
         key={path.join('.')}
         error={error}
         path={!!showPath ? path : undefined}
-        />
+      />
     )}
   </>
 
@@ -107,12 +107,12 @@ export const LabeledCheckbox = forwardRef(({children, disabled, id, className, .
       disabled={disabled}
       htmlFor={id}>
       <Checkbox
-        {...rest}
         className={clsx('mr-2 bg-gray-50', className)}
         disabled={disabled}
         id={id}
         ref={ref}
-        />
+        {...rest}
+      />
       {children}
     </Label>
   )
@@ -129,12 +129,12 @@ export const LabeledRadio = forwardRef(({children, disabled, id, className, ...r
       disabled={disabled}
       htmlFor={id}>
       <Radio
-        {...rest}
         className={clsx('mr-2 bg-gray-50', className)}
         disabled={disabled}
         id={id}
         ref={ref}
-        />
+        {...rest}
+      />
       {children}
     </Label>
   )

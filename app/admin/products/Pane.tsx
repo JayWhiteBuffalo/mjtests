@@ -191,13 +191,13 @@ export const PreviewContainer = ({product}) => {
           <Product
             product={{...product, vendor}}
             mode="full"
-            />
+          />
         </ul>
         <ul className="w-[280px] bg-white">
           <Product
             product={{...product, vendor}}
             mode="compact"
-            />
+          />
         </ul>
       </div>
     )

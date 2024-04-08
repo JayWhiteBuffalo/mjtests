@@ -24,7 +24,7 @@ const Page = async ({user, vendorId}) => {
       {...await getFormProps(user, vendorId)}
       action={save.bind(null, vendorId)}
       vendor={vendor}
-      />
+    />
   )
 }
 

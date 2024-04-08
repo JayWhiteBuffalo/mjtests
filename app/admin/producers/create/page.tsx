@@ -22,7 +22,7 @@ const Page = async ({user}) => {
       {...await getFormProps(user, undefined)}
       action={save.bind(null, undefined)}
       producer={ProducerUtil.empty()}
-      />
+    />
   )
 }
 

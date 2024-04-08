@@ -25,14 +25,14 @@ export const FormattedInput = forwardRef(({value, defaultValue, format, parse, o
 
   return (
     <TextInput
-      {...rest}
       className={clsx('FormattedInput', className)}
       onBlur={onBlur}
       onChange={onInputChange}
       onKeyDown={onKeyDown}
       ref={ref}
       value={text}
-      />
+      {...rest}
+    />
   )
 })
 FormattedInput.displayName = 'FormattedInput'

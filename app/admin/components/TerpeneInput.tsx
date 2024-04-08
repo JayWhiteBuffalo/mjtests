@@ -33,7 +33,7 @@ export const TerpeneInput = ({terps, errors, onChange}) => {
               id={`terps.${terpName}`}
               onChange={value => onChange({...terps, [terpName]: value})}
               value={value}
-              />
+            />
             <RemoveButton onClick={() => onChange(ObjectUtil.delete(terps, terpName))} />
           </div>
           <FieldError error={errors?.[terpName]} />
@@ -64,11 +64,11 @@ const parsePercent = x => mapDefined(unNan(x), x => MathUtil.roundTo(x / 100, 6)
 
 export const PotencyInput = forwardRef(({...rest}, ref) =>
   <FormattedInput
-    {...rest}
     format={formatPercent}
     parse={parsePercent}
     ref={ref}
     step={1e-4}
-    />
+    {...rest}
+  />
 )
 PotencyInput.displayName = 'PotencyInput'

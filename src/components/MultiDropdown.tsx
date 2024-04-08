@@ -25,13 +25,13 @@ const MultiDropdownButton = forwardRef(({placeholder, values, className, ...rest
 
   return (
     <Button
-      {...rest}
       className={clsx('MultiDropdown', className)}
       color="light"
       ref={ref}
       theme={{
         inner: {base: 'flex items-stretch items-center justify-between w-full transition-all duration-200'},
-      }}>
+      }}
+      {...rest}>
       <span
         className="text-ellipsis overflow-hidden whitespace-nowrap text-gray-500 italic">
         {text}
@@ -44,14 +44,14 @@ MultiDropdownButton.displayName = 'MultiDropdownButton'
 
 const Items = forwardRef(({className, items, values, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
-    {...rest}
     className={clsx(
       'MultiDropdownItems',
       'flex flex-col flex-wrap flex-auto shrink-0 h-[400px] -mx-3 overflow-auto px-1',
       'min-w-[208px]',
       className,
     )}
-    ref={ref}>
+    ref={ref}
+    {...rest}>
     {items.map((item, index) =>
       <li key={item.key}>
         <button

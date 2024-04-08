@@ -22,17 +22,17 @@ const upload = async file => {
 const Item = ({publicId, selected, onDelete, ...rest}) =>
   <li className="relative flex-none group">
     <button
-      {...rest}
       type="button"
       className={clsx(
         'box-content border-4 rounded-lg overflow-hidden',
         selected ? 'border-blue-400' : 'border-transparent',
-    )}>
+      )}
+      {...rest}>
       <FixedHeightImage
         alt="Uploaded image"
         height={240}
         publicId={publicId}
-       />
+      />
     </button>
     <button
       className="absolute right-2 top-2 group-hover:opacity-100 opacity-0 group-hover:visible invisible"
@@ -123,7 +123,7 @@ export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors,
             onDelete={() => onDelete(ix)}
             publicId={publicId}
             selected={mainImageRefId === publicId}
-            />
+          />
         )}
       </ul>
 

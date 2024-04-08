@@ -23,7 +23,7 @@ const Page = async ({user}) => {
       publish={publish.bind(null, undefined)}
       saveDraft={saveDraft.bind(null, undefined)}
       product={ProductUtil.read({})}
-      />
+    />
   )
 }
 

@@ -9,9 +9,9 @@ export const cloudinaryLoader = ({src, width, quality}) => {
 
 export const Image = ({publicId, src,...rest}) =>
   <NextImage
-    {...rest}
     src={src ?? publicId}
     loader={publicId ? cloudinaryLoader : undefined}
+    {...rest}
   />
 
 export const ImageOrFallback = forwardRef(({alt, size, src, className, onLoad, ...rest}, ref) =>

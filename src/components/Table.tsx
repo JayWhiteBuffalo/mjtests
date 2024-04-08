@@ -55,7 +55,8 @@ export const TMTable = ({items, columns, getItemKey}) => {
                   key={column.key}
                   value={ObjectUtil.getByPath(item, column.key)}
                   item={item}
-                  column={column} />
+                  column={column}
+                />
               )}
             </Table.Row>
           )}

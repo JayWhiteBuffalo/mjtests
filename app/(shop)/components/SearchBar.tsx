@@ -157,11 +157,11 @@ const FilterKeywordContainer = () => {
 
 const MapKeywordItem = forwardRef(({children, className, active, ...rest}, ref) =>
   <button
-    {...rest}
     className={`${className} ${active ? 'active' : ''}`}
     ref={ref}
     tabIndex={-1}
-    type="button">
+    type="button"
+    {...rest}>
     {children}
   </button>
 )

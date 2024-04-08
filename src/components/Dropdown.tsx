@@ -27,14 +27,14 @@ type DropdownItem = {
 
 const Items = forwardRef(({className, items, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
-    {...rest}
     className={clsx(
       'DropdownItems',
       'max-h-[480px] min-w-[208px]',
       'flex flex-col flex-1 shrink-0 overflow-auto -m-3',
       className,
     )}
-    ref={ref}>
+    ref={ref}
+    {...rest}>
     {items.map((item, index) =>
       <li
         {...getItemProps({
@@ -109,7 +109,6 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
   return (
     <Button
       color="light"
-      {...rest}
       theme={theme}
       className={clsx(
         'Dropdown',
@@ -117,7 +116,8 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
         readOnly && 'bg-zinc-200 cursor-not-allowed',
         className,
       )}
-      ref={ref}>
+      ref={ref}
+      {...rest}>
       <span className="DropdownText overflow-hidden text-ellipsis whitespace-nowrap">{text}</span>
       {!readOnly ? <HiOutlineChevronDown className="ml-2 h-4 w-4" /> : undefined}
     </Button>
@@ -220,13 +220,13 @@ export const Dropdown = forwardRef(({value, items, disabled, readOnly, onChange,
   return (
     <>
       <DropdownButton
-        {...rest}
         {...getReferenceProps({onKeyDown: onKeyDownReference})}
         disabled={disabled}
         readOnly={readOnly}
         ref={elem => {refs.setReference(elem); setRef(ref, elem)}}
         value={selectedIndex !== -1 ? items[selectedIndex]?.name : undefined}
-        />
+        {...rest}
+      />
       {expanded && Floating()}
     </>
   )
@@ -240,14 +240,14 @@ Dropdown.displayName = 'Dropdown'
 const TypeaheadKeyword = forwardRef(({value, className, ...rest}, ref) => {
   return (
     <TextInput
-      {...rest}
       aria-autocomplete="list"
       autoComplete="off"
       className={clsx('Typeahead', className)}
       ref={ref}
       type="search"
       value={value}
-      />
+      {...rest}
+    />
   )
 })
 TypeaheadKeyword.displayName = 'TypeaheadKeyword'
@@ -344,11 +344,11 @@ export const Typeahead = forwardRef(({value, TypeaheadStore, onChange, ...rest}:
   return (
     <>
       <TypeaheadKeyword
-        {...rest}
         {...getReferenceProps({onChange: onChangeKeyword, onKeyDown: onKeyDownKeyword})}
         ref={elem => {refs.setReference(elem); setRef(ref, elem)}}
         value={keyword}
-        />
+        {...rest}
+      />
       {expanded && Floating()}
     </>
   )

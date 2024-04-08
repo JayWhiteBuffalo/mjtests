@@ -38,7 +38,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               autoComplete="off"
               id="name"
               placeholder="Mary Jane"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -50,7 +50,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="productType"
               items={sortedProductTypes}
               placeholder="Select product type"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -66,7 +66,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="concentrateType"
               items={Treemap.concentrateTypes}
               placeholder="Select concentrate type"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -77,7 +77,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               {...useController({control, name: 'brand'}).field}
               id="brand"
               TypeaheadStore={BrandTypeaheadStore}
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -93,7 +93,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="vendorId"
               items={vendorItems}
               readOnly={!isAdmin && product.vendorId != null}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc isAdmin={isAdmin && product.vendorId != null} />
         </FormField>
@@ -106,7 +106,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="price"
               type="number"
               step={0.01}
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -118,7 +118,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="weight"
               type="number"
               step={0.01}
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -134,7 +134,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="producerId"
               items={producerItems}
               readOnly={!isAdmin && product.producerId != null}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc isAdmin={isAdmin && product.producerId != null} />
         </FormField>
@@ -147,7 +147,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               id="subspecies"
               items={Treemap.subspecies}
               placeholder="Select subspecies"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -158,7 +158,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               {...useController({control, name: 'cultivar'}).field}
               id="cultivar"
               TypeaheadStore={CultivarTypeaheadStore}
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -172,7 +172,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               {...useController({control, name: 'potency.thc'}).field}
               aria-describedby="potency.thc potency.thc2"
               id="potency.thc"
-              />
+            />
           </InputWithError>
           <FieldDesc id="potency.thc2">
             Max precision 1ppm
@@ -189,7 +189,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               {...useController({control, name: 'potency.cbd'}).field}
               aria-describedby="potency.cbd potency.cbd2"
               id="potency.cbd"
-              />
+            />
           </InputWithError>
           <FieldDesc id="potency.cbd2">
             Max precision 1ppm
@@ -221,7 +221,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               imageRefs={imageRefs}
               mainImageRefId={field.value}
               onChange={field.onChange}
-              />
+            />
           }
           />
       </section>
@@ -240,7 +240,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               aria-describedby="slug.desc slug.desc2"
               autoComplete="vendor-slug"
               id="slug"
-              />
+            />
           </InputWithError>
           <FieldDesc id="slug.desc2">
             Dash-separated alphanumeric characters only. 60 characters max.
@@ -263,7 +263,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           render={formData =>
             <PreviewContainer product={preprocessFormData({isDraft: true})(formData)} />
           }
-          />
+        />
       </section>
     </form>
   )

@@ -111,7 +111,8 @@ export const TerpeneSelector = ({onSelect, disabledTerps = {}}) => {
                   onClick={onItemClick}
                   ref={node => listRef.current[index] = node}
                   tabIndex={activeIndex === index ? 0 : -1}
-                  terp={terp} />
+                  terp={terp}
+                />
               )}
             </ul>
           </dialog>

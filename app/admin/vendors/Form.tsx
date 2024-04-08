@@ -31,7 +31,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               aria-describedby="name.desc"
               autoComplete="off"
               readOnly={!isAdmin}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc id="name.desc" isAdmin={isAdmin} />
         </FormField>
@@ -48,7 +48,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               autoComplete="street-address"
               id="location.address"
               readOnly={!isAdmin}
-              />
+            />
           </InputWithError>
           <AdminOnlyFieldDesc id="location.address.desc2" isAdmin={isAdmin} />
         </FormField>
@@ -69,7 +69,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
                   imageRefs={imageRefs}
                   mainImageRefId={field.value}
                   onChange={field.onChange}
-                  />
+                />
               }
               />
           </FormField>
@@ -86,7 +86,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               {...register('contact.tel')}
               autoComplete="tel"
               id="contact.tel"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -100,7 +100,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               autoComplete="email"
               id="contact.email"
               placeholder="contact@acmejoint.com"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -111,7 +111,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               {...register('contact.url')}
               autoComplete="url"
               id="contact.url"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -122,7 +122,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               {...register('contact.twitter')}
               autoComplete="twitter"
               id="contact.twitter"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -133,7 +133,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               {...register('contact.facebook')}
               autoComplete="facebook"
               id="contact.facebook"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -144,7 +144,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               {...register('contact.instagram')}
               autoComplete="instagram"
               id="contact.instagram"
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -193,7 +193,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               errors={fieldState.error}
               onChange={field.onChange}
               schedule={field.value}
-              />
+            />
           }
           />
         <FieldError error={errors.schedule} />
@@ -226,7 +226,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               format={orEmpty}
               id="license.number"
               parse={VendorUtil.parsePartialOmmaNumber}
-              />
+            />
           </InputWithError>
           <FieldDesc id="license.number.desc2">
 
@@ -248,7 +248,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               aria-describedby="slug.desc slug.desc2"
               autoComplete="vendor-slug"
               id="slug"
-              />
+            />
           </InputWithError>
           <FieldDesc id="slug.desc2">
             Dash-separated alphanumeric characters only. 60 characters max.
@@ -267,7 +267,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
           render={formData =>
             <PreviewContainer vendor={preprocessFormData(formData)} />
           }
-          />
+        />
       </section>
     </form>
   )

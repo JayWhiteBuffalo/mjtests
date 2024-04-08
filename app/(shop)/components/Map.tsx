@@ -116,15 +116,17 @@ export const MapContainer = () => {
   )
 }
 
-const ReactMarkerIcon = forwardRef(({type, options, style, alt, ...rest}, ref) => {
+const ReactMarkerIcon = forwardRef(({type, options, style, alt, className, ...rest}, ref) => {
   const anchor = options[`${type}Anchor`] || options.iconAnchor
   const size = options[`${type}Size`] || options.iconSize
   return (
     <Image
-      {...rest}
       alt={alt}
       ref={ref}
-      className={`absolute pointer-events-auto leaflet-zoom-hide`}
+      className={clsx(
+        'absolute pointer-events-auto leaflet-zoom-hide',
+        className,
+      )}
       src={options[`${type}RetinaUrl`] || options[`${type}Url`]}
       style={{
         ...style,
@@ -134,6 +136,7 @@ const ReactMarkerIcon = forwardRef(({type, options, style, alt, ...rest}, ref) =
         height: `${size[1]}px`,
         zIndex: type === 'icon' ? 200 : 100,
       }}
+      {...rest}
     />
   )
 })
@@ -142,7 +145,6 @@ ReactMarkerIcon.displayName = 'ReactMarkerIcon'
 const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) =>
   <>
     <ReactMarkerIcon
-      {...rest}
       ref={ref}
       type="icon"
       alt={alt}
@@ -150,6 +152,7 @@ const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) =>
       role="button"
       style={style}
       options={iconOptions}
+      {...rest}
     />
     <ReactMarkerIcon
       type="shadow"

@@ -91,7 +91,6 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
 
   return (
     <TextInput
-      {...rest}
       className="w-[80px]"
       max={bound[1]}
       min={bound[0]}
@@ -108,6 +107,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
         },
       }}
       value={text}
+      {...rest}
     />
   )
 }

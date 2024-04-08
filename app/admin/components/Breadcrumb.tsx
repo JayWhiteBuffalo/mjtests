@@ -36,7 +36,7 @@ export const Breadcrumb = ({items, className, ...rest}) => {
             isFirst={index === 0}
             key={index}
             label={item.name}
-            />
+          />
         })}
       </ol>
     </nav>

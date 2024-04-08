@@ -106,7 +106,7 @@ export const Form = ({user, action}) => {
             <TextInput
               {...register('referrer')}
               id="referrer"
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
