@@ -1,3 +1,3 @@
 #!/bin/bash
 echo stopping server
-pm2 stop share
+pm2 stop next
