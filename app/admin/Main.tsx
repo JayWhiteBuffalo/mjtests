@@ -28,8 +28,8 @@ export const makeMain = ({getRoute, Page}) => {
       </main>
     )
   }
-  Page.displayName = 'Main'
-  return Page
+  Main.displayName = 'Main'
+  return Main
 }
 
 export const UnauthorizedPage = () =>
