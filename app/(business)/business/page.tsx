@@ -10,7 +10,7 @@ export const Card = ({children}) =>
     {children}
   </section>
 
-export default async () =>
+const Page = async () =>
   <main className="flex flex-col items-center justify-center h-screen bg-slate-100">
     <div className="my-4">
       <span className="text-xl font-bold">Sell with us!</span>
@@ -61,3 +61,4 @@ export default async () =>
       </Card>
     </div>
   </main>
+export default Page

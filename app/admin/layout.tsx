@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: 'Management console for the biggest weed market in Oklahoma',
 }
 
-export default async ({children}) => {
+const RootLayout = async ({children}) => {
   const user = await UserDto.getCurrent()
 
   return (
@@ -48,3 +48,5 @@ export default async ({children}) => {
     </html>
   )
 }
+
+export default RootLayout
