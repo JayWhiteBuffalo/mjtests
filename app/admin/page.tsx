@@ -1,5 +1,6 @@
 import {HiHome} from 'react-icons/hi'
 import {makeMain} from '@app/admin/Main'
+import {siteName} from '@components/Site'
 
 export const getRoute = async () => [{
   Icon: HiHome,
@@ -9,7 +10,7 @@ export const getRoute = async () => [{
 
 const Page = async ({}) => {
   return (
-    <div>Welcome to AdminApp</div>
+    <div>Welcome to ${siteName} Management Console!</div>
   )
 }
 

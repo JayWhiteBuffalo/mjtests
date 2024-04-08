@@ -1,9 +1,11 @@
+'use client'
 import clsx from 'clsx'
 import ObjectUtil from '@util/ObjectUtil'
 import {CgClose} from 'react-icons/cg'
 import {Children, cloneElement, useId, forwardRef, useCallback} from 'react'
 import {get, useForm, useWatch} from 'react-hook-form'
 import {Label, Checkbox, Radio} from 'flowbite-react'
+import {HiCheckCircle, HiInformationCircle} from 'react-icons/hi'
 
 export const InputWithError = ({children, errors, name}) => {
   const error = get(errors, name)
@@ -151,3 +153,36 @@ export const nullResolver = () => async data => ({values: data, errors: {}})
 
 export const Watch = ({control, render}) =>
   render(useWatch({control}))
+
+const defaultIcons = {
+  success: HiCheckCircle,
+  warning: HiInformationCircle,
+}
+
+type AlertBoxProps = {
+  color: string;
+  Icon?: any;
+  className?: string;
+  children: any;
+};
+export const AlertBox = ({
+  color = 'default',
+  Icon,
+  className,
+  children,
+}: AlertBoxProps) => {
+  Icon ??= defaultIcons[color] ?? HiInformationCircle;
+
+  return (
+    <div
+      className={clsx(
+        `flex items-center p-2 bg-neutral-200 rounded-lg border-${color} border-2`,
+        className
+      )}
+    >
+      <Icon className={`fill-${color} w-8 h-8 mr-2`} />
+      <div>{children}</div>
+    </div>
+  )
+}
+

@@ -70,6 +70,7 @@ const BusinessRequestDto = {
     await prisma.businessRequest.createMany({
       data: [{
         ...request,
+        id,
         createdById: user.id,
         updatedById: user.id,
       }],

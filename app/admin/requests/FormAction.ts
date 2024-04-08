@@ -24,7 +24,7 @@ export const apply = async formData => {
     ...request,
     status: 'pending',
   })
-  redirect('/admin/apply/success')
+  redirect(`/admin/apply/${request.type}/success`)
 }
 
 export const approve = async requestId => {

@@ -40,8 +40,8 @@ export const ShopFooter = () =>
           <div>
             <Footer.Title title="Business" />
             <Footer.LinkGroup col>
-              <Footer.Link href="/distributor">For Distributors</Footer.Link>
-              <Footer.Link href="/producer">For Producers</Footer.Link>
+              <Footer.Link href="/business#distributor">For Distributors</Footer.Link>
+              <Footer.Link href="/business#producer">For Producers</Footer.Link>
             </Footer.LinkGroup>
           </div>
         </div>

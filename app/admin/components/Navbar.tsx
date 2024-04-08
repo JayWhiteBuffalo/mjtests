@@ -10,7 +10,7 @@ export const AdminNavbar = ({user, ...rest}) =>
         <FaBars className="h-6 w-6 shrink-0" />
       </button>
       <NavbarBrand href="/admin" as={Link}>
-        <Logo className="mr-3 ml-3 h-8 w-8 sm:h-9" />
+        <Logo className="mr-1 ml-2 h-10 w-10 sm:h-9" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           {siteName} Management Console
         </span>

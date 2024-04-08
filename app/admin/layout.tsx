@@ -42,11 +42,7 @@ export default async ({children}) => {
             user={user}
             style={{gridArea: 'sidebar'}}
           />
-          <main 
-            className="m-b-[30vh]"
-            style={{gridArea: 'main'}}>
-            {children}
-          </main>
+          {children}
         </MantineProvider>
       </body>
     </html>

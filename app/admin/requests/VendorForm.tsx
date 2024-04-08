@@ -22,7 +22,7 @@ export const Form = ({user, action}) => {
               id="user.name"
               placeholder="Mary Jane"
               autoComplete="name"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -36,7 +36,7 @@ export const Form = ({user, action}) => {
               id="user.email"
               readOnly
               defaultValue={user.email}
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -53,7 +53,7 @@ export const Form = ({user, action}) => {
               aria-describedby="vendor.name.desc"
               autoComplete="organization"
               id="vendor.name"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -67,7 +67,7 @@ export const Form = ({user, action}) => {
               autoComplete="email"
               id="vendor.email"
               placeholder="contact@acmejoint.com"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -78,7 +78,7 @@ export const Form = ({user, action}) => {
               {...register('vendor.url')}
               autoComplete="url"
               id="vendor.url"
-              />
+            />
           </InputWithError>
         </FormField>
 
@@ -92,7 +92,7 @@ export const Form = ({user, action}) => {
               autoComplete="street-address"
               id="vendor.address"
               placeholder={"101 E Main St\nNorman, OK 73069"}
-              />
+            />
           </InputWithError>
         </FormField>
       </section>
@@ -110,6 +110,13 @@ export const Form = ({user, action}) => {
           </InputWithError>
         </FormField>
       </section>
+
+      <input
+        {...register('type')}
+        type="hidden"
+        name="type"
+        value="vendor"
+      />
 
       <FormError errors={errors} />
       <Button type="submit">Submit</Button>

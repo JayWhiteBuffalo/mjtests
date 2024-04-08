@@ -131,9 +131,9 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
         </FormField>
 
         <FormField>
-          <Label htmlFor="license.number">OMMA Dispensary License Number</Label>
+          <Label htmlFor="license.number">OMMA License Number</Label>
           <FieldDesc id="license.number.desc">
-            The dispensary license is issued by the Oklahoma Medical Marijuana Authority (OMMA). The license number is 12 character alphanumeric code, e.g. <code>DAAA-1234-5XYZ</code>.
+            The grower or processor license is issued by the Oklahoma Medical Marijuana Authority (OMMA). The license number is 12 character alphanumeric code, e.g. <code>GAAA-1234-5XYZ</code>.
           </FieldDesc>
           <InputWithError errors={errors} name="license.number">
             <FormattedInput

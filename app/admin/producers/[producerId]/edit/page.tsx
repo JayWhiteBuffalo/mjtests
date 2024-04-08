@@ -24,7 +24,7 @@ const Page = async ({user, producerId}) => {
       {...await getFormProps(user, producerId)}
       action={save.bind(null, producerId)}
       producer={producer}
-      />
+    />
   )
 }
 

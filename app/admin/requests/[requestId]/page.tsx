@@ -26,7 +26,7 @@ const Page = async ({user, requestId}) => {
       canEdit={await BusinessRequestDto.canEdit(user, requestId)}
       reject={reject.bind(null, requestId)}
       request={request}
-      />
+    />
   )
 }
 

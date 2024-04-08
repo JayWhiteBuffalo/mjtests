@@ -30,12 +30,12 @@ model Account {
 
 model BusinessRequest {
   id String @id
-  producer Json
+  producer Json?
   referrer String?
   status String
   type String
   user Json
-  vendor Json
+  vendor Json?
 
   archived Boolean @default(false)
   createdAt DateTime @default(now())
