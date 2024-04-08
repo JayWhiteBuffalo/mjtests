@@ -6,9 +6,11 @@ import {Logo, siteName} from '@components/Site'
 export const AdminNavbar = ({user, ...rest}) =>
   <Navbar fluid {...rest}>
     <div className="flex">
+      {/*
       <button type="button">
         <FaBars className="h-6 w-6 shrink-0" />
       </button>
+      */}
       <NavbarBrand href="/admin" as={Link}>
         <Logo className="mr-1 ml-2 h-10 w-10 sm:h-9" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

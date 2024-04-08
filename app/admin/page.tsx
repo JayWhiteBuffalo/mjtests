@@ -10,7 +10,7 @@ export const getRoute = async () => [{
 
 const Page = async ({}) => {
   return (
-    <div>Welcome to ${siteName} Management Console!</div>
+    <div className="my-2 px-4">Welcome to {siteName} Management Console!</div>
   )
 }
 
