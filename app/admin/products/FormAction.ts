@@ -79,7 +79,7 @@ export const getFormProps = async (user, productId) => {
   return {
     imageRefs,
     isAdmin: user.roles.includes('admin') || user.roles.includes('sales'),
-    producerItems, 
+    producerItems,
     vendorItems,
   }
 }

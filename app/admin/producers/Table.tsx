@@ -36,7 +36,7 @@ export const ProducerTable = ({producers}) => {
   )
 }
 
-const ActionBar = () => 
+const ActionBar = () =>
   <div className="flex justify-end gap-2 p-2">
     <Link href={`/admin/producers/create`}>
       <Button>Add Producer</Button>

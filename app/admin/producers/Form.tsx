@@ -97,7 +97,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
           <FormField>
             <Label htmlFor="mainImageRefId">Logo</Label>
             <FieldDesc id="mainImageRefId.desc">
-              Include at least one logo or branding of your products. Minumum size 360x240, recommended 1440x1440 or higher. 
+              Include at least one logo or branding of your products. Minumum size 360x240, recommended 1440x1440 or higher.
             </FieldDesc>
             <Controller
               control={control}

@@ -238,7 +238,7 @@ const MapOverlay = ({vendors, map}) => {
   }, [map])
 
   return (
-    <div 
+    <div
       className={clsx(
         'absolute inset-0 overflow-hidden pointer-events-none',
         anim ? 'leaflet-zoom-anim' : undefined,

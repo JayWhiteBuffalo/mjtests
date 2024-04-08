@@ -11,7 +11,7 @@ const MapLoading = () =>
   </div>
 
 const MapContainer = dynamic(
-  () => import('./Map').then(Map => Map.MapContainer), 
+  () => import('./Map').then(Map => Map.MapContainer),
   {
     ssr: false,
     loading: MapLoading,
@@ -21,7 +21,7 @@ const MapContainer = dynamic(
 export const MapPaneContainer = () => {
   const layout = useFluxStore(LayoutStore)
   return (
-    <div 
+    <div
       className={clsx(
         'relative flex-0 basis-[300px] border-b border-gray-300',
         layout.expandMapPane ? 'basis-[75vh]' : undefined,

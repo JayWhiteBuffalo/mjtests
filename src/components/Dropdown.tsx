@@ -10,7 +10,7 @@ import {useState, useRef, useCallback, useEffect, forwardRef} from 'react'
 export const DropdownMenuButton = ({className, disabled, children, ...rest}) =>
   <button
     className={clsx(
-      'px-1 text-sm', 
+      'px-1 text-sm',
       disabled ? 'text-gray-500' : 'text-cyan-700',
       className,
     )}
@@ -29,7 +29,7 @@ const Items = forwardRef(({className, items, getItemProps, listRef, activeIndex,
   <ul
     {...rest}
     className={clsx(
-      'DropdownItems', 
+      'DropdownItems',
       'max-h-[480px] min-w-[208px]',
       'flex flex-col flex-1 shrink-0 overflow-auto -m-3',
       className,
@@ -112,9 +112,9 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
       {...rest}
       theme={theme}
       className={clsx(
-        'Dropdown', 
+        'Dropdown',
         'w-full max-w-[300px]',
-        readOnly && 'bg-zinc-200 cursor-not-allowed', 
+        readOnly && 'bg-zinc-200 cursor-not-allowed',
         className,
       )}
       ref={ref}>
@@ -323,7 +323,7 @@ export const Typeahead = forwardRef(({value, TypeaheadStore, onChange, ...rest}:
           {...getFloatingProps()}
           ref={refs.setFloating}
           className={clsx(
-            'DropdownPopover DropdownPane', 
+            'DropdownPopover DropdownPane',
             'bg-white border border-gray-300 z-20',
             !items.length && 'invisible',
             'flex flex-1 px-3 flex-col',

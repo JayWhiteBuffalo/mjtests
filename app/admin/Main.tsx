@@ -19,7 +19,7 @@ export const makeMain = ({getRoute, Page}) => async ({params}) => {
     return <UnauthorizedPage />
   }
   return (
-    <main 
+    <main
       className="mb-[30vh]"
       style={{gridArea: 'main'}}>
       <Breadcrumb items={route} />

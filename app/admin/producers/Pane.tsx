@@ -80,11 +80,11 @@ export const ProducerPane = ({producer, canEdit}) =>
           ? <>
             <p>Logo</p>
             <div className="w-24 h-18">
-              <Image 
+              <Image
                 alt="Logo of producer"
-                className="object-cover" 
-                fill={true} 
-                publicId={producer.mainImageRefId} 
+                className="object-cover"
+                fill={true}
+                publicId={producer.mainImageRefId}
                 />
             </div>
           </>

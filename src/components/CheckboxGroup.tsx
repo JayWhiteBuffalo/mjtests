@@ -32,7 +32,7 @@ const CheckboxGroupItem = ({item, checked, onChange}) =>
     {item.name}
   </Label>
 
-export const CheckboxGroup = ({items, values, onChange}: CheckboxGroupProps) => 
+export const CheckboxGroup = ({items, values, onChange}: CheckboxGroupProps) =>
   <div className="CheckboxGroup">
     {items.map(item =>
       <CheckboxGroupItem
@@ -64,12 +64,12 @@ const ButtonCbGroupItem = ({item, selected, onClick}) =>
     {item.name}
   </Button>
 
-export const ButtonCbGroup = ({items, values, onChange}: CheckboxGroupProps) => 
+export const ButtonCbGroup = ({items, values, onChange}: CheckboxGroupProps) =>
   <div className="flex flex-wrap">
     {items.map(item =>
       <ButtonCbGroupItem
         key={item.key}
-        item={item} 
+        item={item}
         selected={item.key in values}
         onClick={() => onChange(FlagObjectUtil.toggle(values, item.key))}
       />

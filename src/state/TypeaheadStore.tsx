@@ -37,7 +37,7 @@ export class TypeaheadStore extends FluxStore {
     return this.items.orElse(() => [])
   }
 
-  getByKeys = keys => keys.map(key => 
+  getByKeys = keys => keys.map(key =>
     this.byKey[key]?.get() ?? {key, name: key}
   )
 }

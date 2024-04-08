@@ -1,5 +1,5 @@
 /*
-An immutable, algebraic data type representing the status of some computation that may fail. 
+An immutable, algebraic data type representing the status of some computation that may fail.
 
 It is either a pending status, an error, or a result:
 

@@ -117,7 +117,7 @@ const Header = ({title}) =>
   </div>
 
 const VendorScheduleGrid = ({children}) =>
-  <div 
+  <div
     className="grid gap-2 items-center my-4"
     style={{
       gridTemplateColumns: 'auto min-content max-content max-content',
@@ -128,7 +128,7 @@ const VendorScheduleGrid = ({children}) =>
 const WeekHours = ({week, errors, onChange}) =>
   <VendorScheduleGrid>
     <Header title="Weekly Hours" />
-    
+
     {VendorSchedule.daysOfWeek.map((dayOfWeek, ix) =>
       <Fragment key={ix}>
         <div>{dayOfWeek.name}</div>

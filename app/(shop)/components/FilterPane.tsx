@@ -64,7 +64,7 @@ const CommonFilterSection = ({filter, onChange}) => {
         <span>Flags</span>
         {clearButton}
       </header>
-      
+
       <FilterItem>
         <CheckboxGroup
           items={FlagFilterItems}

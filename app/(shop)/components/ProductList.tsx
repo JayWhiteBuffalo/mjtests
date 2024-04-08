@@ -201,7 +201,7 @@ export const Product = ({product, mode}) => {
       )}>
       {
         product.mainImageRefId
-          ? <div 
+          ? <div
               className={clsx(
                 'relative',
                 mode === 'full' ? 'h-[240px]' : 'h-[100px]',
@@ -246,17 +246,17 @@ export const Product = ({product, mode}) => {
 
 const ProductList = ({products, mode}) =>
   <>
-    <ul 
+    <ul
       className={clsx(
         `ProductList ${mode}`,
         'grid p-2 min-h-0 justify-center',
         mode === 'full' ? 'gap-3' : undefined,
       )}>
-      {products.map(product => 
+      {products.map(product =>
         <ErrorBoundary key={product.id}>
           <Product
-            mode={mode} 
-            product={product} 
+            mode={mode}
+            product={product}
           />
         </ErrorBoundary>
       )}
@@ -270,7 +270,7 @@ const ProductList = ({products, mode}) =>
   </>
 
 const ProductListPane = ({products, mode}) =>
-  <div 
+  <div
     className={clsx(
       'ProductListPane border-t border-gray-300 flex-1 basis-[400px]',
       'flex flex-col items-stretch',
@@ -278,7 +278,7 @@ const ProductListPane = ({products, mode}) =>
     <ErrorBoundary>
       {products
         .then(products => <ProductList products={products} mode={mode} />)
-        .orPending(() => 
+        .orPending(() =>
           <div className="flex justify-center">
             <Spinner size="xl" className="mt-6" />
           </div>
@@ -291,9 +291,9 @@ export const ProductListPaneContainer = () => {
   const products = useFluxStore(FilteredProductStore)
   const layout = useFluxStore(LayoutStore)
   return (
-    <ProductListPane 
+    <ProductListPane
       mode={layout.productListMode}
-      products={products} 
+      products={products}
     />
   )
 }

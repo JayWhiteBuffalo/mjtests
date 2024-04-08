@@ -36,7 +36,7 @@ export const VendorTable = ({vendors}) => {
   )
 }
 
-const ActionBar = () => 
+const ActionBar = () =>
   <div className="flex justify-end gap-2 p-2">
     <Link href={`/admin/vendors/create`}>
       <Button>Add Vendor</Button>

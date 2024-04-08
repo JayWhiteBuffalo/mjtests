@@ -46,7 +46,7 @@ const Items = forwardRef(({className, items, values, getItemProps, listRef, acti
   <ul
     {...rest}
     className={clsx(
-      'MultiDropdownItems', 
+      'MultiDropdownItems',
       'flex flex-col flex-wrap flex-auto shrink-0 h-[400px] -mx-3 overflow-auto px-1',
       'min-w-[208px]',
       className,
@@ -180,7 +180,7 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
             ref={refs.setFloating}
             style={isMobile ? mobileFloatingStyles : floatingStyles}>
             <ErrorBoundary>
-              <div 
+              <div
                 className={clsx(
                   'MultiDropdownPane MultiDropdownItemsPane',
                   'flex flex-1 flex-col p-3',
@@ -259,7 +259,7 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
   ])
 
   return (
-    <div 
+    <div
       className={clsx(
         'MultiDropdownPane MultiDropdownSelectedPane',
         'flex flex-1 flex-col p-3',
@@ -279,7 +279,7 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
           Done
         </DropdownMenuButton>
       </div>
-      
+
       <Items
         {...getFloatingProps({
           onFocus: () => setFocused(true),
@@ -321,7 +321,7 @@ const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDr
   ])
 
   return (
-    <div 
+    <div
       className={clsx(
         'MultiDropdownPane MultiDropdownSearchPane',
         'flex flex-1 flex-col p-3 border-gray-300 border-l',

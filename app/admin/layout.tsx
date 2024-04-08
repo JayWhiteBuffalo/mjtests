@@ -27,10 +27,10 @@ export default async ({children}) => {
       <head>
         <ColorSchemeScript />
       </head>
-      <body 
+      <body
         className={clsx(
           'grid bg-zinc-100 min-h-screen',
-          inter.className, 
+          inter.className,
           'AdminBody',
         )}>
         <MantineProvider>
@@ -38,7 +38,7 @@ export default async ({children}) => {
             user={user}
             style={{gridArea: 'navbar'}}
           />
-          <AdminSidebar 
+          <AdminSidebar
             user={user}
             style={{gridArea: 'sidebar'}}
           />
