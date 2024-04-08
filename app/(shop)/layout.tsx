@@ -1,5 +1,7 @@
 import '@app/globals.css'
 import type {Metadata} from 'next'
+import {customTheme} from './Theme'
+import {Flowbite} from 'flowbite-react'
 import {Inter} from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,7 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Flowbite theme={{theme: customTheme}}>
+          {children}
+        </Flowbite>
+      </body>
     </html>
   )
 }

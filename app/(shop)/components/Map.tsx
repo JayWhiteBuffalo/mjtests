@@ -134,7 +134,7 @@ const ReactMarkerIcon = forwardRef(({type, options, style, alt, className, ...re
         marginTop: `${-anchor[1]}px`,
         width: `${size[0]}px`,
         height: `${size[1]}px`,
-        zIndex: type === 'icon' ? 200 : 100,
+        zIndex: type === 'icon' ? 20 : 10,
       }}
       {...rest}
     />

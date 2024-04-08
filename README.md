@@ -26,7 +26,7 @@ DATABASE_URL="postgresql://dhe@localhost:5432/treemap_three?schema=public"
 
 * 2c. Run
 ```bash
-npx prisma db push
+pnpx prisma db push
 ```
 to initialize tables used by treemap. This command will need to be rerun whenever the schema changes in the future.
 

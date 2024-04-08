@@ -106,7 +106,8 @@ const ProductListModeSelector = ({mode, onChange}) => {
     <Button
       theme={{size: {xs: 'text-xs px-1'}}}
       className="SortDropdown"
-      size="xs">
+      size="xs"
+    >
       <selectedProps.Icon className="h-5 w-5" />
     </Button>
 
