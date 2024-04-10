@@ -10,13 +10,12 @@ export const generateStaticParams = () => (
   {searchParams: {}}
 )
 
+const requireLogin = false
 const Page = async ({searchParams: query}) => {
-  /*
   const user = await UserDto.getCurrent()
-  if (!user.loggedIn) {
+  if (requireLogin && !user.loggedIn) {
     return signIn(null, {redirectTo: getPathname()})
   }
-  */
 
   const filter = ProductFilterUtil.fromQuery(query)
   const products = await ProductDto.getProducts(filter)

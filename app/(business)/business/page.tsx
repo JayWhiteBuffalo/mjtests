@@ -46,10 +46,10 @@ const Page = async () =>
         </header>
         <ul className="flex-1 list-disc ml-4 my-2">
           <li>
-            Advertise your marijuana-related produce to the dispensaries, reducing the time & hassle of finding dispensaries to sell your produce to at every harvest.
+            Advertise your marijuana-related produce to the dispensaries, reducing the time &amp; hassle of finding dispensaries to sell your produce to at every harvest.
           </li>
           <li>
-            Compare your produces' test results & pricing against other producers.
+            Compare your produces' test results &amp; pricing against other producers.
           </li>
         </ul>
 
