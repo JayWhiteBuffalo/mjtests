@@ -49,7 +49,7 @@ const Page = async () =>
             Advertise your marijuana-related produce to the dispensaries, reducing the time &amp; hassle of finding dispensaries to sell your produce to at every harvest.
           </li>
           <li>
-            Compare your produces' test results &amp; pricing against other producers.
+            Compare your produces&apos; test results &amp; pricing against other producers.
           </li>
         </ul>
 
