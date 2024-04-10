@@ -61,7 +61,8 @@ export const canUseAdmin = user => {
   if (user.roles.includes('producer')) {
     return true
   }
-  if (user.loggedIn && process.env.NODE_ENV === 'development') {
+  //if (user.loggedIn && process.env.NODE_ENV === 'development') {
+  if (user.loggedIn) {
     return true
   }
   return false
