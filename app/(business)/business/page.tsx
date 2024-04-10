@@ -19,14 +19,17 @@ const Page = async () =>
 
       <Card>
         <header>
-          <h2 className="font-bold">For vendors</h2>
+          <h2 className="font-bold">For Dispensaries</h2>
         </header>
         <ul className="flex-1 list-disc ml-4 my-2">
           <li>
-            List on the largest marijuana marketplace in Oklahoma
+            Differentiate your products from your competitors with the test results of your products!
           </li>
           <li>
-            Differentiate your products with terpene data
+            Compare your product pricing against your competitors based on the test results, not just the strain name!
+          </li>
+          <li>
+            Find producers to purchase your stock from!
           </li>
         </ul>
 
@@ -39,17 +42,14 @@ const Page = async () =>
 
       <Card>
         <header>
-          <h2 className="font-bold">For producers</h2>
+          <h2 className="font-bold">For Producers</h2>
         </header>
         <ul className="flex-1 list-disc ml-4 my-2">
           <li>
-            Improve your product reach
+            Advertise your marijuana-related produce to the dispensaries, reducing the time & hassle of finding dispensaries to sell your produce to at every harvest.
           </li>
           <li>
-            Differentiate your products with terpene data
-          </li>
-          <li>
-            Find distributors in the largest marijuana marketplace in Oklahoma
+            Compare your produces' test results & pricing against other producers.
           </li>
         </ul>
 
@@ -61,4 +61,5 @@ const Page = async () =>
       </Card>
     </div>
   </main>
+
 export default Page
