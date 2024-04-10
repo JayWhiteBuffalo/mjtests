@@ -204,7 +204,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               errors={fieldState.error}
               onChange={field.onChange}
               terps={field.value ?? {}}
-              />
+            />
           }
           />
       </section>

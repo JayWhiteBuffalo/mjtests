@@ -104,6 +104,7 @@ model Product {
   mainImageRef ImageRef? @relation(fields: [mainImageRefId], references: [publicId], name: "main")
   mainImageRefId String?
   name String
+  normalizedTerps Json?
   potency Json
   price Float?
   pricePerGram Float?

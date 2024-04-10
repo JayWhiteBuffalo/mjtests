@@ -99,6 +99,7 @@ const ProductDto = {
     assert(productId ? await ProductDto.canEdit(user, productId) : await ProductDto.canCreate(user))
     assert(!product.vendorId || await ProductDto.canEdit(user, product.vendorId))
     assert(!product.producerId || await ProducerDto.canEdit(user, product.producerId))
+    ProductUtil.addIndexes(product)
 
     if (productId) {
       await prisma.product.update({

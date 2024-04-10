@@ -39,6 +39,7 @@ export const approve = async requestId => {
     const vendor = VendorUtil.read({
       contact: {
         email: request.vendor.email,
+        tel: request.vendor.tel,
         url: request.vendor.url,
       },
       location: {
@@ -62,7 +63,17 @@ export const approve = async requestId => {
     redirect(`/admin/vendors/${vendorId}`)
 
   } else if (request.type === 'producer') {
-    const producer = {}
+    const producer = {
+      contact: {
+        email: request.producer.email,
+        tel: request.producer.tel,
+        url: request.producer.url,
+      },
+      location: {
+        address: request.producer.address,
+      },
+      name: request.producer.name,
+    }
     const producerId = await ProducerDto.createOrUpdate(undefined, producer)
 
     const requestUser = await UserDto.getByEmail(request.user.email)

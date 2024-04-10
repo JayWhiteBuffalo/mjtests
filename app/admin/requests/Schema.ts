@@ -7,6 +7,7 @@ export const apiSchema = z.object({
     address: z.string().min(10).max(300).optional(),
     email: z.string().email().max(255).optional(),
     name: z.string().min(1, {message: 'Please enter a name'}).max(100),
+    tel: z.string().optional(),
     url: z.string().url().max(255).optional(),
   }).nullable(),
   referrer: z.string().max(300).optional(),
@@ -20,6 +21,7 @@ export const apiSchema = z.object({
     address: z.string().min(10).max(300),
     email: z.string().email().max(255).optional(),
     name: z.string().min(1, {message: 'Please enter a name'}).max(100),
+    tel: z.string().optional(),
     url: z.string().url().max(255).optional(),
   }).nullable(),
 })

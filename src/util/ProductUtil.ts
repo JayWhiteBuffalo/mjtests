@@ -51,6 +51,7 @@ export const ProductUtil = {
           ? ProductUtil.images.sativa
           : ProductUtil.images.indica
       )
+
     return product
   },
 
@@ -61,5 +62,30 @@ export const ProductUtil = {
 
   populateFlags(product) {
     product.flags.openNow = product.vendor.openStatus.isOpen
+  },
+
+  normalizeTerps(terps) {
+    const entries = Treemap.terpenes.filter(terpene => terpene.core).map(terpene => {
+      if (terps[terpene.name]) {
+        return [terpene.name, terps[terpene.name]]
+      }
+
+      const aliasValues = (terpene.aliases ?? []).map(name => terps[name]).filter(x => x != null)
+      if (aliasValues.length !== 0) {
+        return [terpene.name, aliasValues[0]]
+      }
+
+      const includeValues = (terpene.includes ?? []).map(name => terps[name]).filter(x => x != null)
+      if (includeValues.length !== 0) {
+        return [terpene.name, MathUtil.sum(includeValues)]
+      }
+
+    })
+      .filter(x => x != null)
+    return Object.fromEntries(entries)
+  },
+
+  addIndexes(product) {
+    product.normalizedTerps = ProductUtil.normalizeTerps(product.terps ?? {})
   },
 }

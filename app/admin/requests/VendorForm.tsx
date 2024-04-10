@@ -95,13 +95,27 @@ export const Form = ({user, action}) => {
             />
           </InputWithError>
         </FormField>
+
+        <FormField>
+          <Label htmlFor="vendor.tel">Phone (Optional)</Label>
+          <FieldDesc id="vendor.tel.desc">Your dispensary&apos;s public, general contact phone number.</FieldDesc>
+          <InputWithError errors={errors} name="vendor.tel">
+            <TextInput
+              {...register('vendor.tel')}
+              aria-describedby="vendor.tel.desc"
+              autoComplete="tel"
+              id="vendor.tel"
+            />
+          </InputWithError>
+        </FormField>
+
       </section>
 
       <section>
         <h2>Miscellaneous</h2>
 
         <FormField>
-          <Label htmlFor="referrer">Were you referred to us by anyone?</Label>
+          <Label htmlFor="referrer">Were you aided in onboarding by an onboarding specialist? If so, who?</Label>
           <InputWithError errors={errors} name="referrer">
             <TextInput
               {...register('referrer')}

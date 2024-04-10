@@ -27,7 +27,7 @@ export const ShopFooter = () =>
             <Footer.LinkGroup col>
               <Footer.Link href="#">Facebook</Footer.Link>
               <Footer.Link href="#">Instagram</Footer.Link>
-              <Footer.Link href="#">Discord</Footer.Link>
+              <Footer.Link href="https://twitter.com/mjtests">Twitter</Footer.Link>
             </Footer.LinkGroup>
           </div>
           <div>
@@ -52,7 +52,7 @@ export const ShopFooter = () =>
         <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
           <Footer.Icon href="#" icon={BsFacebook} />
           <Footer.Icon href="#" icon={BsInstagram} />
-          <Footer.Icon href="#" icon={BsTwitter} />
+          <Footer.Icon href="https://twitter.com/mjtests" icon={BsTwitter} />
           <Footer.Icon href="#" icon={BsGithub} />
         </div>
       </div>

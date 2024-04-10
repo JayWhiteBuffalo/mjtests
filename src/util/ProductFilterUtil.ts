@@ -38,7 +38,7 @@ export const ProductFilterUtil = {
       && (ObjectUtil.isEmpty(filter.brands) || filter.brands[product.brand])
       && (ObjectUtil.isEmpty(filter.cultivars) || filter.cultivars[product.cultivar])
       && (ObjectUtil.isEmpty(filter.vendors) || filter.vendors[product.vendor])
-      && ProductFilterUtil.testTerpFilter(filter.terps, product.terps)
+      && ProductFilterUtil.testTerpFilter(filter.terps, product.normalizedTerps)
       && ProductFilterUtil.testLocationFilter(filter.location, product)
       && ProductFilterUtil.testFlagsFilter(filter.flags, product)
   },
@@ -194,7 +194,7 @@ export const ProductFilterUtil = {
     const where = {
       AND: [].concat(
         ProductFilterUtil.keywordToPrisma(filter.keyword),
-        ProductFilterUtil.rangesToPrisma(filter.terps, 'terps'),
+        ProductFilterUtil.rangesToPrisma(filter.terps, 'normalizedTerps'),
         ProductFilterUtil.rangesToPrisma(filter.potency, 'potency'),
         ProductFilterUtil.multiFlagsToPrisma(filter.flags, 'flags'),
       ),
