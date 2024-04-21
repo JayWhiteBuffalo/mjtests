@@ -9,7 +9,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-.FilterPaneItem > .MultiDropdown {
-  width: 163px;
-}

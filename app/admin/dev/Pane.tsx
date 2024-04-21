@@ -1,5 +1,5 @@
 'use client'
-import {Button} from 'flowbite-react'
+import {Button} from '@nextui-org/react'
 import {InfoSection} from '@components/InfoSection'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
@@ -10,8 +10,8 @@ const DevActionButton = ({action, children, ...rest}) => {
 
   return (
     <Button
-      isProcessing={isLoading}
-      onClick={async () => {
+      isLoading={isLoading}
+      onPress={async () => {
         setIsLoading(true)
         await action()
         setIsLoading(false)

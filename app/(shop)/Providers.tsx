@@ -1,13 +1,12 @@
-import {customTheme} from './Theme'
-import {Flowbite} from 'flowbite-react'
+import {MantineProvider} from '@mantine/core'
 import {NextUIProvider} from '@nextui-org/react'
 import {ThemeProvider as NextThemesProvider} from 'next-themes'
 
 export const Providers = ({children}) =>
   <NextUIProvider>
-    <NextThemesProvider attribute="class" defaultTheme="dark">
-      <Flowbite theme={{theme: customTheme}}>
+    <NextThemesProvider attribute="class" defaultTheme="light">
+      <MantineProvider>
         {children}
-      </Flowbite>
+      </MantineProvider>
     </NextThemesProvider>
   </NextUIProvider>

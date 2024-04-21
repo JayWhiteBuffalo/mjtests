@@ -1,18 +1,20 @@
 'use client'
-import {AdminOnlyFieldDesc} from '@app/admin/components/AdminForm'
-import {Button, Label, TextInput, Textarea} from 'flowbite-react'
+import {AdminOnlyText} from '@app/admin/components/AdminForm'
+import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
+import {Button, Input, Textarea, RadioGroup, Radio} from '@nextui-org/react'
 import {Controller, useController} from 'react-hook-form'
 import {FormattedInput} from '@components/FormattedInput'
+import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@app/admin/components/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
 import {preprocessFormData} from './Schema'
 import {PreviewContainer} from './Pane'
-import {useTreemapForm, nullResolver, FormField, InputWithError, FieldDesc, FieldError, FormError, LabeledRadio, Watch} from '@components/Form'
+import {useTreemapForm, nullResolver, FieldLayout, FieldError, FormError, Watch} from '@components/Form'
 import {VendorScheduleInput} from '@app/admin/components/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({vendor, imageRefs, isAdmin, action}) => {
-  const {register, registerChecked, handleSubmit, formState: {errors}, control} = useTreemapForm({
+  const {register, handleSubmit, formState: {errors}, control} = useTreemapForm({
     resolver: nullResolver(),
     defaultValues: vendor,
   })
@@ -22,43 +24,36 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
       <section>
         <h2>Store</h2>
 
-        <FormField>
-          <Label htmlFor="name">Store name</Label>
-          <InputWithError errors={errors} name="name">
-            <TextInput
-              {...register('name')}
-              id="name"
-              aria-describedby="name.desc"
-              autoComplete="off"
-              readOnly={!isAdmin}
-            />
-          </InputWithError>
-          <AdminOnlyFieldDesc id="name.desc" isAdmin={isAdmin} />
-        </FormField>
+        <FieldLayout
+          bottomDescription={<AdminOnlyText isAdmin={isAdmin} />}
+          error={errors.name}
+          label="Store Name"
+        >
+          <Input
+            {...register('name')}
+            autoComplete="off"
+            readOnly={!isAdmin}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="location.address">Storefront address</Label>
-          <FieldDesc id="location.address.desc">
-            Physical address, where customers will visit your dispensary.
-          </FieldDesc>
-          <InputWithError errors={errors} name="location.address">
-            <Textarea
-              {...register('location.address')}
-              aria-describedby="location.address.desc location.address.desc2"
-              autoComplete="street-address"
-              id="location.address"
-              readOnly={!isAdmin}
-            />
-          </InputWithError>
-          <AdminOnlyFieldDesc id="location.address.desc2" isAdmin={isAdmin} />
-        </FormField>
+        <FieldLayout
+          bottomDescription={<AdminOnlyText isAdmin={isAdmin} />}
+          description="Physical address, where customers will visit your dispensary."
+          error={errors.location?.address}
+          label="Storefront Address"
+        >
+          <Textarea
+            {...register('location.address')}
+            autoComplete="street-address"
+            readOnly={!isAdmin}
+          />
+        </FieldLayout>
 
         {vendor.id &&
-          <FormField>
-            <Label htmlFor="mainImageRefId">Photos of store</Label>
-            <FieldDesc id="mainImageRefId.desc">
-              Include at least one photo of your storefront. Minumum size 360x240, recommended 1440x1440 or higher. Photo should be taken in daytime without excessive filters or watermarking.
-            </FieldDesc>
+          <FieldLayout
+            description="Include at least one photo of your storefront. Minumum size 360x240, recommended 1440x1440 or higher. Photo should be taken in daytime without excessive filters or watermarking."
+            label="Photos of Store"
+          >
             <Controller
               control={control}
               name="mainImageRefId"
@@ -72,118 +67,113 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
                 />
               }
               />
-          </FormField>
+          </FieldLayout>
         }
       </section>
 
       <section>
         <h2>Contact &amp; Socials</h2>
 
-        <FormField>
-          <Label htmlFor="contact.tel">Phone (Optional)</Label>
-          <InputWithError errors={errors} name="contact.tel">
-            <TextInput
-              {...register('contact.tel')}
-              autoComplete="tel"
-              id="contact.tel"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.contact?.tel}
+          label="Phone (Optional)"
+          startContent={<HiPhone className="fill-gray-500 w-4 h-4" />}
+        >
+          <Input
+            {...register('contact.tel')}
+            autoComplete="tel"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="contact.email">Email (Optional)</Label>
-          <FieldDesc id="contact.email.desc">Your dispensary&apos;s public, general contact email.</FieldDesc>
-          <InputWithError errors={errors} name="contact.email">
-            <TextInput
-              {...register('contact.email')}
-              aria-describedby="contact.email.desc"
-              autoComplete="email"
-              id="contact.email"
-              placeholder="contact@acmejoint.com"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          description="Your dispensary&apos;s public, general contact email."
+          error={errors.contact?.email}
+          label="Email (Optional)"
+          startContent={<HiMail className="fill-gray-500 w-4 h-4" />}
+        >
+          <Input
+            {...register('contact.email')}
+            autoComplete="email"
+            placeholder="contact@acmejoint.com"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="contact.url">Website (Optional)</Label>
-          <InputWithError errors={errors} name="contact.url">
-            <TextInput
-              {...register('contact.url')}
-              autoComplete="url"
-              id="contact.url"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.contact?.url}
+          label="Website (Optional)"
+        >
+          <Input
+            {...register('contact.url')}
+            autoComplete="url"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="contact.twitter">X/Twitter (Optional)</Label>
-          <InputWithError errors={errors} name="contact.twitter">
-            <TextInput
-              {...register('contact.twitter')}
+        <FieldLayout
+          error={errors.contact?.twitter}
+          label="X/Twitter (Optional)"
+          startContent={<BsTwitter className="fill-gray-500 w-4 h-4" />}
+        >
+          <Input
+            {...register('contact.twitter')}
               autoComplete="twitter"
-              id="contact.twitter"
-            />
-          </InputWithError>
-        </FormField>
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="contact.facebook">Facebook Page (Optional)</Label>
-          <InputWithError errors={errors} name="contact.facebook">
-            <TextInput
-              {...register('contact.facebook')}
+        <FieldLayout
+          error={errors.contact?.facebook}
+          label="Facebook Page (Optional)"
+          startContent={<BsFacebook className="fill-gray-500 w-4 h-4" />}
+        >
+          <Input
+            {...register('contact.facebook')}
               autoComplete="facebook"
-              id="contact.facebook"
-            />
-          </InputWithError>
-        </FormField>
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="contact.instagram">Instagram (Optional)</Label>
-          <InputWithError errors={errors} name="contact.instagram">
-            <TextInput
-              {...register('contact.instagram')}
+        <FieldLayout
+          error={errors.contact?.instagram}
+          label="Instagram (Optional)"
+          startContent={<BsInstagram className="fill-gray-500 w-4 h-4" />}
+        >
+          <Input
+            {...register('contact.instagram')}
               autoComplete="instagram"
-              id="contact.instagram"
-            />
-          </InputWithError>
-        </FormField>
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>Business Hours</h2>
 
-        <InputWithError errors={errors} name="operatingStatus">
-          <fieldset>
-            <legend>Is your store open?</legend>
-
-            <LabeledRadio
-              {...registerChecked('operatingStatus', 'open')}
-              aria-describedby="vendor.operatingStatus.open">
-              Open
-            </LabeledRadio>
-            <FieldDesc id="vendor.operatingStatus.open">
-              Store is in business.
-            </FieldDesc>
-
-            <LabeledRadio
-              {...registerChecked('operatingStatus', 'temporarilyClosed')}
-              aria-describedby="vendor.operatingStatus.temporarilyClosed">
-              Temporarily closed
-            </LabeledRadio>
-            <FieldDesc id="vendor.operatingStatus.temporarilyClosed">
-              Store will reopen in the future.
-            </FieldDesc>
-
-            <LabeledRadio
-              {...registerChecked('operatingStatus', 'permanentlyClosed')}
-              aria-describedby="vendor.operatingStatus.permanentlyClosed">
-              Permanently closed
-            </LabeledRadio>
-            <FieldDesc id="vendor.operatingStatus.permanentlyClosed">
-              Store is closed and will not reopen.
-            </FieldDesc>
-          </fieldset>
-        </InputWithError>
+        <Controller
+          control={control}
+          name="operatingStatus"
+          render={({field, fieldState}) =>
+            <RadioGroup
+              errorMessage={fieldState.error?.operatingStatus}
+              isInvalid={'operatingStatus' in errors}
+              label="Is your store open?"
+              onValueChange={field.onChange}
+              value={[field.value]}
+            >
+              <Radio
+                description="Store is in business."
+                value="open">
+                Open
+              </Radio>
+              <Radio
+                description="Store will reopen in the future."
+                value="temporarilyClosed">
+                Temporarily closed
+              </Radio>
+              <Radio
+                description="Store is closed and will not reopen."
+                value="permanentlyClosed">
+                Permanently closed
+              </Radio>
+            </RadioGroup>
+          }
+        />
 
         <Controller
           control={control}
@@ -195,65 +185,55 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               schedule={field.value}
             />
           }
-          />
+        />
         <FieldError error={errors.schedule} />
       </section>
 
       <section>
         <h2>Legal</h2>
 
-        <FormField>
-          <Label htmlFor="license.state">State of operation</Label>
-          <InputWithError errors={errors} name="license.state">
-            <TextInput
-              {...register('license.state')}
-              id="license.state"
-              readOnly>
-            </TextInput>
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.license?.state}
+          label="State of operation"
+        >
+          <Input
+            {...register('license.state')}
+            readOnly
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="license.number">OMMA Dispensary License Number</Label>
-          <FieldDesc id="license.number.desc">
-            The dispensary license is issued by the Oklahoma Medical Marijuana Authority (OMMA). The license number is 12 character alphanumeric code, e.g. <code>DAAA-1234-5XYZ</code>.
-          </FieldDesc>
-          <InputWithError errors={errors} name="license.number">
-            <FormattedInput
-              {...useController({control, name: 'license.number'}).field}
-              aria-describedby="license.number.desc license.number.desc2"
-              autoComplete="off"
-              format={orEmpty}
-              id="license.number"
-              parse={VendorUtil.parsePartialOmmaNumber}
-            />
-          </InputWithError>
-          <FieldDesc id="license.number.desc2">
-
-          </FieldDesc>
-        </FormField>
+        <FieldLayout
+          error={errors.license?.number}
+          label="OMMA Dispensary License Number"
+          description={
+            <span>The dispensary license is issued by the Oklahoma Medical Marijuana Authority (OMMA). The license number is 12 character alphanumeric code, e.g. <code>DAAA-1234-5XYZ</code>.</span>
+          }
+        >
+          <FormattedInput
+            {...useController({control, name: 'license.number'}).field}
+            autoComplete="off"
+            format={orEmpty}
+            parse={VendorUtil.parsePartialOmmaNumber}
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>SEO</h2>
 
-        <FormField>
-          <Label htmlFor="slug">URL Slug</Label>
-          <FieldDesc id="slug.desc">
-            The slug represents this dispensary in URLs. For example <code>http://treemap.com/vendor/<strong>acme-joint-emporium</strong></code>.
-          </FieldDesc>
-          <InputWithError errors={errors} name="slug">
-            <TextInput
-              {...register('slug')}
-              aria-describedby="slug.desc slug.desc2"
-              autoComplete="vendor-slug"
-              id="slug"
-            />
-          </InputWithError>
-          <FieldDesc id="slug.desc2">
-            Dash-separated alphanumeric characters only. 60 characters max.
-          </FieldDesc>
-        </FormField>
+        <FieldLayout
+          bottomDescription="Dash-separated alphanumeric characters only. 60 characters max."
+          error={errors.slug}
+          label="URL Slug"
+          description={
+            <span>The slug represents this dispensary in URLs. For example <code>http://treemap.com/vendor/<strong>acme-joint-emporium</strong></code>.</span>
+          }
+        >
+          <Input
+            {...register('slug')}
+            autoComplete="vendor-slug"
+          />
+        </FieldLayout>
       </section>
 
       <FormError errors={errors} />

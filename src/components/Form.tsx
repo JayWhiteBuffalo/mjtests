@@ -2,9 +2,8 @@
 import clsx from 'clsx'
 import ObjectUtil from '@util/ObjectUtil'
 import {CgClose} from 'react-icons/cg'
-import {Children, cloneElement, useId, forwardRef, useCallback} from 'react'
+import {Children, cloneElement, useId, useCallback} from 'react'
 import {get, useForm, useWatch} from 'react-hook-form'
-import {Label, Checkbox, Radio} from 'flowbite-react'
 import {HiCheckCircle, HiInformationCircle} from 'react-icons/hi'
 
 export const InputWithError = ({children, errors, name}) => {
@@ -24,12 +23,72 @@ export const InputWithError = ({children, errors, name}) => {
   )
 }
 
-export const FieldError = ({id, error, path}) =>
-  error?.message != null &&
-    <p id={id} className="FieldError text-red-700 dark:text-red-500">
-      {path?.length ? path.join('.') + ': ' : undefined}
-      {error.message}
-    </p>
+export const FieldLayout = ({label, description, topDescription, bottomDescription, children, error}) => {
+  const id = useId()
+  const descriptionId = useId()
+  const topDescriptionId = useId()
+  const bottomDescriptionId = useId()
+  const errorMessageId = useId()
+
+  const describedByIds = []
+  if (description) {
+    describedByIds.push(descriptionId)
+  }
+  if (topDescription) {
+    describedByIds.push(topDescriptionId)
+  }
+  if (bottomDescription) {
+    describedByIds.push(bottomDescriptionId)
+  }
+
+  const input = cloneElement(
+    Children.only(children),
+    {
+      'aria-describedby': describedByIds.length ? describedByIds.join(' ') : undefined,
+      'aria-errormessage': error ? errorMessageId : undefined,
+      //'aria-invalid': error != null,
+      color: error ? 'failure' : undefined,
+      id,
+      isInvalid: error != null,
+    }
+  )
+
+  //const descriptionIsTop = bottomDescription && !topDescription
+  const descriptionIsTop = true
+  const descriptionNode =
+    description
+      ? <FieldDescription id={descriptionId}>{description}</FieldDescription>
+      : undefined
+  
+  return (
+    <div className="my-2">
+      {label
+        ? <label htmlFor={id} className="block">{label}</label>
+        : undefined
+      }
+      {topDescription
+        ? <FieldDescription id={topDescriptionId}>{topDescription}</FieldDescription>
+        : undefined
+      }
+      {descriptionIsTop ? descriptionNode : undefined}
+      {input}
+      <FieldError id={errorMessageId} error={error} />
+      {!descriptionIsTop ? descriptionNode : undefined}
+      {bottomDescription
+        ? <FieldDescription id={bottomDescriptionId}>{bottomDescription}</FieldDescription>
+        : undefined
+      }
+    </div>
+  )
+}
+
+export const FieldError = ({error, path, className, ...rest}) =>
+  error?.message != null
+    ? <p className={clsx('FieldError text-sm text-danger', className)} {...rest}>
+        {path?.length ? path.join('.') + ': ' : undefined}
+        {error.message}
+      </p>
+    : undefined
 
 
 export const RecursiveErrors = ({errors, showPath}) =>
@@ -43,8 +102,8 @@ export const RecursiveErrors = ({errors, showPath}) =>
     )}
   </>
 
-export const FieldDesc = ({children, id}) =>
-  <p id={id} className="text-gray-600">{children}</p>
+export const FieldDescription = ({children, ...rest}) =>
+  <p className={clsx('text-foreground-600 text-sm', className)} {...rest}>{children}</p>
 
 export const useTreemapForm = options => {
   const methods = useForm(options)
@@ -96,50 +155,6 @@ export const FormField = ({children}) =>
   <div className="my-4">
     {children}
   </div>
-
-export const LabeledCheckbox = forwardRef(({children, disabled, id, className, ...rest}, ref) => {
-  const id0 = useId()
-  id ??= id0
-
-  return (
-    <Label
-      className="flex items-center"
-      disabled={disabled}
-      htmlFor={id}>
-      <Checkbox
-        className={clsx('mr-2 bg-gray-50', className)}
-        disabled={disabled}
-        id={id}
-        ref={ref}
-        {...rest}
-      />
-      {children}
-    </Label>
-  )
-})
-LabeledCheckbox.displayName = 'LabeledCheckbox'
-
-export const LabeledRadio = forwardRef(({children, disabled, id, className, ...rest}, ref) => {
-  const id0 = useId()
-  id ??= id0
-
-  return (
-    <Label
-      className="flex items-center"
-      disabled={disabled}
-      htmlFor={id}>
-      <Radio
-        className={clsx('mr-2 bg-gray-50', className)}
-        disabled={disabled}
-        id={id}
-        ref={ref}
-        {...rest}
-      />
-      {children}
-    </Label>
-  )
-})
-LabeledRadio.displayName = 'LabeledRadio'
 
 export const RemoveButton = ({onClick, className}) =>
   <button

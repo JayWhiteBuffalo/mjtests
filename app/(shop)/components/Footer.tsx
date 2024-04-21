@@ -1,60 +1,75 @@
-import {Footer} from 'flowbite-react'
-import {BsFacebook, BsGithub, BsInstagram, BsTwitter} from 'react-icons/bs'
+import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
+import {Logo, companyName, siteName} from '@components/Site'
+import Link from 'next/link'
+
+export const FooterLinkGroup = ({title, children}) =>
+  <div>
+    <div>{title}</div>
+    <ul>
+      {children}
+    </ul>
+  </div>
+
+export const FooterLink = ({href, children}) =>
+  <li>
+    <Link href={href}>
+      {children}
+    </Link>
+  </li>
+
+export const FooterNav = () =>
+  <nav className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
+    <div>
+      <Logo width={200} height={200} />
+      {siteName}
+    </div>
+
+    <div className="grid w-full grid-cols-2 gap-8 px-6 py-8 md:grid-cols-4">
+      <FooterLinkGroup title="About">
+        <FooterLink href="/help/about">Treemap</FooterLink>
+        <FooterLink href="/help">Help</FooterLink>
+        <FooterLink href="/blog">Blog</FooterLink>
+      </FooterLinkGroup>
+
+      <FooterLinkGroup title="Follow us">
+        <FooterLink href="#">Facebook</FooterLink>
+        <FooterLink href="#">Instagram</FooterLink>
+        <FooterLink href="https://twitter.com/mjtests">Twitter</FooterLink>
+      </FooterLinkGroup>
+
+      <FooterLinkGroup title="Legal">
+        <FooterLink href="/help/privacy">Privacy Policy</FooterLink>
+        <FooterLink href="/help/terms">Terms &amp; Conditions</FooterLink>
+      </FooterLinkGroup>
+
+      <FooterLinkGroup title="Business">
+        <FooterLink href="/business#distributor">For Distributors</FooterLink>
+        <FooterLink href="/business#producer">For Producers</FooterLink>
+      </FooterLinkGroup>
+    </div>
+  </nav>
+
+export const FooterCopyright = ({year = 2024}) =>
+  <span>© {year} {companyName}</span>
+
+export const FooterIcon = ({href, Icon}) =>
+  <Link href={href}>
+    <Icon className="w-4 h-4" />
+  </Link>
+
+export const FooterBar = () =>
+  <div className="w-full sm:flex sm:items-center sm:justify-between">
+    <FooterCopyright />
+    <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
+      <FooterIcon href="#" Icon={BsFacebook} />
+      <FooterIcon href="#" Icon={BsInstagram} />
+      <FooterIcon href="https://twitter.com/mjtests" Icon={BsTwitter} />
+    </div>
+  </div>
 
 export const ShopFooter = () =>
-  <Footer container>
-    <div className="w-full">
-      <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-        <div>
-          <Footer.Brand
-            href="/"
-            src="https://flowbite.com/docs/images/logo.svg"
-            alt="Treemap Logo"
-            name="Treemap"
-          />
-        </div>
-        <div className="grid w-full grid-cols-2 gap-8 px-6 py-8 md:grid-cols-4">
-          <div>
-            <Footer.Title title="About" />
-            <Footer.LinkGroup col>
-              <Footer.Link href="/help/about">Treemap</Footer.Link>
-              <Footer.Link href="/help">Help</Footer.Link>
-              <Footer.Link href="/blog">Blog</Footer.Link>
-            </Footer.LinkGroup>
-          </div>
-          <div>
-            <Footer.Title title="Follow us" />
-            <Footer.LinkGroup col>
-              <Footer.Link href="#">Facebook</Footer.Link>
-              <Footer.Link href="#">Instagram</Footer.Link>
-              <Footer.Link href="https://twitter.com/mjtests">Twitter</Footer.Link>
-            </Footer.LinkGroup>
-          </div>
-          <div>
-            <Footer.Title title="Legal" />
-            <Footer.LinkGroup col>
-              <Footer.Link href="/help/privacy">Privacy Policy</Footer.Link>
-              <Footer.Link href="/help/terms">Terms &amp; Conditions</Footer.Link>
-            </Footer.LinkGroup>
-          </div>
-          <div>
-            <Footer.Title title="Business" />
-            <Footer.LinkGroup col>
-              <Footer.Link href="/business#distributor">For Distributors</Footer.Link>
-              <Footer.Link href="/business#producer">For Producers</Footer.Link>
-            </Footer.LinkGroup>
-          </div>
-        </div>
-      </div>
-      <Footer.Divider />
-      <div className="w-full sm:flex sm:items-center sm:justify-between">
-        <Footer.Copyright href="#" by="Treemap" year={2024} />
-        <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-          <Footer.Icon href="#" icon={BsFacebook} />
-          <Footer.Icon href="#" icon={BsInstagram} />
-          <Footer.Icon href="https://twitter.com/mjtests" icon={BsTwitter} />
-          <Footer.Icon href="#" icon={BsGithub} />
-        </div>
-      </div>
-    </div>
-  </Footer>
+  <div className="w-full">
+    <FooterNav />
+    <hr />
+    <FooterBar />
+  </div>

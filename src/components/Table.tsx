@@ -1,66 +1,65 @@
 'use client'
 import ObjectUtil from '@util/ObjectUtil'
 import {BlueLink} from '@components/Link'
-import {Checkbox} from 'flowbite-react'
-import {Table} from 'flowbite-react'
+import {Checkbox, Table, TableHeader, TableBody, TableCell, TableRow, TableColumn} from '@nextui-org/react'
 
 export const DefaultCell = ({value}) =>
-  <Table.Cell>
+  <TableCell>
     {value}
-  </Table.Cell>
+  </TableCell>
 
 export const DefaultHeaderCell = ({label}) =>
-  <Table.HeadCell>
+  <TableColumn>
     {label}
-  </Table.HeadCell>
+  </TableColumn>
 
 export const CheckboxCell = () =>
-  <Table.Cell className="p-4">
+  <TableCell className="p-4">
     <Checkbox />
-  </Table.Cell>
+  </TableCell>
 
 export const CheckboxHeaderCell = () =>
-  <Table.Cell className="p-4">
+  <TableCell className="p-4">
     <Checkbox />
-  </Table.Cell>
+  </TableCell>
 
 export const ActionCell = () =>
-  <Table.Cell>
+  <TableCell>
     <BlueLink href="#" className="font-medium">
       Edit
     </BlueLink>
-  </Table.Cell>
+  </TableCell>
 
 export const ActionHeaderCell = () =>
-  <Table.HeadCell>
+  <TableColumn>
     <span className="sr-only">Actions</span>
-  </Table.HeadCell>
+  </TableColumn>
 
 export const TMTable = ({items, columns, getItemKey}) => {
   getItemKey ??= item => item.id ?? item.key
 
   return (
     <div className="overflow-x-auto">
-      <Table hoverable>
-        <Table.Head>
-          {columns.map(column =>
+      <Table>
+        <TableHeader columns={columns}>
+          {column =>
             <column.HeaderCell key={column.key} label={column.label} />
-          )}
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {items.map(item =>
-            <Table.Row key={getItemKey(item)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              {columns.map(column =>
+          }
+        </TableHeader>
+        <TableBody className="divide-y" items={items}>
+          {item =>
+            <TableRow key={getItemKey(item)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+              {column =>
                 <column.Cell
                   key={column.key}
                   value={ObjectUtil.getByPath(item, column.key)}
                   item={item}
                   column={column}
                 />
-              )}
-            </Table.Row>
-          )}
-        </Table.Body>
+              }
+            </TableRow>
+          }
+        </TableBody>
       </Table>
     </div>
   )

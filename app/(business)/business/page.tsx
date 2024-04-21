@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import clsx from 'clsx'
-import {Button} from 'flowbite-react'
+import Link from 'next/link'
+import {Button} from '@nextui-org/react'
 
 export const Card = ({children}) =>
   <section className={clsx(

@@ -9,7 +9,7 @@ import {GiPathDistance} from 'react-icons/gi'
 import {HiOutlineChevronDoubleUp, HiOutlineChevronDoubleDown, HiOutlineChevronDown, HiLocationMarker} from 'react-icons/hi'
 import {LocationTypeaheadStore} from '../state/DataStore'
 import {TbSortAscendingLetters} from 'react-icons/tb'
-import {TextInput, Button, Dropdown, Spinner} from 'flowbite-react'
+import {Button, Spinner, Dropdown, DropdownItem, DropdownTrigger, DropdownMenu, Input} from '@nextui-org/react'
 import {useFloating, useDismiss, useInteractions, useRole, flip, shift, size, FloatingFocusManager, useListNavigation} from '@floating-ui/react'
 import {useState, useCallback, useRef, forwardRef} from 'react'
 
@@ -33,23 +33,31 @@ const sortItemProps = [
 
 const SortDropdown = ({sortBy, onChange}) => {
   const selectedProps = sortItemProps.find(x => x.key === sortBy)
-  const BaseButton = () =>
-    <Button className="SortDropdown" size="sm">
-      <selectedProps.Icon className="mr-2 h-4 w-4 inline-block" />
-      Sort: {selectedProps.label}
-      <HiOutlineChevronDown className="ml-2 h-4 w-4" />
-    </Button>
 
   return (
-    <Dropdown renderTrigger={BaseButton}>
-      {sortItemProps.map(props =>
-        <Dropdown.Item
-          key={props.key}
-          onClick={() => onChange(props.key)}
-          icon={props.Icon}>
+    <Dropdown
+        classNames={{content: "min-w-30"}}>
+      <DropdownTrigger>
+        <Button
+          className="SortDropdown"
+          startContent={<selectedProps.Icon />}
+          endContent={<HiOutlineChevronDown />}
+        >
+          Sort: {selectedProps.label}
+        </Button>
+      </DropdownTrigger>
+
+      <DropdownMenu
+        aria-label="Product list sort by"
+        onAction={key => onChange(key)}>
+        {sortItemProps.map(props =>
+          <DropdownItem
+            key={props.key}
+            startContent={<props.Icon />}>
             {props.label}
-        </Dropdown.Item>
-      )}
+          </DropdownItem>
+        )}
+      </DropdownMenu>
     </Dropdown>
   )
 }
@@ -67,14 +75,9 @@ const SortDropdownContainer = () => {
 const ToggleFilterPane = ({showFilterPane, onClick}) =>
   <Button
     className="ToggleFilterPane"
-    size="sm"
-    onClick={onClick}>
+    onPress={onClick}
+    endContent={showFilterPane ? <HiOutlineChevronDoubleUp /> : <HiOutlineChevronDoubleDown />}>
     Filters
-    {
-      showFilterPane
-        ? <HiOutlineChevronDoubleUp className="ml-1 h-4 w-4" />
-        : <HiOutlineChevronDoubleDown className="ml-1 h-4 w-4" />
-    }
   </Button>
 
 const ToggleFilterPaneContainer = () => {
@@ -102,25 +105,27 @@ const modeItemProps = [
 
 const ProductListModeSelector = ({mode, onChange}) => {
   const selectedProps = modeItemProps.find(x => x.key === mode)
-  const BaseButton = () =>
-    <Button
-      theme={{size: {xs: 'text-xs px-1'}}}
-      className="SortDropdown"
-      size="xs"
-    >
-      <selectedProps.Icon className="h-5 w-5" />
-    </Button>
 
   return (
-    <Dropdown renderTrigger={BaseButton}>
-      {modeItemProps.map(props =>
-        <Dropdown.Item
-          key={props.key}
-          onClick={() => onChange(props.key)}
-          icon={props.Icon}>
+    <Dropdown
+        classNames={{content: "min-w-20"}}>
+      <DropdownTrigger>
+        <Button className="SortDropdown" isIconOnly>
+          <selectedProps.Icon className="h-5 w-5" />
+        </Button>
+      </DropdownTrigger>
+
+      <DropdownMenu
+        aria-label="Product list details mode"
+        onAction={key => onChange(key)}>
+        {modeItemProps.map(props =>
+          <DropdownItem
+            key={props.key}
+            startContent={<props.Icon />}>
             {props.label}
-        </Dropdown.Item>
-      )}
+          </DropdownItem>
+        )}
+      </DropdownMenu>
     </Dropdown>
   )
 }
@@ -136,12 +141,13 @@ const ProductListModeSelectorContainer = () => {
 }
 
 const FilterKeyword = ({keyword, onChange}) =>
-  <TextInput
-    className="FilterKeyword"
-    icon={CgSearch}
+  <Input
+    className="flex-1 basis-40"
     id="filterKeyword"
+    isClearable
     onChange={e => onChange(e.target.value)}
     placeholder="Search products"
+    startContent={<CgSearch className="w-6 h-6" />}
     type="search"
     value={keyword}
   />
@@ -270,12 +276,12 @@ const MapKeyword = ({keyword, items, exact, onChangeKeyword, geolocationInProgre
 
   return (
     <>
-      <TextInput
+      <Input
         {...getReferenceProps({onKeyDown, onChange, onFocus, onClick})}
         aria-autocomplete="list"
         autoComplete="off"
-        className="MapKeyword"
-        icon={HiLocationMarker}
+        className="flex-1 basis-32"
+        startContent={<HiLocationMarker className="w-6 h-6" />}
         id="mapKeyword"
         placeholder="Near me"
         ref={refs.setReference}
@@ -310,14 +316,14 @@ const MapKeywordContainer = () => {
 }
 
 const SearchBar = () =>
-  <div className="SearchBar">
-    <search className="SearchBarLeft">
+  <div className="flex flex-wrap bg-white flex-1 basis-1 gap-1 mx-auto px-2 py-1 justify-end max-w-[900px]">
+    <search className="flex flex-wrap gap-1">
       <ErrorBoundary>
         <FilterKeywordContainer />
         <MapKeywordContainer />
       </ErrorBoundary>
     </search>
-    <div className="SearchBarRight">
+    <div className="SearchBarRight flex flex-wrap flex-initial gap-1">
       <ErrorBoundary>
         <SortDropdownContainer />
         <ToggleFilterPaneContainer />

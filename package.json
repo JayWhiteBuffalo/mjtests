@@ -56,14 +56,5 @@
     "typescript": "^5.4.4",
     "typescript-eslint": "^7.5.0"
   },
-  "type": "module",
-  "postcss": {
-    "plugins": {
-      "postcss-import": {},
-      "postcss-preset-mantine": {},
-      "tailwindcss/nesting": "postcss-nesting",
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
-  }
+  "type": "module"
 }

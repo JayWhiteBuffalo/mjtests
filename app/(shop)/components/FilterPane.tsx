@@ -9,22 +9,24 @@ import {ErrorBoundary} from '@components/Error'
 import {FilterStore} from '../state/UIStore'
 import {HiOutlineShoppingBag} from 'react-icons/hi2'
 import {IntervalTextbox} from '@components/IntervalControl'
-import {Label, RangeSlider} from 'flowbite-react'
 import {LuClock2} from 'react-icons/lu'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
 import {RemoveButton} from '@components/Form'
+import {Slider, Button} from '@nextui-org/react'
 import {SmallMultiDropdown, LargeMultiDropdown} from '@components/MultiDropdown'
 import {TerpeneSelector} from '@components/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {useFluxStore, dispatch} from '@/state/Flux'
 
 export const ClearFilterButton = ({onClick}) =>
-  <button
-    className="ClearFilterButton ml-2"
-    onClick={onClick}
-    type="button">
-    <CgClose size="1.5em" />
-  </button>
+  <Button
+    className="-my-1"
+    isIconOnly
+    onPress={onClick}
+    size="sm"
+    variant="light">
+    <CgClose className="w-6 h-6" />
+  </Button>
 
 const FlagFilterItems = [
   {
@@ -44,6 +46,11 @@ const FilterSection = ({children}) =>
     {children}
   </section>
 
+const FilterSectionHeader = ({children}) =>
+  <header className="flex justify-between items-center my-1">
+    {children}
+  </header>
+
 const FilterItem = ({children}) =>
   <div className="FilterPaneItem flex items-center justify-around my-1">
     {children}
@@ -60,16 +67,18 @@ const CommonFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Flags</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
 
       <FilterItem>
         <CheckboxGroup
+          aria-label="Select common flag filters"
           items={FlagFilterItems}
-          values={filter.flags}
           onChange={flags => onChange({flags})}
+          orientation="horizontal"
+          values={filter.flags}
         />
       </FilterItem>
     </FilterSection>
@@ -94,22 +103,25 @@ const ProductTypeFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Category</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
 
       <FilterItem>
         <CheckboxGroup
+          aria-label="Select product types"
           items={Treemap.productTypes}
-          values={filter.productTypes}
           onChange={productTypes => onChange({productTypes})}
+          orientation="horizontal"
+          values={filter.productTypes}
         />
       </FilterItem>
 
       <FilterItem>
-        <Label className="flex-1" htmlFor="concentrateTypes">Concentrates</Label>
+        <label className="flex-1" htmlFor="concentrateTypes">Concentrates</label>
         <SmallMultiDropdown
+          className="w-40"
           id="concentrateTypes"
           items={Treemap.concentrateTypes}
           values={filter.concentrateTypes}
@@ -119,8 +131,9 @@ const ProductTypeFilterSection = ({filter, onChange}) => {
       </FilterItem>
 
       <FilterItem>
-        <Label className="flex-1" htmlFor="brands">Brands</Label>
+        <label className="flex-1" htmlFor="brands">Brands</label>
         <LargeMultiDropdown
+          className="w-40"
           id="brands"
           onChange={brands => onChange({brands})}
           placeholder="Brands"
@@ -148,10 +161,10 @@ const SpeciesFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Species</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
 
       <FilterItem>
         <ButtonCbGroup
@@ -162,8 +175,9 @@ const SpeciesFilterSection = ({filter, onChange}) => {
       </FilterItem>
 
       <FilterItem>
-        <Label className="flex-1" htmlFor="cultivars">Strains</Label>
+        <label className="flex-1" htmlFor="cultivars">Strains</label>
         <LargeMultiDropdown
+          className="w-40"
           id="cultivars"
           onChange={cultivars => onChange({cultivars})}
           placeholder="Strains"
@@ -188,10 +202,10 @@ const PotencyFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Potency and Weight</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
       <PotencyFilter potency={filter.potency} onChange={potency => onChange({potency})} />
       <WeightFilter range={filter.weight} onChange={weight => onChange({weight})} />
     </FilterSection>
@@ -201,7 +215,7 @@ const PotencyFilterSection = ({filter, onChange}) => {
 const PotencyFilter = ({potency, onChange}) =>
   <>
     <FilterItem>
-      <Label className="flex-1" htmlFor="potency.thc.min">Total THC (%)</Label>
+      <label className="flex-1" htmlFor="potency.thc.min">Total THC (%)</label>
       <IntervalTextbox
         bound={[0, 1].map(x => x * 100)}
         id="potency.thc"
@@ -212,7 +226,7 @@ const PotencyFilter = ({potency, onChange}) =>
     </FilterItem>
 
     <FilterItem>
-      <Label className="flex-1" htmlFor="potency.cbd.min">Total CBD (%)</Label>
+      <label className="flex-1" htmlFor="potency.cbd.min">Total CBD (%)</label>
       <IntervalTextbox
         bound={[0, 1].map(x => x * 100)}
         id="potency.cbd"
@@ -225,7 +239,7 @@ const PotencyFilter = ({potency, onChange}) =>
 
 const WeightFilter = ({range, onChange}) =>
   <FilterItem>
-    <Label className="flex-1" htmlFor="weight.min">Weight (g)</Label>
+    <label className="flex-1" htmlFor="weight.min">Weight (g)</label>
     <IntervalTextbox
       bound={[0, 100]}
       id="weight"
@@ -248,12 +262,12 @@ const PriceFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Price</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
       <FilterItem>
-        <Label className="flex-1" htmlFor="price.min">Price ($)</Label>
+        <label className="flex-1" htmlFor="price.min">Price ($)</label>
         <IntervalTextbox
           bound={[0, 1000]}
           id="price"
@@ -263,7 +277,7 @@ const PriceFilterSection = ({filter, onChange}) => {
         />
       </FilterItem>
       <FilterItem>
-        <Label className="flex-1" htmlFor="pricePerGram.min">Price per gram ($/g)</Label>
+        <label className="flex-1" htmlFor="pricePerGram.min">Price per gram ($/g)</label>
         <IntervalTextbox
           bound={[0, 1000]}
           id="pricePerGram"
@@ -291,26 +305,28 @@ const LocationFilterSection = ({filter, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Location</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
 
       <FilterItem>
-        <Label htmlFor="location.distance" className="flex-1">Distance (mi)</Label>
-        <RangeSlider
-          id="location.distance"
-          max={bound[1]}
-          min={bound[0]}
-          onChange={e => onChange({location: {...filter.location, distance: +e.target.value}})}
+        <label id="location.distance.label" className="flex-1">Distance (mi)</label>
+        <Slider
+          aria-labelledby="location.distance.label"
+          maxValue={bound[1]}
+          minValue={bound[0]}
+          onChange={distance => onChange({location: {...filter.location, distance}})}
+          showTooltip
           style={{width: '163px'}}
           value={filter.location.distance || bound[1]}
         />
       </FilterItem>
 
       <FilterItem>
-        <Label className="flex-1" htmlFor="vendors">Stores</Label>
+        <label className="flex-1" htmlFor="vendors">Stores</label>
         <LargeMultiDropdown
+          className="w-40"
           id="vendors"
           onChange={vendors => onChange({vendors})}
           placeholder="Stores"
@@ -348,12 +364,12 @@ const TerpFilterItem = ({terpName, range, bound, onChange, onRemove}) => {
   const color = Treemap.terpenesByName[terpName].color
   return (
     <FilterItem>
-      <Label
+      <label
         className="flex-1"
         style={{textTransform: 'capitalize', color}}
         htmlFor={'terps.' + terpName + '.min'}>
         {terpName} (%)
-      </Label>
+      </label>
       <IntervalTextbox
         bound={bound.map(x => x * 100)}
         id={'terps.' + terpName}
@@ -385,10 +401,10 @@ export const TerpsFilterSection = ({terps, onChange}) => {
 
   return (
     <FilterSection>
-      <header className="flex justify-between">
+      <FilterSectionHeader>
         <span>Terpenes</span>
         {clearButton}
-      </header>
+      </FilterSectionHeader>
       <TerpeneSelector
         onSelect={terpName => dispatch({type: 'filter.addTerp', terpName})}
         disabledTerps={terps}

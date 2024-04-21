@@ -1,29 +1,4 @@
 
-.SearchBar {
-  background: white;
-  display: flex;
-  flex-wrap: wrap;
-  flex: 1 1 min-content;
-  grid-gap: 4px;
-  justify-content: right;
-  margin: 0 auto;
-  max-width: 900px;
-  padding: 4px 8px;
-}
-
-.SearchBarLeft {
-  display: flex;
-  flex-flow: row wrap;
-  grid-gap: 4px;
-}
-
-.FilterKeyword {
-  flex: 1 1 180px;
-}
-
-.MapKeyword {
-  flex: 1 1 140px;
-}
 
 .MapKeywordPopup {
   align-items: stretch;
@@ -57,13 +32,6 @@
 
 .MapKeywordPopup .spinner {
   margin-top: -2px;
-}
-
-.SearchBarRight {
-  display: flex;
-  flex-flow: row wrap;
-  flex: 0 1 auto;
-  grid-gap: 4px;
 }
 
 @media (width <= 414px) {

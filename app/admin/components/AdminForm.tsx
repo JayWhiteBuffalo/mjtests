@@ -1,11 +1,10 @@
 import {BlueLink} from '@components/Link'
-import {FieldDesc} from '@components/Form'
 
-export const AdminOnlyFieldDesc = ({isAdmin, ...rest}) =>
+export const AdminOnlyText = ({isAdmin, ...rest}) =>
   isAdmin
-    ? <FieldDesc {...rest}>
+    ? <span {...rest}>
         (This field can only be modified by site admins.)
-      </FieldDesc>
-    : <FieldDesc {...rest}>
+      </span>
+    : <span {...rest}>
         Please <BlueLink href="/help/contact">contact us</BlueLink> if you wish to change this.
-      </FieldDesc>
+      </span>

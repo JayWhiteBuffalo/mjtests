@@ -1,6 +1,6 @@
 import './TerpeneSelector.css'
 import clsx from 'clsx'
-import {Button} from 'flowbite-react'
+import {Button} from '@nextui-org/react'
 import {forwardRef, useState, useCallback, useRef} from 'react'
 import {HiOutlineChevronDown} from "react-icons/hi"
 import {Treemap} from '@/Treemap'
@@ -125,10 +125,11 @@ export const TerpeneSelector = ({onSelect, disabledTerps = {}}) => {
     <>
       <Button
         {...getReferenceProps()}
-        className="AddTerpButton w-full"
-        ref={refs.setReference}>
-        <span>Select Terpene</span>
-        <HiOutlineChevronDown className="ml-2 h-4 w-4" />
+        className="w-full"
+        endContent={<HiOutlineChevronDown className="h-4 w-4" />}
+        ref={refs.setReference}
+      >
+        Select Terpene
       </Button>
       {expanded && Floating()}
     </>

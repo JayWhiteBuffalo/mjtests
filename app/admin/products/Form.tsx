@@ -1,9 +1,9 @@
 'use client'
 import ArrayUtil from '@util/ArrayUtil'
-import {AdminOnlyFieldDesc} from '@app/admin/components/AdminForm'
-import {Button, Label, TextInput} from 'flowbite-react'
+import {AdminOnlyText} from '@app/admin/components/AdminForm'
 import {Dropdown, Typeahead} from '@components/Dropdown'
 import {ImageInput} from '@app/admin/components/ImageInput'
+import {Input, Button} from '@nextui-org/react'
 import {PotencyInput} from '@app/admin/components/TerpeneInput'
 import {preprocessFormData} from './Schema'
 import {PreviewContainer} from './Pane'
@@ -11,7 +11,7 @@ import {TerpeneInput} from '@app/admin/components/TerpeneInput'
 import {Treemap} from '@/Treemap'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {useController, Controller} from 'react-hook-form'
-import {Watch, nullResolver, useTreemapForm, FormField, InputWithError, FieldDesc, FormError} from '@components/Form'
+import {Watch, nullResolver, useTreemapForm, FieldLayout, FormError} from '@components/Form'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -30,171 +30,149 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
       <section>
         <h2>General</h2>
 
-        <FormField>
-          <Label htmlFor="name">Product Name</Label>
-          <InputWithError errors={errors} name="name">
-            <TextInput
-              {...register('name')}
-              autoComplete="off"
-              id="name"
-              placeholder="Mary Jane"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.name}
+          label="Product Name"
+        >
+          <Input
+            {...register('name')}
+            autoComplete="off"
+            placeholder="Mary Jane"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="productType">Product Type</Label>
-          <InputWithError errors={errors} name="productType">
-            <Dropdown
-              {...useController({control, name: 'productType'}).field}
-              id="productType"
-              items={sortedProductTypes}
-              placeholder="Select product type"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.productType}
+          label="Product Type"
+        >
+          <Dropdown
+            {...useController({control, name: 'productType'}).field}
+            items={sortedProductTypes}
+            placeholder="Select product type"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="concentrateType">Concentrate Type</Label>
-          <InputWithError errors={errors} name="concentrateType">
-            <Dropdown
-              {...useController({
-                control,
-                name: 'concentrateType',
-                disabled: productType !== 'concentrate',
-              }).field}
-              id="concentrateType"
-              items={Treemap.concentrateTypes}
-              placeholder="Select concentrate type"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          label="Concentrate Type"
+          error={errors.concentrateType}
+        >
+          <Dropdown
+            {...useController({
+              control,
+              name: 'concentrateType',
+              disabled: productType !== 'concentrate',
+            }).field}
+            items={Treemap.concentrateTypes}
+            placeholder="Select concentrate type"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="brand">Brand</Label>
-          <InputWithError errors={errors} name="brand">
-            <Typeahead
-              {...useController({control, name: 'brand'}).field}
-              id="brand"
-              TypeaheadStore={BrandTypeaheadStore}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          label="Brand"
+          error={errors.brand}
+        >
+          <Typeahead
+            {...useController({control, name: 'brand'}).field}
+            TypeaheadStore={BrandTypeaheadStore}
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>Weight and Price</h2>
 
-        <FormField>
-          <Label htmlFor="vendorId">Dispensary</Label>
-          <InputWithError errors={errors} name="vendorId">
-            <Dropdown
-              {...useController({control, name: 'vendorId'}).field}
-              id="vendorId"
-              items={vendorItems}
-              readOnly={!isAdmin && product.vendorId != null}
-            />
-          </InputWithError>
-          <AdminOnlyFieldDesc isAdmin={isAdmin && product.vendorId != null} />
-        </FormField>
+        <FieldLayout
+          bottomDescription={<AdminOnlyText isAdmin={isAdmin && product.vendorId != null} />}
+          error={errors.concentrateType}
+          label="Dispensary"
+        >
+          <Dropdown
+            {...useController({control, name: 'vendorId'}).field}
+            items={vendorItems}
+            readOnly={!isAdmin && product.vendorId != null}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="price">Price (USD)</Label>
-          <InputWithError errors={errors} name="price">
-            <TextInput
-              {...register('price')}
-              id="price"
-              type="number"
-              step={0.01}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.price}
+          label="Price (USD)"
+        >
+          <Input
+            step={0.01}
+            type="number"
+            {...register('price')}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="weight">Weight (g)</Label>
-          <InputWithError errors={errors} name="weight">
-            <TextInput
-              {...register('weight')}
-              id="weight"
-              type="number"
-              step={0.01}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.weight}
+          label="Weight (g)"
+        >
+          <Input
+            step={0.01}
+            type="number"
+            {...register('weight')}
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>Activity</h2>
 
-        <FormField>
-          <Label htmlFor="producerId">Grower</Label>
-          <InputWithError errors={errors} name="producerId">
-            <Dropdown
-              {...useController({control, name: 'producerId'}).field}
-              id="producerId"
-              items={producerItems}
-              readOnly={!isAdmin && product.producerId != null}
-            />
-          </InputWithError>
-          <AdminOnlyFieldDesc isAdmin={isAdmin && product.producerId != null} />
-        </FormField>
+        <FieldLayout
+          bottomDescription={<AdminOnlyText isAdmin={isAdmin && product.producerId != null} />}
+          error={errors.producerId}
+          label="Grower"
+        >
+          <Dropdown
+            {...useController({control, name: 'producerId'}).field}
+            items={producerItems}
+            readOnly={!isAdmin && product.producerId != null}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="subspecies">Subspecies</Label>
-          <InputWithError errors={errors} name="subspecies">
-            <Dropdown
-              {...useController({control, name: 'subspecies'}).field}
-              id="subspecies"
-              items={Treemap.subspecies}
-              placeholder="Select subspecies"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.subspecies}
+          label="Subspecies"
+        >
+          <Dropdown
+            {...useController({control, name: 'subspecies'}).field}
+            items={Treemap.subspecies}
+            placeholder="Select subspecies"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="cultivar">Cultivar</Label>
-          <InputWithError errors={errors} name="cultivar">
-            <Typeahead
-              {...useController({control, name: 'cultivar'}).field}
-              id="cultivar"
-              TypeaheadStore={CultivarTypeaheadStore}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          label="Cultivar"
+          error={errors.cultivar}
+        >
+          <Typeahead
+            {...useController({control, name: 'cultivar'}).field}
+            TypeaheadStore={CultivarTypeaheadStore}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="potency.thc">THC Potency (%)</Label>
-          <FieldDesc id="potency.cbd.desc">
-            Enter the total THC content, as a percent of concentration by weight.
-          </FieldDesc>
-          <InputWithError errors={errors} name="potency.thc">
-            <PotencyInput
-              {...useController({control, name: 'potency.thc'}).field}
-              aria-describedby="potency.thc potency.thc2"
-              id="potency.thc"
-            />
-          </InputWithError>
-          <FieldDesc id="potency.thc2">
-            Max precision 1ppm
-          </FieldDesc>
-        </FormField>
+        <FieldLayout
+          bottomDescription="Max precision 1ppm"
+          error={errors.potency?.thc}
+          label="THC Potency (%)"
+          description="Enter the total THC content, as a percent of concentration by weight."
+        >
+          <PotencyInput
+            {...useController({control, name: 'potency.thc'}).field}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="potency.cbd">CBD Potency (%)</Label>
-          <FieldDesc id="potency.cbd.desc">
-            Enter the total CBD content, as a percent of concentration by weight.
-          </FieldDesc>
-          <InputWithError errors={errors} name="potency.cbd">
-            <PotencyInput
-              {...useController({control, name: 'potency.cbd'}).field}
-              aria-describedby="potency.cbd potency.cbd2"
-              id="potency.cbd"
-            />
-          </InputWithError>
-          <FieldDesc id="potency.cbd2">
-            Max precision 1ppm
-          </FieldDesc>
-        </FormField>
+        <FieldLayout
+          bottomDescription="Max precision 1ppm"
+          error={errors.potency?.cbd}
+          label="THC Potency (%)"
+          description="Enter the total CBD content, as a percent of concentration by weight."
+        >
+          <PotencyInput
+            {...useController({control, name: 'potency.cbd'}).field}
+          />
+        </FieldLayout>
 
         <Controller
           control={control}
@@ -206,7 +184,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               terps={field.value ?? {}}
             />
           }
-          />
+        />
       </section>
 
       <section>
@@ -223,36 +201,34 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
               onChange={field.onChange}
             />
           }
-          />
+        />
       </section>
 
       <section>
         <h2>SEO</h2>
 
-        <FormField>
-          <Label htmlFor="slug">URL Slug</Label>
-          <FieldDesc id="slug.desc">
-            The slug represents this product in URLs. For example <code>http://treemap.com/product/<strong>beth-harmon-7g</strong></code>.
-          </FieldDesc>
-          <InputWithError errors={errors} name="slug">
-            <TextInput
-              {...register('slug')}
-              aria-describedby="slug.desc slug.desc2"
-              autoComplete="vendor-slug"
-              id="slug"
-            />
-          </InputWithError>
-          <FieldDesc id="slug.desc2">
-            Dash-separated alphanumeric characters only. 60 characters max.
-          </FieldDesc>
-        </FormField>
+        <FieldLayout
+          bottomDescription="Dash-separated alphanumeric characters only. 60 characters max."
+          error={errors.slug}
+          label="URL Slug"
+          description={
+            <span>
+              The slug represents this product in URLs. For example <code>http://treemap.com/product/<strong>beth-harmon-7g</strong></code>.
+            </span>
+          }
+        >
+          <Input
+            {...register('slug')}
+            autoComplete="product-slug"
+          />
+        </FieldLayout>
       </section>
 
       <FormError errors={errors} />
 
       <div className="flex gap-2">
         <Button type="submit">Save as Draft</Button>
-        <Button type="submit" color="purple" formAction={handleSubmit(publish)}>Publish</Button>
+        <Button type="submit" color="secondary" formAction={handleSubmit(publish)}>Publish</Button>
       </div>
 
       <hr className="my-4 border-gray-400" />

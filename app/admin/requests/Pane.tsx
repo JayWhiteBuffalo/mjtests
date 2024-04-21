@@ -2,7 +2,7 @@
 import clsx from 'clsx'
 import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueLink} from '@components/Link'
-import {Button} from 'flowbite-react'
+import {Button} from '@nextui-org/react'
 import {None, InfoSection} from '@components/InfoSection'
 import {AdminPane} from '@app/admin/components/Pane'
 
@@ -41,8 +41,8 @@ export const RequestPane = ({request, canEdit, approve, reject}) =>
     {
       canEdit
         ? <div className="flex justify-end gap-2">
-            <Button onClick={() => approve()}>Approve</Button>
-            <Button onClick={() => reject()}>Reject</Button>
+            <Button onPress={() => approve()}>Approve</Button>
+            <Button onPress={() => reject()}>Reject</Button>
           </div>
         : undefined
     }

@@ -1,5 +1,5 @@
 
-.AdminBody {
+.AdminGrid {
   grid-template-rows: auto 1fr;
   grid-template-columns: 200px 1fr;
   grid-template-areas:

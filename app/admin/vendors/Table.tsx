@@ -1,25 +1,25 @@
 'use client'
 import {TMTable, ActionHeaderCell, makeColumns} from '@components/Table'
-import {Table, Button} from 'flowbite-react'
+import {TableCell, Button} from '@nextui-org/react'
 import {BlueLink} from '@components/Link'
 import Link from 'next/link'
 
 const NameCell = ({item: vendor}) =>
-  <Table.Cell className="p-4">
+  <TableCell className="p-4">
     <BlueLink href={`/admin/vendors/${vendor.id}`}>{vendor.name}</BlueLink>
-  </Table.Cell>
+  </TableCell>
 
 const LocationCell = ({value: location}) =>
-  <Table.Cell className="p-4 whitespace-pre-line">
+  <TableCell className="p-4 whitespace-pre-line">
     {location.address}
-  </Table.Cell>
+  </TableCell>
 
 const ActionCell = ({item: {id}}) =>
-  <Table.Cell>
+  <TableCell>
     <BlueLink href={`/admin/vendors/${id}/edit`} className="font-medium">
       Edit
     </BlueLink>
-  </Table.Cell>
+  </TableCell>
 
 export const VendorTable = ({vendors}) => {
   const columns = makeColumns([

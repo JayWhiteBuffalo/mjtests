@@ -3,7 +3,6 @@ import UserDto from '@data/UserDto'
 import {AppContainer} from './components/App'
 import {getPathname} from '@nimpl/getters/get-pathname'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
-import {redirect} from 'next/navigation'
 import {signIn} from '@/auth'
 
 export const generateStaticParams = () => (

@@ -3,7 +3,7 @@ import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
 import {BlueButton} from '@components/Link'
-import {Button, Dropdown, Spinner} from 'flowbite-react'
+import {Popover, PopoverTrigger, PopoverContent, Spinner, Chip} from '@nextui-org/react'
 import {ErrorBoundary} from '@components/Error'
 import {FilteredProductStore} from '../state/DataStore'
 import {Fragment, useState, useRef} from 'react'
@@ -27,57 +27,57 @@ const ProductTypeLabel = ({product}) =>
     }
   </div>
 
-const Pill = props =>
-  <Button
-    {...props}
-    className={`p-0 ${props.className}`}
-    pill
-    size="xs">
-    {props.label}
-  </Button>
-
-const ProductPills = ({product}) =>
+const ProductChips = ({product}) =>
   // openNow, closing soon
   <div className="flex flex-wrap gap-1 mb-1">
     {
       product.subspecies
-        ? <Pill label={Treemap.subspeciesByKey[product.subspecies].name} />
+        ? <Chip className="bg-cyan-700 dark:bg-cyan-600 text-white" size="sm">
+            {Treemap.subspeciesByKey[product.subspecies].name}
+          </Chip>
         : undefined
     }
     {
       product.flags.new
-        ? <Pill label="New Listing" gradientDuoTone="pinkToOrange" />
+        ? <Chip className="bg-gradient-to-br from-pink-500 to-orange-400 text-white" size="sm">
+            New Listing
+          </Chip>
         : undefined
     }
     {
       product.flags.topSeller
-        ? <Pill label="Top Seller" gradientDuoTone="greenToBlue" />
+        ? <Chip className="bg-gradient-to-br from-green-400 to-cyan-600 text-white" size="sm">
+            Top Seller
+          </Chip>
         : undefined
     }
     {
       product.flags.hot
-        ? <Pill label="Hot!" gradientMonochrome="failure" />
+        ? <Chip className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white" size="sm">
+            Hot!
+          </Chip>
         : undefined
     }
     {
       product.flags.promotion
-        ? <Pill label="Promotion" gradientMonochrome="pink" />
+        ? <Chip className="bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 text-white" size="sm">
+            Promotion
+          </Chip>
         : undefined
     }
   </div>
 
 const VendorNameButton = ({vendor}) =>
-  <Dropdown
-    inline
-    placement="top"
-    renderTrigger={() =><BlueButton>{vendor.name}</BlueButton>}
-  >
-    <Dropdown.Item>
+  <Popover placement="top" shouldCloseOnInteractOutside={() => true}>
+    <PopoverTrigger>
+      <BlueButton>{vendor.name}</BlueButton>
+    </PopoverTrigger>
+    <PopoverContent>
       <ErrorBoundary>
         <VendorPopupContentContainer vendorId={vendor.id} />
       </ErrorBoundary>
-    </Dropdown.Item>
-  </Dropdown>
+    </PopoverContent>
+  </Popover>
 
 const ProductSubheader = ({product}) =>
   product.vendor
@@ -228,7 +228,7 @@ export const Product = ({product, mode}) => {
       <ProductSubheader product={product} />
       {mode === 'full' && product.rating ? <VendorRating rating={product.rating} /> : undefined}
       {product.vendor?.openStatus ? <OpenStatus status={product.vendor.openStatus} /> : undefined}
-      <ProductPills product={product} />
+      <ProductChips product={product} />
 
       {mode === 'full' ? <ProductAttributeList product={product} /> : undefined}
       {

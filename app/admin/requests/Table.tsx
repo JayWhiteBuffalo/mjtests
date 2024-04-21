@@ -1,17 +1,17 @@
 'use client'
-import {TMTable, makeColumns} from '@components/Table'
-import {Table} from 'flowbite-react'
 import {BlueLink} from '@components/Link'
+import {TableCell} from '@nextui-org/react'
+import {TMTable, makeColumns} from '@components/Table'
 
 const NameCell = ({item: request}) =>
-  <Table.Cell className="p-4">
+  <TableCell className="p-4">
     <BlueLink href={`/admin/requests/${request.id}`}>{request.vendor.name}</BlueLink>
-  </Table.Cell>
+  </TableCell>
 
 const LocationCell = ({value}) =>
-  <Table.Cell className="p-4">
+  <TableCell className="p-4">
     {value}
-  </Table.Cell>
+  </TableCell>
 
 export const RequestTable = ({requests}) => {
   const columns = makeColumns([

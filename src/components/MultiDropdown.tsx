@@ -2,10 +2,8 @@ import './MultiDropdown.css'
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import FlagObjectUtil from '@util/FlagObjectUtil'
-import FnUtil from '@util/FnUtil'
 import ObjectUtil from '@util/ObjectUtil'
-import {Button, Checkbox, TextInput} from 'flowbite-react'
-import {CgSearch} from 'react-icons/cg'
+import {Button, Checkbox, Input} from '@nextui-org/react'
 import {DropdownMenuButton} from '@components/Dropdown'
 import {ErrorBoundary} from '@components/Error'
 import {HiOutlineChevronDown} from "react-icons/hi"
@@ -18,29 +16,29 @@ type MultiDropdownItem = {
   name: string,
 }
 
-const MultiDropdownButton = forwardRef(({placeholder, values, className, ...rest}, ref) => {
+const MultiDropdownTrigger = forwardRef(({placeholder, values, className, ...rest}, ref) => {
   const selectedCount = ObjectUtil.size(values)
   const text = selectedCount === 0 && placeholder && <span className="placeholder">{placeholder}</span>
     || `${selectedCount} selected`
 
   return (
     <Button
-      className={clsx('MultiDropdown', className)}
-      color="light"
+      className={clsx(
+        'text-ellipsis overflow-hidden whitespace-nowrap italic justify-between',
+        className,
+      )}
+      endContent={<HiOutlineChevronDown className="h-4 w-4" />}
       ref={ref}
-      theme={{
-        inner: {base: 'flex items-stretch items-center justify-between w-full transition-all duration-200'},
-      }}
+      variant="bordered"
       {...rest}>
       <span
-        className="text-ellipsis overflow-hidden whitespace-nowrap text-gray-500 italic">
+        className="">
         {text}
       </span>
-      <HiOutlineChevronDown className="ml-2 h-4 w-4" />
     </Button>
   )
 })
-MultiDropdownButton.displayName = 'MultiDropdownButton'
+MultiDropdownTrigger.displayName = 'MultiDropdownTrigger'
 
 const Items = forwardRef(({className, items, values, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
   <ul
@@ -68,9 +66,8 @@ const Items = forwardRef(({className, items, values, getItemProps, listRef, acti
           tabIndex={activeIndex === index ? 0 : -1}
           type="button">
           <Checkbox
-            checked={values[item.key] || false}
-            className="mr-1 cursor-unset align-text-bottom"
-            onChange={FnUtil.void}
+            isSelected={values[item.key] || false}
+            className="cursor-unset align-text-bottom"
             role="presentation"
             tabIndex={-1}
           />
@@ -209,7 +206,7 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
 
   return (
     <>
-      <MultiDropdownButton
+      <MultiDropdownTrigger
         {...getReferenceProps()}
         className={props.className}
         id={props.id}
@@ -223,11 +220,10 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
 }
 
 const Search = ({id, keyword, onChange}) =>
-  <TextInput
+  <Input
     className="max-w-[600px] mb-1"
-    icon={CgSearch}
     id={id}
-    onChange={e => onChange(e.target.value)}
+    onValueChange={onChange}
     placeholder="Filter list"
     tabIndex={0}
     type="search"
@@ -403,7 +399,7 @@ export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
 
   return (
     <>
-      <MultiDropdownButton
+      <MultiDropdownTrigger
         {...getReferenceProps()}
         className={props.className}
         id={props.id}

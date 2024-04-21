@@ -1,5 +1,7 @@
 import '@app/globals.css'
+import '@mantine/core/styles.css'
 import type {Metadata} from 'next'
+import {ColorSchemeScript} from '@mantine/core'
 import {Inter} from 'next/font/google'
 import {Providers} from './Providers'
 
@@ -16,7 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body className={inter.className}>
         <Providers>
           {children}

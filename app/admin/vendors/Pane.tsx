@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import {AuditingSection} from '@app/admin/components/AuditingSection'
 import {BlueExternalLink} from '@components/Link'
-import {Button} from 'flowbite-react'
+import {Button} from '@nextui-org/react'
 import {None, Unknown, InfoSection} from '@components/InfoSection'
 import {PhoneLink, VendorPopupContent} from '@app/(shop)/components/VendorPopup'
 import {VendorUtil} from '@util/VendorUtil'

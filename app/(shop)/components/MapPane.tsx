@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import {ErrorBoundary} from '@components/Error'
 import {LayoutStore} from '../state/UIStore'
-import {Spinner} from 'flowbite-react'
+import {Spinner} from '@nextui-org/react'
 import {useFluxStore} from '@/state/Flux'
 
 const MapLoading = () =>

@@ -10,3 +10,5 @@ export const Logo = ({...rest}) =>
   />
 
 export const siteName = 'MJTests'
+
+export const companyName = 'MJTests'

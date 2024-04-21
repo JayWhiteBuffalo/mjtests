@@ -1,9 +1,9 @@
-import ArrayUtil from '@util/ArrayUtil'
 import DateUtil from '@util/DateUtil'
 import {BlueExternalLink} from '@components/Link'
 import {Fragment} from 'react'
 import {MdPhone} from 'react-icons/md'
-import {Rating, Spinner} from 'flowbite-react'
+import {Rating} from '@mantine/core'
+import {Spinner} from '@nextui-org/react'
 import {useFluxStore} from '@/state/Flux'
 import {VendorSchedule} from '@util/VendorSchedule'
 import {VendorStore} from '../state/DataStore'
@@ -123,12 +123,10 @@ const VendorHours = ({schedule}) => {
 }
 
 export const VendorRating = ({rating}) =>
-  <Rating className="VendorRating">
-    {ArrayUtil.range(1, 6).map(x =>
-      <Rating.Star key={x} filled={rating.average >= x - 0.5 - 1e-10} />
-    )}
+  <div className="flex items-center">
+    <Rating value={rating.average} fractions={10} readOnly />
     <p className="ml-2">{rating.average.toFixed(1)}/5 ({rating.count} reviews)</p>
-  </Rating>
+  </div>
 
 export const VendorPopupContent = ({vendor}) => {
   return (

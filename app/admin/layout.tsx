@@ -1,8 +1,7 @@
 import './Admin.css'
 import '@app/globals.css'
-import '@mantine/core/styles.css';
-import '@mantine/dropzone/styles.css';
-import clsx from 'clsx'
+import '@mantine/core/styles.css'
+import '@mantine/dropzone/styles.css'
 import type {Metadata} from 'next'
 import UserDto from '@data/UserDto'
 import {AdminNavbar} from './components/Navbar'
@@ -23,26 +22,23 @@ const RootLayout = async ({children}) => {
   const user = await UserDto.getCurrent()
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
-      <body
-        className={clsx(
-          'grid bg-zinc-100 min-h-screen',
-          inter.className,
-          'AdminBody',
-        )}>
+      <body className={inter.className}>
         <Providers>
-          <AdminNavbar
-            user={user}
-            style={{gridArea: 'navbar'}}
-          />
-          <AdminSidebar
-            user={user}
-            style={{gridArea: 'sidebar'}}
-          />
-          {children}
+          <div className="AdminGrid grid min-h-screen">
+            <AdminNavbar
+              user={user}
+              style={{gridArea: 'navbar'}}
+            />
+            <AdminSidebar
+              user={user}
+              style={{gridArea: 'sidebar'}}
+            />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

@@ -2,9 +2,9 @@ import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import DateUtil from '@util/DateUtil'
 import ObjectUtil from '@util/ObjectUtil'
+import {Checkbox, Input} from '@nextui-org/react'
+import {FieldError, RecursiveErrors} from '@components/Form'
 import {Fragment, forwardRef, useRef, useState, useCallback, useEffect} from 'react'
-import {TextInput} from 'flowbite-react'
-import {FieldError, LabeledCheckbox, RecursiveErrors} from '@components/Form'
 import {VendorSchedule} from '@util/VendorSchedule'
 
 const timeToText = time => time != null ? DateUtil.formatAmPm(time) : ''
@@ -28,13 +28,12 @@ export const TimeOfDay = forwardRef(({value, onChange, className, ...rest}, ref)
       validate(event.target.value)
     }
   }, [validate])
-  const onInputChange = useCallback(event => setText(event.target.value), [])
 
   return (
-    <TextInput
+    <Input
       className={clsx('w-[90px]', className)}
       onBlur={onBlur}
-      onChange={onInputChange}
+      onValueChange={setText}
       onKeyDown={onKeyDown}
       ref={ref}
       value={text}
@@ -77,18 +76,18 @@ export const DaySchedule = ({value, disabled, onChange}) => {
 
   return (
     <>
-      <LabeledCheckbox
+      <Checkbox
         checked={value !== 'closed'}
-        disabled={disabled}
-        onChange={event => {
-          if (event.target.checked) {
+        isDisabled={disabled}
+        onValueChange={checked => {
+          if (checked) {
             onChange(rangeToValue(range))
           } else {
             onChange('closed')
           }
         }}>
         Open
-      </LabeledCheckbox>
+      </Checkbox>
       <TimeOfDay
         disabled={value === 'closed' || disabled}
         onChange={time => {
@@ -160,17 +159,17 @@ const HolidayHours = ({special, errors, onChange}) => {
 
       {VendorSchedule.getNamedDaysForYear().map(({key, day}) =>
         <Fragment key={key}>
-          <LabeledCheckbox
+          <Checkbox
             checked={key in special}
-            onChange={event => {
-              if (event.target.checked) {
+            onValueChange={checked => {
+              if (checked) {
                 onChange({...special, [key]: daySchedules.current[key]})
               } else {
                 onChange(ObjectUtil.delete(special, key))
               }
             }}>
             <time>{day} {VendorSchedule.namedDaysByKey[key].name}</time>
-          </LabeledCheckbox>
+          </Checkbox>
 
           <DaySchedule
             className="mr-4"

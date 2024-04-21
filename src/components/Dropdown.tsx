@@ -1,6 +1,6 @@
 import './Dropdown.css'
 import clsx from 'clsx'
-import {Button, TextInput} from 'flowbite-react'
+import {Button, Input} from '@nextui-org/react'
 import {autoUpdate, useFloating, useClick, useDismiss, useRole, useInteractions, useListNavigation, useTypeahead, flip, offset, shift, size, FloatingPortal, FloatingFocusManager} from '@floating-ui/react'
 import {HiOutlineChevronDown} from "react-icons/hi"
 import {setRef} from '@util/ReactUtil'
@@ -78,7 +78,7 @@ const DropdownTopMenu = ({onClose}) =>
     </DropdownMenuButton>
   </div>
 
-const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...rest}, ref) => {
+const DropdownTrigger = forwardRef(({placeholder, value, readOnly, className, ...rest}, ref) => {
   let text
   if (value != null) {
     text = value
@@ -90,40 +90,24 @@ const DropdownButton = forwardRef(({placeholder, value, readOnly, className, ...
     text = <span className="placeholder">Select</span>
   }
 
-  const theme = {
-    color: {
-      failure: clsx(
-        'text-red-900 bg-red-50 border border-red-500 focus:border-red-500 focus:ring-red-500 enabled:hover:bg-red-100 focus:ring-1',
-        'dark:text-white dark:bg-gray-600 dark:border-gray-600 dark:enabled:hover:bg-gray-700 dark:enabled:hover:border-gray-700 dark:focus:ring-gray-700',
-      ),
-      light: clsx(
-        'text-gray-900 bg-gray-50 border border-gray-300 enabled:hover:bg-gray-100 focus:border-cyan-500 focus:ring-cyan-500 focus:ring-1',
-        'dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:enabled:hover:bg-gray-700 dark:enabled:hover:border-gray-700 dark:focus:ring-gray-700',
-      ),
-    },
-    inner: {
-      base: 'flex items-stretch items-center justify-between w-full transition-all duration-200',
-    },
-  }
-
   return (
     <Button
-      color="light"
-      theme={theme}
       className={clsx(
         'Dropdown',
         'w-full max-w-[300px]',
+        'overflow-hidden text-ellipsis whitespace-nowrap justify-between',
         readOnly && 'bg-zinc-200 cursor-not-allowed',
         className,
       )}
+      endContent={!readOnly ? <HiOutlineChevronDown className="h-4 w-4" /> : undefined}
       ref={ref}
+      variant="bordered"
       {...rest}>
-      <span className="DropdownText overflow-hidden text-ellipsis whitespace-nowrap">{text}</span>
-      {!readOnly ? <HiOutlineChevronDown className="ml-2 h-4 w-4" /> : undefined}
+      {text}
     </Button>
   )
 })
-DropdownButton.displayName = 'DropdownButton'
+DropdownTrigger.displayName = 'DropdownTrigger'
 
 type DropdownProps = {
   items: Array<DropdownItem>,
@@ -219,7 +203,7 @@ export const Dropdown = forwardRef(({value, items, disabled, readOnly, onChange,
 
   return (
     <>
-      <DropdownButton
+      <DropdownTrigger
         {...getReferenceProps({onKeyDown: onKeyDownReference})}
         disabled={disabled}
         readOnly={readOnly}
@@ -239,7 +223,7 @@ Dropdown.displayName = 'Dropdown'
 
 const TypeaheadKeyword = forwardRef(({value, className, ...rest}, ref) => {
   return (
-    <TextInput
+    <Input
       aria-autocomplete="list"
       autoComplete="off"
       className={clsx('Typeahead', className)}

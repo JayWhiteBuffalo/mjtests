@@ -1,8 +1,7 @@
-import clsx from 'clsx'
 import {forwardRef, useEffect, useState, useCallback} from 'react'
-import {TextInput} from 'flowbite-react'
+import {Input} from '@nextui-org/react'
 
-export const FormattedInput = forwardRef(({value, defaultValue, format, parse, onChange, className, ...rest}, ref) => {
+export const FormattedInput = forwardRef(({value, defaultValue, format, parse, onChange, ...rest}, ref) => {
   const [text, setText] = useState(format(defaultValue ?? value))
 
   useEffect(() => setText(format(value)), [value, format])
@@ -21,13 +20,11 @@ export const FormattedInput = forwardRef(({value, defaultValue, format, parse, o
       validate(event.target.value)
     }
   }, [validate])
-  const onInputChange = useCallback(event => setText(event.target.value), [])
 
   return (
-    <TextInput
-      className={clsx('FormattedInput', className)}
+    <Input
       onBlur={onBlur}
-      onChange={onInputChange}
+      onValueChange={setText}
       onKeyDown={onKeyDown}
       ref={ref}
       value={text}

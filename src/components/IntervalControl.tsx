@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import {orEmpty} from '@util/ValidationUtil'
-import {TextInput} from 'flowbite-react'
+import {Input} from '@nextui-org/react'
 import {useState, useEffect, useCallback} from 'react'
 
 type IntervalTextboxProps = {
@@ -81,30 +81,27 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
     }
   }, [validate, onChange])
 
-  const onInputChange = useCallback(event => {
-    setText(event.target.value)
-    const x = +event.target.value
+  const onValueChange = useCallback(value => {
+    setText(value)
+    const x = +value
     if (bound[0] <= x && x <= bound[1]) {
       onChange(x)
     }
   }, [bound, onChange])
 
   return (
-    <TextInput
+    <Input
       className="w-[80px]"
       max={bound[1]}
       min={bound[0]}
       onBlur={onBlur}
-      onChange={onInputChange}
+      onValueChange={onValueChange}
       onFocus={useCallback(() => setFocus(true), [])}
       onKeyDown={onKeyDown}
       type="number"
-      theme={{
-        field: {
-          input: {
-            base: 'text-center !pr-0 w-full',
-          },
-        },
+      classNames={{
+        inputWrapper: 'pr-0',
+        input: 'text-center',
       }}
       value={text}
       {...rest}

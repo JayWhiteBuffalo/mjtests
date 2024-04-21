@@ -1,6 +1,6 @@
 'use client'
-import {Button, Label, TextInput, Textarea} from 'flowbite-react'
-import {useTreemapForm, FormField, InputWithError, FieldDesc, FormError} from '@components/Form'
+import {Button, Input, Textarea} from '@nextui-org/react'
+import {useTreemapForm, FieldLayout, FormError} from '@components/Form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {formSchema} from './Schema'
 
@@ -14,115 +14,101 @@ export const Form = ({user, action}) => {
       <section>
         <h2>About you</h2>
 
-        <FormField>
-          <Label htmlFor="user.name">Your Name</Label>
-          <InputWithError errors={errors} name="user.name">
-            <TextInput
-              {...register('user.name')}
-              id="user.name"
-              placeholder="Mary Jane"
-              autoComplete="name"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          label="Your Name"
+          error={errors.user?.name}
+        >
+          <Input
+            {...register('user.name')}
+            placeholder="Mary Jane"
+            autoComplete="name"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="user.email">Your Email</Label>
-          <FieldDesc id="user.email.desc">We will use this to contact you about your application.</FieldDesc>
-          <InputWithError errors={errors} name="user.email">
-            <TextInput
-              {...register('user.email')}
-              aria-describedby="user.email.desc"
-              id="user.email"
-              readOnly
-              defaultValue={user.email}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          description="We will use this to contact you about your application."
+          error={errors.user?.email}
+          label="Your Email"
+        >
+          <Input
+            {...register('user.email')}
+            readOnly
+            defaultValue={user.email}
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>About your dispensary</h2>
 
-        <FormField>
-          <Label htmlFor="vendor.name">Name of dispensary</Label>
-          <FieldDesc id="vendor.name.desc">This is the public facing name of your dispensary, for example <i>Acme Joint Emporium.</i></FieldDesc>
-          <InputWithError errors={errors} name="vendor.name">
-            <TextInput
-              {...register('vendor.name')}
-              aria-describedby="vendor.name.desc"
-              autoComplete="organization"
-              id="vendor.name"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.vendor?.name}
+          description="This is the public facing name of your dispensary, for example <i>Acme Joint Emporium."
+          label="Name of dispensary"
+        >
+          <Input
+            {...register('vendor.name')}
+            autoComplete="organization"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="vendor.email">Email (Optional)</Label>
-          <FieldDesc id="vendor.email.desc">Your dispensary&apos;s public, general contact email.</FieldDesc>
-          <InputWithError errors={errors} name="vendor.email">
-            <TextInput
-              {...register('vendor.email')}
-              aria-describedby="vendor.email.desc"
-              autoComplete="email"
-              id="vendor.email"
-              placeholder="contact@acmejoint.com"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.vendor?.email}
+          description="Your dispensary&apos;s public, general contact email."
+          label="Email (Optional)"
+        >
+          <Input
+            {...register('vendor.email')}
+            autoComplete="email"
+            placeholder="contact@acmejoint.com"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="vendor.url">Website (Optional)</Label>
-          <InputWithError errors={errors} name="vendor.url">
-            <TextInput
-              {...register('vendor.url')}
-              autoComplete="url"
-              id="vendor.url"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.vendor?.url}
+          label="Website (Optional)"
+        >
+          <Input
+            {...register('vendor.url')}
+            autoComplete="url"
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="vendor.address">Storefront address</Label>
-          <FieldDesc id="vendor.address.desc">Physical address, where customers will visit your dispensary.</FieldDesc>
-          <InputWithError errors={errors} name="vendor.address">
-            <Textarea
-              {...register('vendor.address')}
-              aria-describedby="vendor.address.desc"
-              autoComplete="street-address"
-              id="vendor.address"
-              placeholder={"101 E Main St\nNorman, OK 73069"}
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.vendor?.address}
+          description="Physical address, where customers will visit your dispensary."
+          label="Storefront address"
+        >
+          <Textarea
+            {...register('vendor.address')}
+            autoComplete="street-address"
+            placeholder={"101 E Main St\nNorman, OK 73069"}
+          />
+        </FieldLayout>
 
-        <FormField>
-          <Label htmlFor="vendor.tel">Phone (Optional)</Label>
-          <FieldDesc id="vendor.tel.desc">Your dispensary&apos;s public, general contact phone number.</FieldDesc>
-          <InputWithError errors={errors} name="vendor.tel">
-            <TextInput
-              {...register('vendor.tel')}
-              aria-describedby="vendor.tel.desc"
-              autoComplete="tel"
-              id="vendor.tel"
-            />
-          </InputWithError>
-        </FormField>
-
+        <FieldLayout
+          error={errors.vendor?.tel}
+          description={<span>Your dispensary&apos;s public, general contact phone number.</span>}
+          label="Phone (Optional)"
+        >
+          <Input
+            {...register('vendor.tel')}
+            autoComplete="tel"
+          />
+        </FieldLayout>
       </section>
 
       <section>
         <h2>Miscellaneous</h2>
 
-        <FormField>
-          <Label htmlFor="referrer">Were you aided in onboarding by an onboarding specialist? If so, who?</Label>
-          <InputWithError errors={errors} name="referrer">
-            <TextInput
-              {...register('referrer')}
-              id="referrer"
-            />
-          </InputWithError>
-        </FormField>
+        <FieldLayout
+          error={errors.referrer}
+          label="Were you aided in onboarding by an onboarding specialist? If so, who?"
+        >
+          <Input
+            {...register('referrer')}
+          />
+        </FieldLayout>
       </section>
 
       <input
