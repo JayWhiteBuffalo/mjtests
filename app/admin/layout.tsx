@@ -8,8 +8,8 @@ import UserDto from '@data/UserDto'
 import {AdminNavbar} from './components/Navbar'
 import {AdminSidebar} from './components/Sidebar'
 import {ColorSchemeScript} from '@mantine/core'
-import {MantineProvider} from '@mantine/core';
 import {Inter} from 'next/font/google'
+import {Providers} from './Providers'
 import {siteName} from '@components/Site'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -33,7 +33,7 @@ const RootLayout = async ({children}) => {
           inter.className,
           'AdminBody',
         )}>
-        <MantineProvider>
+        <Providers>
           <AdminNavbar
             user={user}
             style={{gridArea: 'navbar'}}
@@ -43,7 +43,7 @@ const RootLayout = async ({children}) => {
             style={{gridArea: 'sidebar'}}
           />
           {children}
-        </MantineProvider>
+        </Providers>
       </body>
     </html>
   )
