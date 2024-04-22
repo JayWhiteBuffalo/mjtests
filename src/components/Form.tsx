@@ -47,7 +47,7 @@ export const FieldLayout = ({label, description, topDescription, bottomDescripti
       'aria-describedby': describedByIds.length ? describedByIds.join(' ') : undefined,
       'aria-errormessage': error ? errorMessageId : undefined,
       //'aria-invalid': error != null,
-      color: error ? 'failure' : undefined,
+      color: error ? 'danger' : undefined,
       id,
       isInvalid: error != null,
     }

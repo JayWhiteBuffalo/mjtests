@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownItem, DropdownSection} from '@nextui-org/react'
-import {FaBars} from 'react-icons/fa'
+import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection} from '@nextui-org/react'
 import {Logo, siteName} from '@components/Site'
 
 export const AvatarDropdown = ({user}) =>
@@ -27,6 +26,7 @@ export const AdminNavbar = ({user, ...rest}) =>
   <Navbar fluid {...rest}>
     <div className="flex">
       {/*
+          import {FaBars} from 'react-icons/fa'
       <button type="button">
         <FaBars className="h-6 w-6 shrink-0" />
       </button>

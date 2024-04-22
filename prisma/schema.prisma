@@ -1,31 +1,15 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
+  previewFeatures = ["postgresqlExtensions", "multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
   extensions = [postgis]
-}
-
-model Account {
-  access_token String? @db.Text
-  expires_at Int?
-  id String @id @default(cuid())
-  id_token String? @db.Text
-  provider String
-  providerAccountId String
-  refresh_token String? @db.Text
-  scope String?
-  session_state String?
-  token_type String?
-  type String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  @@unique([provider, providerAccountId])
+  schemas = ["private"]
 }
 
 model BusinessRequest {
@@ -45,6 +29,8 @@ model BusinessRequest {
   updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
   updatedById String
   version Int @default(1)
+
+  @@schema("private")
 }
 
 model ImageRef {
@@ -66,6 +52,8 @@ model ImageRef {
   vendor Vendor? @relation(fields: [vendorId], references: [id], name: "all")
   vendorId String?
   vendorMain Vendor[] @relation("main")
+
+  @@schema("private")
 }
 
 model Producer {
@@ -91,6 +79,8 @@ model Producer {
   updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
   updatedById String
   version Int @default(1)
+
+  @@schema("private")
 }
 
 model Product {
@@ -127,26 +117,16 @@ model Product {
   updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
   updatedById String
   version Int @default(1)
-}
 
-model Session {
-  id String @id @default(cuid())
-  sessionToken String @unique
-  userId String
-  expires DateTime
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@schema("private")
 }
 
 model User {
-  accounts Account[]
-  email String? @unique
-  emailVerified DateTime?
-  id String @id @default(cuid())
-  image String?
+  id String @id
   name String?
   producers UserOnProducer[]
+  profileImageUrl String?
   roles String[] @default([])
-  sessions Session[]
   vendors UserOnVendor[]
 
   createdAt DateTime @default(now())
@@ -161,6 +141,8 @@ model User {
   updatedProducts Product[] @relation("updatedBy")
   updatedVendors Vendor[] @relation("updatedBy")
   uploadedImageRefs ImageRef[]
+
+  @@schema("private")
 }
 
 model UserOnProducer {
@@ -172,6 +154,7 @@ model UserOnProducer {
   producerId String
 
   @@id([userId, producerId])
+  @@schema("private")
 }
 
 model UserOnVendor {
@@ -183,6 +166,7 @@ model UserOnVendor {
   vendorId String
 
   @@id([userId, vendorId])
+  @@schema("private")
 }
 
 model Vendor {
@@ -190,7 +174,7 @@ model Vendor {
   flags Json
   id String @id
   imageRefs ImageRef[] @relation("all")
-  latLng Unsupported("geometry(Point, 4326)")?
+  latLng Unsupported("postgis.geometry(Point, 4326)")?
   license Json
   location Json
   mainImageRef ImageRef? @relation(fields: [mainImageRefId], references: [publicId], name: "main")
@@ -214,12 +198,5 @@ model Vendor {
   version Int @default(1)
 
   @@index([latLng], name: "blockgroup_idx", type: Gist)
-}
-
-model VerificationToken {
-  identifier String
-  token String @unique
-  expires DateTime
-
-  @@unique([identifier, token])
+  @@schema("private")
 }

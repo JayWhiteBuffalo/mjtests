@@ -35,8 +35,7 @@ const SortDropdown = ({sortBy, onChange}) => {
   const selectedProps = sortItemProps.find(x => x.key === sortBy)
 
   return (
-    <Dropdown
-        classNames={{content: "min-w-30"}}>
+    <Dropdown classNames={{content: "min-w-30"}}>
       <DropdownTrigger>
         <Button
           className="SortDropdown"
