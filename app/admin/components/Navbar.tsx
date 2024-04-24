@@ -1,14 +1,16 @@
+'use client'
 import Link from 'next/link'
+import supabase from '@api/supabaseBrowser'
 import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection} from '@nextui-org/react'
 import {Logo, siteName} from '@components/Site'
 
 export const AvatarDropdown = ({user}) =>
   <Dropdown>
     <DropdownTrigger>
-      <Avatar alt="User settings" img={user.profileImageUrl} rounded />
+      <Avatar src={user.profileImageUrl} />
     </DropdownTrigger>
 
-    <DropdownMenu aria-label="Profile actions">
+    <DropdownMenu aria-label="Profile actions" variant="flat">
       <DropdownSection showDivider>
         <DropdownItem>
           <span className="block text-sm">{user.name}</span>
@@ -17,20 +19,19 @@ export const AvatarDropdown = ({user}) =>
       </DropdownSection>
 
       <DropdownSection showDivider>
-        <DropdownItem>Sign out</DropdownItem>
+        <DropdownItem
+          key="logout"
+          onPress={() => void supabase.auth.signOut()}
+        >
+          Log Out
+        </DropdownItem>
       </DropdownSection>
     </DropdownMenu>
   </Dropdown>
 
 export const AdminNavbar = ({user, ...rest}) =>
-  <Navbar fluid {...rest}>
+  <Navbar {...rest}>
     <div className="flex">
-      {/*
-          import {FaBars} from 'react-icons/fa'
-      <button type="button">
-        <FaBars className="h-6 w-6 shrink-0" />
-      </button>
-      */}
       <NavbarBrand href="/admin" as={Link}>
         <Logo className="mr-1 ml-2 h-10 w-10 sm:h-9" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

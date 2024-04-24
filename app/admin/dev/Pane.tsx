@@ -13,8 +13,11 @@ const DevActionButton = ({action, children, ...rest}) => {
       isLoading={isLoading}
       onPress={async () => {
         setIsLoading(true)
-        await action()
-        setIsLoading(false)
+        try {
+          await action()
+        } finally {
+          setIsLoading(false)
+        }
         router.refresh()
       }}
       {...rest}>

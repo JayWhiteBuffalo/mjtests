@@ -21,7 +21,7 @@ export const populate = async () => {
       signupStatus: {...rest.signupStatus, complete: true},
     })
     await prisma.$executeRaw`
-      update "Vendor" set "latLng"=ST_MakePoint(${latLng[0]}, ${latLng[1]}) where id=${vendorId}
+      update private."Vendor" set "latLng"=postgis.ST_MakePoint(${latLng[0]}, ${latLng[1]}) where id=${vendorId}
     `
   }
 
@@ -45,15 +45,13 @@ export const assignAdmin = async () => {
 
 export const truncateData = async () => {
   'use server'
-  await prisma.$executeRaw`truncate table "Product" cascade`
-  await prisma.$executeRaw`truncate table "Vendor" cascade`
-  await prisma.$executeRaw`truncate table "Producer" cascade`
-  await prisma.$executeRaw`truncate table "ImageRef" cascade`
+  await prisma.$executeRaw`truncate table private."Product" cascade`
+  await prisma.$executeRaw`truncate table private."Vendor" cascade`
+  await prisma.$executeRaw`truncate table private."Producer" cascade`
+  await prisma.$executeRaw`truncate table private."ImageRef" cascade`
 }
 
 export const truncateUser = async () => {
   'use server'
-  await prisma.$executeRaw`truncate table "User" cascade`
-  await prisma.$executeRaw`truncate table "Session" cascade`
-  await prisma.$executeRaw`truncate table "Account" cascade`
+  throw new Error('unimplemented')
 }
