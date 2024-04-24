@@ -46,7 +46,6 @@ export const AuthProvider = ({children}) => {
     const {
       data: { subscription: authListener },
     } = supabase.auth.onAuthStateChange((event, currentSession) => {
-
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
 

@@ -1,6 +1,6 @@
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
-import {cloudinaryCloudName} from '@/api'
+import {cloudinaryCloudName} from '@api/cloudinary'
 import {FixedHeightImage} from '@components/Image'
 import {Dropzone, IMAGE_MIME_TYPE} from '@mantine/dropzone';
 import {RecursiveErrors} from '@components/Form'

@@ -1,4 +1,4 @@
-import {cloudinaryCloudName} from '@/api'
+import {cloudinaryCloudName} from '@api/cloudinary'
 import NextImage from 'next/image'
 import {forwardRef, useCallback, useState} from 'react'
 
