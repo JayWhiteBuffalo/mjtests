@@ -148,7 +148,7 @@ export const useTreemapForm = options => {
   return {...methods, handleSubmit, register, registerChecked}
 }
 
-export const FormError = ({errors}) =>
+export const FormErrors = ({errors}) =>
   <RecursiveErrors errors={errors?.root} />
 
 export const FormField = ({children}) =>

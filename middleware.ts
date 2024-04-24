@@ -1,27 +1,64 @@
+import {createMiddlewareClient} from '@api/supabaseMiddleware'
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 
-const [AUTH_USER, AUTH_PASS] = (process.env.HTTP_BASIC_AUTH || ':').split(':');
+// HTTP Basic authentication
+const httpBasicAuth = (request: NextRequest) => {
+  const {HTTP_BASIC_AUTH} = process.env
+  if (!HTTP_BASIC_AUTH) {
+    return true
+  }
 
-export const middleware = (req: NextRequest) => {
-  if (!isAuthenticated(req)) {
+  const [staticUser, staticPass] = (HTTP_BASIC_AUTH || ':').split(':');
+  const authHeader = request.headers.get('authorization') || request.headers.get('Authorization')
+  if (!authHeader) {
+    return false
+  }
+
+  const [user, pass] = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':')
+  return user == staticUser && pass == staticPass
+}
+
+const shouldRedirectLoggedOut = pathname => {
+  if (pathname.startsWith('/admin')) {
+    return true
+  }
+
+  // Don't redirect /api regardless of authentication
+  if (pathname.startsWith('/api')) {
+    return false
+  }
+
+  return false
+}
+
+export async function middleware(request) {
+  if (!httpBasicAuth(request)) {
     return new NextResponse('Authentication required', {
       status: 401,
       headers: {'WWW-Authenticate': 'Basic'},
     })
   }
 
-  return NextResponse.next()
-}
-
-const isAuthenticated = (req: NextRequest) => {
-  const authheader = req.headers.get('authorization') || req.headers.get('Authorization')
-  if (!authheader) {
-    return false
+  if (request.nextUrl.pathname === '/.well-known/change-password') {
+    return NextResponse.redirect(new URL('/auth/change-password'))
   }
 
-  const [user, pass] = Buffer.from(authheader.split(' ')[1], 'base64').toString().split(':')
-  return user == AUTH_USER && pass == AUTH_PASS
+  const response = NextResponse.next()
+  const supabase = createMiddlewareClient({request, response})
+  await supabase.auth.getUser()
+
+  // Refresh sesssion if expired
+  const {data: {session}} = await supabase.auth.getSession()
+
+  // Redirect to login page for logged out users accessing protected routes
+  if (shouldRedirectLoggedOut(request.nextUrl.pathname) && !session) {
+    const redirectUrl = new URL('/auth', request.nextUrl)
+    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  return response
 }
 
 export const config = {

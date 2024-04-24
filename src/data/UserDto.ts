@@ -1,7 +1,7 @@
 import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
-import {auth} from '@/auth'
 import {prisma} from '@/db'
+import supabase from "@api/supabaseServer"
 
 const UserDto = {
   async canSee(user, userId) {
@@ -48,7 +48,7 @@ const UserDto = {
   },
 
   async getCurrent() {
-    const session = await auth()
+    const {data: {session}} = await supabase().auth.getSession()
     if (session) {
       const user = await UserDto._getRaw(session.user.id)
       user.loggedIn = true

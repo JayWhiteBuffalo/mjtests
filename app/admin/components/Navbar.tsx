@@ -5,14 +5,14 @@ import {Logo, siteName} from '@components/Site'
 export const AvatarDropdown = ({user}) =>
   <Dropdown>
     <DropdownTrigger>
-      <Avatar alt="User settings" img={user.image} rounded />
+      <Avatar alt="User settings" img={user.profileImageUrl} rounded />
     </DropdownTrigger>
 
     <DropdownMenu aria-label="Profile actions">
       <DropdownSection showDivider>
         <DropdownItem>
           <span className="block text-sm">{user.name}</span>
-          <span className="block truncate text-sm font-medium">{user.email}</span>
+          {/*<span className="block truncate text-sm font-medium">{user.email}</span>*/}
         </DropdownItem>
       </DropdownSection>
 

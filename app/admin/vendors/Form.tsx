@@ -9,7 +9,7 @@ import {ImageInput} from '@app/admin/components/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
 import {preprocessFormData} from './Schema'
 import {PreviewContainer} from './Pane'
-import {useTreemapForm, nullResolver, FieldLayout, FieldError, FormError, Watch} from '@components/Form'
+import {useTreemapForm, nullResolver, FieldLayout, FieldError, FormErrors, Watch} from '@components/Form'
 import {VendorScheduleInput} from '@app/admin/components/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 
@@ -236,7 +236,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
         </FieldLayout>
       </section>
 
-      <FormError errors={errors} />
+      <FormErrors errors={errors} />
       <Button type="submit">Save</Button>
 
       <hr className="my-4 border-gray-400" />

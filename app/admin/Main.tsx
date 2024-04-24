@@ -3,14 +3,10 @@ import {Breadcrumb} from '@app/admin/components/Breadcrumb'
 import {canUseRootPage, canUseAdmin} from './RootPage'
 import {getPathname} from '@nimpl/getters/get-pathname'
 import {redirect} from 'next/navigation'
-import {signIn} from '@/auth'
 
 export const makeMain = ({getRoute, Page}) => {
   const Main = async ({params}) => {
     const user = await UserDto.getCurrent()
-    if (!user.loggedIn) {
-      return signIn(null, {redirectTo: getPathname()})
-    }
     if (!canUseAdmin(user)) {
       redirect('/business')
     }

@@ -11,7 +11,7 @@ import {TerpeneInput} from '@app/admin/components/TerpeneInput'
 import {Treemap} from '@/Treemap'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {useController, Controller} from 'react-hook-form'
-import {Watch, nullResolver, useTreemapForm, FieldLayout, FormError} from '@components/Form'
+import {Watch, nullResolver, useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -224,7 +224,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
         </FieldLayout>
       </section>
 
-      <FormError errors={errors} />
+      <FormErrors errors={errors} />
 
       <div className="flex gap-2">
         <Button type="submit">Save as Draft</Button>

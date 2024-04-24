@@ -1,6 +1,6 @@
 'use client'
 import {Button, Input, Textarea} from '@nextui-org/react'
-import {useTreemapForm, FieldLayout, FormError} from '@components/Form'
+import {useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {formSchema} from './Schema'
 
@@ -118,7 +118,7 @@ export const Form = ({user, action}) => {
         value="vendor"
       />
 
-      <FormError errors={errors} />
+      <FormErrors errors={errors} />
       <Button type="submit">Submit</Button>
     </form>
   )

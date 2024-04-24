@@ -6,7 +6,7 @@ import {FormattedInput} from '@components/FormattedInput'
 import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@app/admin/components/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
-import {useTreemapForm, nullResolver, FormError, FieldLayout} from '@components/Form'
+import {useTreemapForm, nullResolver, FormErrors, FieldLayout} from '@components/Form'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({producer, isAdmin, imageRefs, action}) => {
@@ -140,7 +140,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
         </FieldLayout>
       </section>
 
-      <FormError errors={errors} />
+      <FormErrors errors={errors} />
       <Button type="submit">Save</Button>
     </form>
   )
