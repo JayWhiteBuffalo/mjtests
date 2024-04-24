@@ -148,7 +148,7 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
     },
     [redirectTo, router, setError]
   );
-
+console.log('errors' ,errors)
   return (
     <form
       className="flex flex-col gap-3"
@@ -158,7 +158,7 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
         {...register("email")}
         autoFocus
         errorMessage={errors.email?.message}
-        //isInvalid={errors.email != null}
+        isInvalid={errors.email != null}
         isRequired
         label="Email Address"
         placeholder="Enter your email"
@@ -169,7 +169,7 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
       <PasswordInput
         {...register("password")}
         errorMessage={errors.password?.message}
-        //isInvalid={errors.password != null}
+        isInvalid={errors.password != null}
         isRequired
         label="Password"
         placeholder="Enter your password"
@@ -193,7 +193,7 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
         <>
           <PasswordInput
             {...register("confirmPassword")}
-            //isInvalid={errors.confirmPassword != null}
+            isInvalid={errors.confirmPassword != null}
             isRequired
             label="Confirm Password"
             placeholder="Confirm your password"
