@@ -1,25 +1,18 @@
 'use client'
 import Link from 'next/link'
 import {BlueLink} from '@components/Link'
-import {TableCell, Button} from '@nextui-org/react'
-import {TMTable, ActionHeaderCell, makeColumns} from '@components/Table'
+import {Button} from '@nextui-org/react'
+import {TMTable, ActionHeaderCell, makeColumns, LocationCell} from '@components/Table'
 
 const NameCell = ({item: producer}) =>
-  <TableCell className="p-4">
-    <BlueLink href={`/admin/producers/${producer.id}`}>{producer.name}</BlueLink>
-  </TableCell>
-
-const LocationCell = ({value: location}) =>
-  <TableCell className="p-4 whitespace-pre-line">
-    {location.address}
-  </TableCell>
+  <BlueLink href={`/admin/producers/${producer.id}`} className="p-4">
+    {producer.name}
+  </BlueLink>
 
 const ActionCell = ({item: {id}}) =>
-  <TableCell>
-    <BlueLink href={`/admin/producers/${id}/edit`} className="font-medium">
-      Edit
-    </BlueLink>
-  </TableCell>
+  <BlueLink href={`/admin/producers/${id}/edit`} className="font-medium">
+    Edit
+  </BlueLink>
 
 export const ProducerTable = ({producers}) => {
   const columns = makeColumns([
@@ -31,7 +24,11 @@ export const ProducerTable = ({producers}) => {
   return (
     <>
       <ActionBar />
-      <TMTable columns={columns} items={producers} />
+      <TMTable
+        aria-label="Table of producers"
+        columns={columns}
+        items={producers} 
+      />
     </>
   )
 }

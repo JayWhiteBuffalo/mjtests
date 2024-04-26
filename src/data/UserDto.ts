@@ -51,15 +51,16 @@ const UserDto = {
     const {data: {session}} = await supabase().auth.getSession()
     if (session) {
       const user = await UserDto._getRaw(session.user.id)
-      user.loggedIn = true
-      return user
-    } else {
-      return {
-        loggedIn: false,
-        producers: [],
-        roles: [],
-        vendors: [],
+      if (user) {
+        user.loggedIn = true
+        return user
       }
+    }
+    return {
+      loggedIn: false,
+      producers: [],
+      roles: [],
+      vendors: [],
     }
   },
 

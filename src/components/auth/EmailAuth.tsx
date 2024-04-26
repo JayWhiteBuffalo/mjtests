@@ -22,7 +22,9 @@ const signInWithGithub = async (redirectTo) => {
   await supabase.auth
     .signInWithOAuth({
       provider: "github",
-      options: { redirectTo: redirectTo ?? '/' },
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+      },
     })
     .then(throwOnError);
 };
@@ -148,7 +150,7 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
     },
     [redirectTo, router, setError]
   );
-console.log('errors' ,errors)
+
   return (
     <form
       className="flex flex-col gap-3"

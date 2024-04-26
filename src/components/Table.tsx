@@ -4,59 +4,65 @@ import {BlueLink} from '@components/Link'
 import {Checkbox, Table, TableHeader, TableBody, TableCell, TableRow, TableColumn} from '@nextui-org/react'
 
 export const DefaultCell = ({value}) =>
-  <TableCell>
-    {value}
-  </TableCell>
+  value
 
 export const DefaultHeaderCell = ({label}) =>
-  <TableColumn>
-    {label}
-  </TableColumn>
+  label
 
 export const CheckboxCell = () =>
-  <TableCell className="p-4">
+  <div className="px-2">
     <Checkbox />
-  </TableCell>
+  </div>
 
 export const CheckboxHeaderCell = () =>
-  <TableCell className="p-4">
+  <div className="px-2">
     <Checkbox />
-  </TableCell>
+  </div>
 
 export const ActionCell = () =>
-  <TableCell>
-    <BlueLink href="#" className="font-medium">
-      Edit
-    </BlueLink>
-  </TableCell>
+  <BlueLink href="#" className="font-medium">
+    Edit
+  </BlueLink>
 
 export const ActionHeaderCell = () =>
-  <TableColumn>
-    <span className="sr-only">Actions</span>
-  </TableColumn>
+  <span className="sr-only">Actions</span>
 
-export const TMTable = ({items, columns, getItemKey}) => {
+export const LocationCell = ({value: location}) =>
+  <div className="whitespace-pre-line">
+    {location.address}
+  </div>
+
+export const TMTable = ({items, columns, getItemKey, ...rest}) => {
   getItemKey ??= item => item.id ?? item.key
+  const columnsByKey = ObjectUtil.fromIterable(columns, column => column.key)
 
   return (
     <div className="overflow-x-auto">
-      <Table>
+      <Table {...rest}>
         <TableHeader columns={columns}>
           {column =>
-            <column.HeaderCell key={column.key} label={column.label} />
+            <TableColumn>
+              <column.HeaderCell key={column.key} label={column.label} />
+            </TableColumn>
           }
         </TableHeader>
+
         <TableBody className="divide-y" items={items}>
           {item =>
             <TableRow key={getItemKey(item)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              {column =>
-                <column.Cell
-                  key={column.key}
-                  value={ObjectUtil.getByPath(item, column.key)}
-                  item={item}
-                  column={column}
-                />
-              }
+              {columnKey => {
+                const column = columnsByKey[columnKey]
+                return (
+                  <TableCell>
+                    <column.Cell
+                      key={column.key}
+                      value={ObjectUtil.getByPath(item, column.key)}
+                      item={item}
+                      column={column}
+                    />
+                  </TableCell>
+                )
+              }}
             </TableRow>
           }
         </TableBody>

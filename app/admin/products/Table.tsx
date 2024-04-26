@@ -1,20 +1,16 @@
 'use client'
 import Link from 'next/link'
 import {BlueLink} from '@components/Link'
-import {TableCell, Button} from '@nextui-org/react'
+import {Button} from '@nextui-org/react'
 import {TMTable, ActionHeaderCell, makeColumns} from '@components/Table'
 
 const NameCell = ({item: product}) =>
-  <TableCell className="p-4">
-    <BlueLink href={`/admin/products/${product.id}`}>{product.name}</BlueLink>
-  </TableCell>
+  <BlueLink href={`/admin/products/${product.id}`}>{product.name}</BlueLink>
 
 const ActionCell = ({item: {id}}) =>
-  <TableCell>
-    <BlueLink href={`/admin/products/${id}/edit`} className="font-medium">
-      Edit
-    </BlueLink>
-  </TableCell>
+  <BlueLink href={`/admin/products/${id}/edit`} className="font-medium">
+    Edit
+  </BlueLink>
 
 export const ProductTable = ({products}) => {
   const columns = makeColumns([
@@ -27,7 +23,11 @@ export const ProductTable = ({products}) => {
   return (
     <>
       <ActionBar />
-      <TMTable columns={columns} items={products} />
+      <TMTable
+        aria-label="Table of products"
+        columns={columns}
+        items={products} 
+      />
     </>
   )
 }

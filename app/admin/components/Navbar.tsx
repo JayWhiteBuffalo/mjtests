@@ -3,24 +3,31 @@ import Link from 'next/link'
 import supabase from '@api/supabaseBrowser'
 import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection} from '@nextui-org/react'
 import {Logo, siteName} from '@components/Site'
+import {HiMiniArrowRightOnRectangle} from 'react-icons/hi2'
 
 export const AvatarDropdown = ({user}) =>
   <Dropdown>
     <DropdownTrigger>
-      <Avatar src={user.profileImageUrl} />
+      <Avatar
+        as="button"
+        className="transition-transform"
+        isBordered
+        src={user.profileImageUrl}
+      />
     </DropdownTrigger>
 
     <DropdownMenu aria-label="Profile actions" variant="flat">
       <DropdownSection showDivider>
-        <DropdownItem>
-          <span className="block text-sm">{user.name}</span>
-          {/*<span className="block truncate text-sm font-medium">{user.email}</span>*/}
+        <DropdownItem className="gap-2" isReadOnly textValue={`Signed in as ${user.name}`}>
+          <p className="font-semibold">Signed in as</p>
+          <p>{user.name}</p>
         </DropdownItem>
       </DropdownSection>
 
-      <DropdownSection showDivider>
+      <DropdownSection>
         <DropdownItem
           key="logout"
+          startContent={<HiMiniArrowRightOnRectangle className="text-xl text-default-500" />}
           onPress={() => void supabase.auth.signOut()}
         >
           Log Out

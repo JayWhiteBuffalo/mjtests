@@ -69,9 +69,9 @@ export const AuthProvider = ({children}) => {
 
   useEffect(() => {
     if (user) {
-      supabase.from('users')
+      supabase.from('user')
         .select()
-        .eq('user_id', user.id)
+        .eq('id', user.id)
         .then(uniqueRecord)
         // TODO timing collision
         .then(setProfile)

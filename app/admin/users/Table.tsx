@@ -1,17 +1,12 @@
 'use client'
 import {BlueLink} from '@components/Link'
-import {TableCell} from '@nextui-org/react'
 import {TMTable, makeColumns} from '@components/Table'
 
 const NameCell = ({item: user}) =>
-  <TableCell className="p-4">
-    <BlueLink href={`/admin/users/${user.id}`}>{user.name}</BlueLink>
-  </TableCell>
+  <BlueLink href={`/admin/users/${user.id}`}>{user.name}</BlueLink>
 
 const RolesCell = ({value: roles}) =>
-  <TableCell className="p-4">
-    {roles.join(', ')}
-  </TableCell>
+  roles.join(', ')
 
 export const UserTable = ({users}) => {
   const columns = makeColumns([
@@ -20,5 +15,11 @@ export const UserTable = ({users}) => {
     {key: 'roles', label: 'Roles', Cell: RolesCell},
   ])
 
-  return <TMTable columns={columns} items={users} />
+  return (
+    <TMTable
+      aria-label="Table of users"
+      columns={columns}
+      items={users} 
+    />
+  )
 }
