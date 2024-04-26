@@ -23,7 +23,7 @@ const signInWithGithub = async (redirectTo) => {
     .signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `http://localhost:3000/auth/callback`,
+        redirectTo: new URL(window.location).origin + `/auth/callback`,
       },
     })
     .then(throwOnError);
@@ -33,7 +33,9 @@ const signInWithGoogle = async (redirectTo) => {
   await supabase.auth
     .signInWithOAuth({
       provider: "google",
-      options: { redirectTo: redirectTo ?? '/' },
+      options: {
+        redirectTo: new URL(window.location).origin + `/auth/callback`,
+      },
     })
     .then(throwOnError);
 };
