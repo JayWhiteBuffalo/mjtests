@@ -3,9 +3,9 @@ import {Logo, companyName, siteName} from '@components/Site'
 import Link from 'next/link'
 
 export const FooterLinkGroup = ({title, children}) =>
-  <div>
-    <div>{title}</div>
-    <ul>
+  <div className="me-4 text-sm">
+    <div className="font-semibold uppercase text-gray-500 dark:text-white">{title}</div>
+    <ul className="mt-6 space-y-4 text-gray-500 dark:text-white">
       {children}
     </ul>
   </div>
@@ -18,13 +18,15 @@ export const FooterLink = ({href, children}) =>
   </li>
 
 export const FooterNav = () =>
-  <nav className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-    <div>
-      <Logo width={200} height={200} />
-      {siteName}
-    </div>
+  <nav className="grid w-full justify-between px-6 py-8 gap-8 sm:flex sm:justify-between md:flex md:grid-cols-1">
+    <Link href="/" className="flex flex-row self-start items-center mr-4">
+      <Logo width={40} height={40} className="mr-1" />
+      <div className="text-2xl text-gray-800 font-semibold dark:text-gray-white">
+        {siteName}
+      </div>
+    </Link>
 
-    <div className="grid w-full grid-cols-2 gap-8 px-6 py-8 md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
       <FooterLinkGroup title="About">
         <FooterLink href="/help/about">Treemap</FooterLink>
         <FooterLink href="/help">Help</FooterLink>
@@ -50,17 +52,17 @@ export const FooterNav = () =>
   </nav>
 
 export const FooterCopyright = ({year = 2024}) =>
-  <span>© {year} {companyName}</span>
+  <span className="text-sm">© {year} {companyName}</span>
 
 export const FooterIcon = ({href, Icon}) =>
   <Link href={href}>
-    <Icon className="w-4 h-4" />
+    <Icon className="w-5 h-5" />
   </Link>
 
 export const FooterBar = () =>
-  <div className="w-full sm:flex sm:items-center sm:justify-between">
+  <div className="w-full p-6 sm:flex sm:items-center sm:justify-between text-gray-500 dark:text-gray-400">
     <FooterCopyright />
-    <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
+    <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center ">
       <FooterIcon href="#" Icon={BsFacebook} />
       <FooterIcon href="#" Icon={BsInstagram} />
       <FooterIcon href="https://twitter.com/mjtests" Icon={BsTwitter} />
@@ -68,8 +70,8 @@ export const FooterBar = () =>
   </div>
 
 export const ShopFooter = () =>
-  <div className="w-full">
+  <footer className="w-full">
     <FooterNav />
     <hr />
     <FooterBar />
-  </div>
+  </footer>
