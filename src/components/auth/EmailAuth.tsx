@@ -24,6 +24,7 @@ const signInWithGithub = async (redirectTo) => {
       provider: "github",
       options: {
         redirectTo: new URL(window.location).origin + `/auth/callback`,
+        next: redirectTo,
       },
     })
     .then(throwOnError);
@@ -35,6 +36,7 @@ const signInWithGoogle = async (redirectTo) => {
       provider: "google",
       options: {
         redirectTo: new URL(window.location).origin + `/auth/callback`,
+        next: redirectTo,
       },
     })
     .then(throwOnError);
