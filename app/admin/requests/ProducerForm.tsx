@@ -100,6 +100,21 @@ export const Form = ({user, action}) => {
             autoComplete="tel"
           />
         </FieldLayout>
+
+        <FieldLayout
+          error={errors.license?.number}
+          label="OMMA License Number"
+          description={
+            <span>The grower or processor license is issued by the Oklahoma Medical Marijuana Authority (OMMA). The license number is 12 character alphanumeric code, e.g. <code>GAAA-1234-5XYZ</code>.</span>
+          }
+        >
+          <FormattedInput
+            {...useController({control, name: 'producer.license?.number'}).field}
+            autoComplete="off"
+            format={orEmpty}
+            parse={VendorUtil.parsePartialOmmaNumber}
+          />
+        </FieldLayout>
       </section>
 
       <section>

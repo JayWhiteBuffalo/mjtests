@@ -85,9 +85,9 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
         </FieldLayout>
       </section>
 
+      {producer.id &&
       <section>
         <h2>Brand</h2>
-        {producer.id &&
           <FieldLayout
             label="Logo"
             description="Include at least one logo or branding of your products. Minumum size 360x240, recommended 1440x1440 or higher."
@@ -106,8 +106,8 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               }
             />
           </FieldLayout>
-        }
       </section>
+      }
 
       <section>
         <h2>Legal</h2>
@@ -131,10 +131,8 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
         >
           <FormattedInput
             {...useController({control, name: 'license.number'}).field}
-            aria-describedby="license.number.desc license.number.desc2"
             autoComplete="off"
             format={orEmpty}
-            id="license.number"
             parse={VendorUtil.parsePartialOmmaNumber}
           />
         </FieldLayout>

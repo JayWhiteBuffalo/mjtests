@@ -61,7 +61,7 @@ export const FieldLayout = ({label, description, topDescription, bottomDescripti
       : undefined
   
   return (
-    <div className="my-2">
+    <div className="my-4">
       {label
         ? <label htmlFor={id} className="block">{label}</label>
         : undefined
@@ -102,7 +102,7 @@ export const RecursiveErrors = ({errors, showPath}) =>
     )}
   </>
 
-export const FieldDescription = ({children, ...rest}) =>
+export const FieldDescription = ({children, className, ...rest}) =>
   <p className={clsx('text-foreground-600 text-sm', className)} {...rest}>{children}</p>
 
 export const useTreemapForm = options => {

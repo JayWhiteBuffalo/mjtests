@@ -22,6 +22,13 @@ const schedule = z.object({
   ),
 })
 
+export const licenseNumber = z.string().regex(VendorUtil.ommaNumberPattern).optional()
+export const license = 
+  z.object({
+    number: licenseNumber,
+    state: z.literal('Oklahoma'),
+  })
+
 export const dbSchema = z.object({
   contact: z.object({
     email: z.string().email().max(255).optional(),
@@ -32,10 +39,7 @@ export const dbSchema = z.object({
     url: z.string().url().max(255).optional(),
   }),
   flags: z.object({}),
-  license: z.object({
-    number: z.string().regex(VendorUtil.ommaNumberPattern).optional(),
-    state: z.literal('Oklahoma'),
-  }),
+  license,
   location: z.object({
     address: z.string().min(10).max(300),
   }),

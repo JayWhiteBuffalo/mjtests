@@ -132,6 +132,15 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
         </FieldLayout>
 
         <FieldLayout
+          error={errors.batch}
+          label="Batch number (Optional)"
+        >
+          <Input
+            {...register('batch')}
+          />
+        </FieldLayout>
+
+        <FieldLayout
           error={errors.subspecies}
           label="Subspecies"
         >

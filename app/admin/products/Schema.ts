@@ -14,6 +14,7 @@ const potency = z.object({
 })
 
 export const publishDbSchema = z.object({
+  batch: z.string().nullable(),
   brand: z.string(),
   concentrateType: z.enum(Treemap.concentrateTypes.map(x => x.key)).nullable(),
   cultivar: z.string(),
@@ -35,6 +36,7 @@ export const publishDbSchema = z.object({
 })
 
 export const dbSchema = z.object({
+  batch: z.string().nullable(),
   brand: z.string().nullable(),
   concentrateType: z.enum(Treemap.concentrateTypes.map(x => x.key)).nullable(),
   cultivar: z.string().nullable(),
@@ -57,6 +59,7 @@ export const dbSchema = z.object({
 export const preprocessFormData = ({isDraft}) => formData => {
   const product = {
     ...formData,
+    batch: unempty(formData.batch) ?? null,
     brand: unempty(formData.brand) ?? null,
     concentrateType: formData.concentrateType ?? null,
     cultivar: unempty(formData.cultivar) ?? null,

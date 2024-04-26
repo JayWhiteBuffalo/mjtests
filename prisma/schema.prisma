@@ -84,6 +84,7 @@ model Producer {
 }
 
 model Product {
+  batch String?
   brand String?
   concentrateType String?
   cultivar String?

@@ -104,6 +104,9 @@ export const ProductPane = ({product, canEdit}) =>
         <h2>Activity</h2>
       </header>
       <dl>
+        <dt>Batch number</dt>
+        <dd>{product.batch} ?? <None /></dd>
+
         <dt>Subspecies</dt>
         <dd>{
           product.subspecies

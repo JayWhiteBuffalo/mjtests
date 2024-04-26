@@ -10,8 +10,8 @@ export const VendorUtil = {
   read(vendor) {
     vendor.contact ??= {}
     vendor.flags ??= {}
-    vendor.license ??= {}
     vendor.location ??= {}
+    vendor.license ??= {}
     vendor.license.state ??= 'Oklahoma'
     vendor.signupStatus ??= {}
     vendor.slug ??= vendor.name ? VendorUtil.autoSlug(vendor) : null

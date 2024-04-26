@@ -42,6 +42,7 @@ export const approve = async requestId => {
         tel: request.vendor.tel,
         url: request.vendor.url,
       },
+      license: request.vendor.liense,
       location: {
         address: request.vendor.address,
       },
@@ -69,6 +70,7 @@ export const approve = async requestId => {
         tel: request.producer.tel,
         url: request.producer.url,
       },
+      license: request.producer.liense,
       location: {
         address: request.producer.address,
       },

@@ -1,6 +1,6 @@
 import ObjectUtil from '@util/ObjectUtil'
+import {license} from '@app/admin/vendors/Schema'
 import {unempty} from '@util/ValidationUtil'
-import {VendorUtil} from '@util/VendorUtil'
 import {z} from 'zod'
 
 export const dbSchema = z.object({
@@ -10,10 +10,7 @@ export const dbSchema = z.object({
     url: z.string().url().max(255).optional(),
   }),
   flags: z.object({}),
-  license: z.object({
-    number: z.string().regex(VendorUtil.ommaNumberPattern).optional(),
-    state: z.literal('Oklahoma'),
-  }),
+  license,
   location: z.object({
     address: z.string().min(10).max(300),
   }),

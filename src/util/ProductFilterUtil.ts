@@ -25,6 +25,18 @@ export const ProductFilterUtil = {
     })
   ),
 
+  isEmpty(filter_) {
+    const filter = ObjectUtil.deepClone(filter_)
+    delete filter.sortBy
+    delete filter.location.center
+
+    const defaultFilter = ProductFilterUtil.defaultFilter()
+    const diff = ObjectUtil.filter(filter, (key, value) =>
+      !ObjectUtil.equals(value, defaultFilter[key])
+    )
+    return ObjectUtil.isEmpty(diff)
+  },
+
   testProductFilter(filter, product) {
     return ProductFilterUtil.testKeywordFilter(filter.keyword, product)
       && MathUtil.inRange(filter.price, product.price)

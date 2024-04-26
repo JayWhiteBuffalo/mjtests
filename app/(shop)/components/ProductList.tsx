@@ -3,12 +3,13 @@ import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
 import {BlueButton} from '@components/Link'
-import {Popover, PopoverTrigger, PopoverContent, Spinner, Chip} from '@nextui-org/react'
 import {ErrorBoundary} from '@components/Error'
 import {FilteredProductStore} from '../state/DataStore'
+import {FilterStore, LayoutStore} from '../state/UIStore'
 import {Fragment, useState, useRef} from 'react'
 import {Image} from '@components/Image'
-import {LayoutStore} from '../state/UIStore'
+import {Popover, PopoverTrigger, PopoverContent, Spinner, Chip} from '@nextui-org/react'
+import {ProductFilterUtil} from '@util/ProductFilterUtil'
 import {TerpeneSelectorItem} from '@components/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {useFloating, useClick, useDismiss, useInteractions, flip, offset, shift, FloatingArrow, arrow} from '@floating-ui/react'
@@ -244,8 +245,17 @@ export const Product = ({product, mode}) => {
   )
 }
 
-const ProductList = ({products, mode}) =>
+const ProductList = ({filter, products, mode}) =>
   <>
+    {
+      products.length !== 0 && ProductFilterUtil.isEmpty(filter)
+        ? <p>
+          {products.length} 
+          {products.length === 1 ? 'product' : 'products'} 
+          match your filter criteria
+        </p>
+        : undefined
+    }
     <ul
       className={clsx(
         `ProductList ${mode}`,
@@ -269,7 +279,7 @@ const ProductList = ({products, mode}) =>
     }
   </>
 
-const ProductListPane = ({products, mode}) =>
+const ProductListPane = ({filter, products, mode}) =>
   <div
     className={clsx(
       'ProductListPane border-t border-gray-300 flex-1 basis-[400px]',
@@ -277,7 +287,7 @@ const ProductListPane = ({products, mode}) =>
     )}>
     <ErrorBoundary>
       {products
-        .then(products => <ProductList products={products} mode={mode} />)
+        .then(products => <ProductList filter={filter} products={products} mode={mode} />)
         .orPending(() =>
           <div className="flex justify-center">
             <Spinner size="xl" className="mt-6" />
@@ -288,10 +298,12 @@ const ProductListPane = ({products, mode}) =>
   </div>
 
 export const ProductListPaneContainer = () => {
+  const filter = useFluxStore(FilterStore)
   const products = useFluxStore(FilteredProductStore)
   const layout = useFluxStore(LayoutStore)
   return (
     <ProductListPane
+      filter={filter}
       mode={layout.productListMode}
       products={products}
     />

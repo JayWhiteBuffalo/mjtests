@@ -174,6 +174,16 @@ const ObjectUtil = {
     }
     return xs
   },
+
+  filter(xs, pred) {
+    const ys = {}
+    for (const xKey in xs) {
+      if (pred(xKey, xs[xKey])) {
+        ys[xKey] = xs[xKey]
+      }
+    }
+    return ys
+  },
 }
 
 export default ObjectUtil
