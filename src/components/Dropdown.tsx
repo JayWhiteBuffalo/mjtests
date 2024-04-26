@@ -83,11 +83,11 @@ const DropdownTrigger = forwardRef(({placeholder, value, readOnly, className, ..
   if (value != null) {
     text = value
   } else if (placeholder) {
-    text = <span className="placeholder">{placeholder}</span>
+    text = <span className="text-gray-500">{placeholder}</span>
   } else if (readOnly) {
-    text = <span className="placeholder">None</span>
+    text = <span className="text-gray-500">None</span>
   } else {
-    text = <span className="placeholder">Select</span>
+    text = <span className="text-gray-500">Select</span>
   }
 
   return (

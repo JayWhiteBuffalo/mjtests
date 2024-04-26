@@ -18,7 +18,7 @@ type MultiDropdownItem = {
 
 const MultiDropdownTrigger = forwardRef(({placeholder, values, className, ...rest}, ref) => {
   const selectedCount = ObjectUtil.size(values)
-  const text = selectedCount === 0 && placeholder && <span className="placeholder">{placeholder}</span>
+  const text = selectedCount === 0 && placeholder && <span className="text-gray-500">{placeholder}</span>
     || `${selectedCount} selected`
 
   return (
@@ -31,10 +31,7 @@ const MultiDropdownTrigger = forwardRef(({placeholder, values, className, ...res
       ref={ref}
       variant="bordered"
       {...rest}>
-      <span
-        className="">
-        {text}
-      </span>
+      {text}
     </Button>
   )
 })

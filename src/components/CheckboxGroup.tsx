@@ -23,8 +23,8 @@ export const CheckboxGroup = ({items, values, onChange, ...rest}: CheckboxGroupP
     {items.map(item =>
       <Checkbox
         key={item.key}
+        icon={() => item.Icon && <item.Icon className="h-4 w-4" />}
         value={item.key}>
-        {item.Icon ? <item.Icon className="h-4 w-4 mr-1 inline-block" /> : undefined}
         {item.name}
       </Checkbox>
     )}

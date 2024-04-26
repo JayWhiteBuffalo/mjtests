@@ -146,7 +146,7 @@ const FilterKeyword = ({keyword, onChange}) =>
     isClearable
     onChange={e => onChange(e.target.value)}
     placeholder="Search products"
-    startContent={<CgSearch className="w-6 h-6" />}
+    startContent={<CgSearch className="w-6 h-6 text-gray-500" />}
     type="search"
     value={keyword}
   />
@@ -280,7 +280,7 @@ const MapKeyword = ({keyword, items, exact, onChangeKeyword, geolocationInProgre
         aria-autocomplete="list"
         autoComplete="off"
         className="flex-1 basis-32"
-        startContent={<HiLocationMarker className="w-6 h-6" />}
+        startContent={<HiLocationMarker className="w-6 h-6 fill-gray-500" />}
         id="mapKeyword"
         placeholder="Near me"
         ref={refs.setReference}
