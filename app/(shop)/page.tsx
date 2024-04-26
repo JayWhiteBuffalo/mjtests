@@ -6,7 +6,6 @@ export const generateStaticParams = () => (
   {searchParams: {}}
 )
 
-const requireLogin = false
 const Page = async ({searchParams: query}) => {
   const filter = ProductFilterUtil.fromQuery(query)
   const products = await ProductDto.getProducts(filter)

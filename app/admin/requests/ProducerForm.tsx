@@ -1,5 +1,6 @@
 'use client'
 import {Button, Input, Textarea} from '@nextui-org/react'
+import {FormattedInput} from '@components/FormattedInput'
 import {formSchema} from './Schema'
 import {useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
 import {zodResolver} from '@hookform/resolvers/zod'

@@ -48,7 +48,7 @@ const preprocessVendor = formVendor =>
   })
 
 const preprocessFormData = formData => ({
-  producer: formData.producer ? formProducer(formData.producer) : null,
+  producer: formData.producer ? preprocessProducer(formData.producer) : null,
   referrer: unempty(formData.referrer),
   status: 'pending',
   type: formData.type,
