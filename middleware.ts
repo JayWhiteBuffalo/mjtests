@@ -54,7 +54,7 @@ export async function middleware(request) {
   // Redirect to login page for logged out users accessing protected routes
   if (shouldRedirectLoggedOut(request.nextUrl.pathname) && !session) {
     const redirectUrl = new URL('/auth', request.nextUrl)
-    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    redirectUrl.searchParams.set('returnTo', request.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)
   }
 

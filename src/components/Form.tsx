@@ -191,11 +191,11 @@ export const AlertBox = ({
   return (
     <div
       className={clsx(
-        `flex items-center p-2 bg-neutral-200 rounded-lg border-${color} border-2`,
+        `flex items-center p-2 rounded-lg border-${color} border-2`,
         className
       )}
     >
-      <Icon className={`fill-${color} w-8 h-8 mr-2`} />
+      <Icon className={`text-${color} w-8 h-8 mr-2`} />
       <div>{children}</div>
     </div>
   )

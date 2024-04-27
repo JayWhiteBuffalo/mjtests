@@ -26,11 +26,3 @@
   font-weight: 700;
   margin: 24px 0 16px;
 }
-
-.AdminForm input[readonly] {
-  @apply bg-zinc-200;
-
-  &:hover {
-    cursor: not-allowed;
-  }
-}

@@ -53,6 +53,8 @@ const UserDto = {
       const user = await UserDto._getRaw(session.user.id)
       if (user) {
         user.loggedIn = true
+        user.session = session
+        user.email = session.user.email
         return user
       }
     }

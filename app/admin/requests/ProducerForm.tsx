@@ -2,11 +2,14 @@
 import {Button, Input, Textarea} from '@nextui-org/react'
 import {FormattedInput} from '@components/FormattedInput'
 import {formSchema} from './Schema'
+import {orEmpty} from '@util/ValidationUtil'
+import {useController} from 'react-hook-form'
 import {useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
+import {VendorUtil} from '@util/VendorUtil'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 export const Form = ({user, action}) => {
-  const {register, handleSubmit, formState: {errors}} = useTreemapForm({
+  const {control, register, handleSubmit, formState: {errors}} = useTreemapForm({
     resolver: zodResolver(formSchema),
   })
 
@@ -33,8 +36,12 @@ export const Form = ({user, action}) => {
         >
           <Input
             {...register('user.email')}
-            readOnly
+            classNames={{
+              input: 'cursor-not-allowed',
+              inputWrapper: '!cursor-not-allowed bg-zinc-200',
+            }}
             defaultValue={user.email}
+            isReadOnly
           />
         </FieldLayout>
       </section>

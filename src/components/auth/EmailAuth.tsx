@@ -14,45 +14,47 @@ import {
 import { PasswordInput } from "./Input";
 import { throwOnError } from "@util/SupabaseUtil";
 import { useForm, Controller } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {defaultReturnTo} from '@components/Site'
+import {redirect} from '@app/ServerAction'
 
-const signInWithGithub = async (redirectTo) => {
+const makePkceRedirect = returnTo =>
+  `${new URL(window.location).origin}/auth/callback${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ''}`
+
+const signInWithGithub = async (returnTo) => {
   await supabase.auth
     .signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: new URL(window.location).origin + `/auth/callback`,
-        next: redirectTo,
+        redirectTo: makePkceRedirect(returnTo),
       },
     })
     .then(throwOnError);
 };
 
-const signInWithGoogle = async (redirectTo) => {
+const signInWithGoogle = async (returnTo) => {
   await supabase.auth
     .signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: new URL(window.location).origin + `/auth/callback`,
-        next: redirectTo,
+        redirectTo: makePkceRedirect(returnTo),
       },
     })
     .then(throwOnError);
 };
 
-export const SignInPlatformSection = ({ redirectTo }) => (
+export const SignInPlatformSection = ({ returnTo }) => (
   <div className="flex flex-col gap-2">
     <Button
-      onClick={signInWithGoogle.bind(null, redirectTo ?? '/')}
+      onClick={signInWithGoogle.bind(null, returnTo)}
       startContent={<Icon icon="flat-color-icons:google" width={24} />}
       variant="bordered"
     >
       Continue with Google
     </Button>
     <Button
-      onClick={signInWithGithub.bind(null, redirectTo ?? '/')}
+      onClick={signInWithGithub.bind(null, returnTo)}
       startContent={
         <Icon className="text-default-500" icon="fe:github" width={24} />
       }
@@ -102,7 +104,7 @@ const StatusAlertBox = ({ status }) => {
   }
 };
 
-export const EmailAuthForm = ({ view, redirectTo }) => {
+export const EmailAuthForm = ({ view, returnTo }) => {
   const {
     handleSubmit,
     register,
@@ -114,13 +116,12 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
     //reValidateMode: 'onBlur',
   });
   const [status, setStatus] = useState();
-  const router = useRouter();
 
   const signUp = useCallback(
     async (formData) => {
       const { data, error } = await supabase.auth.signUp({
         ...formData,
-        options: { emailRedirectTo: redirectTo ?? '/' },
+        options: { emailRedirectTo: returnTo },
       });
       if (error) {
         setError("root.form", { type: "form", message: error.message });
@@ -130,11 +131,11 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
           setStatus("checkEmail");
         } else if (user) {
           setStatus("success");
-          router.push(redirectTo ?? '/');
+          redirect(returnTo ?? defaultReturnTo);
         }
       }
     },
-    [redirectTo, router, setError]
+    [returnTo, setError]
   );
 
   const signIn = useCallback(
@@ -149,10 +150,10 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
         setError("root.form", { type: "form", message: error.message });
       } else {
         setStatus("Success!");
-        router.push(redirectTo ?? '/');
+        redirect(returnTo ?? defaultReturnTo);
       }
     },
-    [redirectTo, router, setError]
+    [returnTo, setError]
   );
 
   return (
@@ -248,15 +249,15 @@ export const EmailAuthForm = ({ view, redirectTo }) => {
 };
 
 
-export const EmailAuth = ({view, redirectTo}) =>
+export const EmailAuth = ({view, returnTo}) =>
   <AuthSection>
     <header>
       <AuthTitle>{view === "signIn" ? "Sign In" : "Sign Up"}</AuthTitle>
     </header>
 
-    <EmailAuthForm view={view} />
+    <EmailAuthForm view={view} returnTo={returnTo} />
     <AuthDivider />
-    <SignInPlatformSection redirectTo={redirectTo} />
+    <SignInPlatformSection returnTo={returnTo} />
 
     {view === "signIn" ? (
       <p className="text-center text-small">
@@ -265,7 +266,7 @@ export const EmailAuth = ({view, redirectTo}) =>
           as={NextLink}
           href={{
             pathname: "/auth/register",
-            query: { redirectTo },
+            query: returnTo ? {returnTo} : {},
           }}
           size="sm"
         >
@@ -279,7 +280,7 @@ export const EmailAuth = ({view, redirectTo}) =>
           as={NextLink}
           href={{
             pathname: "/auth",
-            query: { redirectTo },
+            query: returnTo ? {returnTo} : {},
           }}
           size="sm"
         >

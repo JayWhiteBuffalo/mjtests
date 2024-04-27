@@ -24,7 +24,7 @@ export const ResetPasswordForm = ({}) => {
     setResponse(Present.pend);
     const { error } = await supabase.auth.resetPasswordForEmail(
       formData.get("email"),
-      { redirectTo: "/auth/update-password" }
+      { redirectTo: `${new URL(window.location).origin}/auth/update-password` }
     );
     setResponse(
       error ? Present.reject(error) : Present.resolve({ status: "checkEmail" })
@@ -46,7 +46,7 @@ export const ResetPasswordForm = ({}) => {
         className="w-full my-4"
         color="primary"
         isLoading={response.pending()}
-        startContent={<HiOutlineMail className="w-4 h-4" />}
+        startContent={<HiOutlineMail className="text-xl" />}
         type="submit"
       >
         Send reset password instructions
@@ -61,7 +61,7 @@ export const ResetPasswordForm = ({}) => {
   );
 };
 
-export const ResetPassword = ({redirectTo}) =>
+export const ResetPassword = ({returnTo}) =>
   <AuthSection>
     <header>
       <AuthTitle>Reset Password</AuthTitle>
@@ -73,7 +73,7 @@ export const ResetPassword = ({redirectTo}) =>
         as={NextLink}
         href={{
           pathname: "/auth",
-          query: { redirectTo },
+          query: returnTo ? {returnTo} : {},
         }}
         size="sm"
       >

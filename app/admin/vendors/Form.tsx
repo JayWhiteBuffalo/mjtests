@@ -32,7 +32,11 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
           <Input
             {...register('name')}
             autoComplete="off"
-            readOnly={!isAdmin}
+            classNames={{
+              input: !isAdmin ? 'cursor-not-allowed' : undefined,
+              inputWrapper: !isAdmin ? '!cursor-not-allowed bg-zinc-200' : undefined,
+            }}
+            isReadOnly={!isAdmin}
           />
         </FieldLayout>
 
@@ -45,7 +49,11 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
           <Textarea
             {...register('location.address')}
             autoComplete="street-address"
-            readOnly={!isAdmin}
+            isReadOnly={!isAdmin}
+            classNames={{
+              input: !isAdmin ? 'cursor-not-allowed' : undefined,
+              inputWrapper: !isAdmin ? '!cursor-not-allowed bg-zinc-200' : undefined,
+            }}
           />
         </FieldLayout>
 
@@ -198,7 +206,11 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
         >
           <Input
             {...register('license.state')}
-            readOnly
+            classNames={{
+              input: 'cursor-not-allowed',
+              inputWrapper: '!cursor-not-allowed bg-zinc-200',
+            }}
+            isReadOnly
           />
         </FieldLayout>
 

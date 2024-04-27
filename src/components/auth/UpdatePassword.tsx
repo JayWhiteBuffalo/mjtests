@@ -42,9 +42,10 @@ export const UpdatePasswordForm = () => {
       />
 
       <Button
-        isLoading={response.pending()}
+        className="w-full my-4"
         color="primary"
-        startContent={<HiKey className="w-4 h-4" />}
+        isLoading={response.pending()}
+        startContent={<HiKey className="text-xl" />}
         type="submit"
       >
         Update password

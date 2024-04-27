@@ -1,8 +1,9 @@
 "use client";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Session, User } from "@supabase/supabase-js";
 import supabase from "@api/supabaseBrowser";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import {jsonOnOk} from '@util/FetchUtil'
 import {uniqueRecord} from '@util/SupabaseUtil'
 
 export const EVENTS = {
@@ -69,10 +70,8 @@ export const AuthProvider = ({children}) => {
 
   useEffect(() => {
     if (user) {
-      supabase.from('user')
-        .select()
-        .eq('id', user.id)
-        .then(uniqueRecord)
+      fetch(`/api/users/${user.id}`)
+        .then(jsonOnOk)
         // TODO timing collision
         .then(setProfile)
     } else {
