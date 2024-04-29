@@ -6,6 +6,7 @@ export const throwOnError = ({ data, error }) => {
   }
   return data;
 };
+
 export const toRecords = ({ data, error }) => {
   if (error) {
     throw error;

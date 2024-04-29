@@ -1,4 +1,4 @@
-import {createMiddlewareClient} from '@api/supabaseMiddleware'
+import {updateSession} from '@api/supabaseMiddleware'
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 
@@ -44,15 +44,10 @@ export async function middleware(request) {
     return NextResponse.redirect(new URL('/auth/change-password'))
   }
 
-  const response = NextResponse.next()
-  const supabase = createMiddlewareClient({request, response})
-  await supabase.auth.getUser()
-
-  // Refresh sesssion if expired
-  const {data: {session}} = await supabase.auth.getSession()
+  const {response, supabase, user} = await updateSession({request})
 
   // Redirect to login page for logged out users accessing protected routes
-  if (shouldRedirectLoggedOut(request.nextUrl.pathname) && !session) {
+  if (shouldRedirectLoggedOut(request.nextUrl.pathname) && !user) {
     const redirectUrl = new URL('/auth', request.nextUrl)
     redirectUrl.searchParams.set('returnTo', request.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)

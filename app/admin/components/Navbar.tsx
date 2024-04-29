@@ -1,9 +1,9 @@
 'use client'
 import Link from 'next/link'
-import supabase from '@api/supabaseBrowser'
 import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection} from '@nextui-org/react'
-import {Logo, siteName} from '@components/Site'
 import {HiMiniArrowRightOnRectangle} from 'react-icons/hi2'
+import {Logo, siteName} from '@components/Site'
+import {signOut} from '@app/(shop)/auth/ServerAction'
 
 export const AvatarDropdown = ({user}) =>
   <Dropdown>
@@ -28,7 +28,7 @@ export const AvatarDropdown = ({user}) =>
         <DropdownItem
           key="logout"
           startContent={<HiMiniArrowRightOnRectangle className="text-xl text-default-500" />}
-          onPress={() => void supabase.auth.signOut()}
+          onPress={() => signOut()}
         >
           Log Out
         </DropdownItem>

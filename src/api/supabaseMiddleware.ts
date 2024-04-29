@@ -2,9 +2,16 @@ import type {Database} from '../supabase/schema'
 import {createServerClient, type CookieOptions} from '@supabase/ssr'
 import {NextResponse} from 'next/server'
 import {supabaseUrl} from './Env'
+import {throwOnError} from '@util/SupabaseUtil'
 
-export const createMiddlewareClient = ({request, response}) =>
-  createServerClient<Database>(
+export const updateSession = async ({request}) => {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = createServerClient<Database>(
     supabaseUrl,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -49,3 +56,9 @@ export const createMiddlewareClient = ({request, response}) =>
       },
     }
   )
+
+  //await supabase.auth.refreshSession()
+  const user = (await supabase.auth.getUser()).data?.user
+
+  return {user, response, supabase}
+}

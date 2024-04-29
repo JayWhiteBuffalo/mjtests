@@ -1,6 +1,4 @@
 "use client";
-import supabase from "@api/supabaseBrowser";
-import z from "zod";
 import NextLink from "next/link"
 import { Icon } from "@iconify/react";
 import { AuthDivider, AuthSection, AuthTitle } from "./AuthSection";
@@ -10,51 +8,26 @@ import {
   FormErrors,
   nullResolver,
   AlertBox,
+  useTreemapForm,
 } from "@components/Form";
 import { PasswordInput } from "./Input";
-import { throwOnError } from "@util/SupabaseUtil";
-import { useForm, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {defaultReturnTo} from '@components/Site'
-import {redirect} from '@app/ServerAction'
-
-const makePkceRedirect = returnTo =>
-  `${new URL(window.location).origin}/auth/callback${returnTo ? `?next=${encodeURIComponent(returnTo)}` : ''}`
-
-const signInWithGithub = async (returnTo) => {
-  await supabase.auth
-    .signInWithOAuth({
-      provider: "github",
-      options: {
-        redirectTo: makePkceRedirect(returnTo),
-      },
-    })
-    .then(throwOnError);
-};
-
-const signInWithGoogle = async (returnTo) => {
-  await supabase.auth
-    .signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: makePkceRedirect(returnTo),
-      },
-    })
-    .then(throwOnError);
-};
+import {signIn, signUp, signInWithOAuth} from '@app/(shop)/auth/ServerAction'
+import {signUpSchema} from '@app/(shop)/auth/Schema'
 
 export const SignInPlatformSection = ({ returnTo }) => (
   <div className="flex flex-col gap-2">
     <Button
-      onClick={signInWithGoogle.bind(null, returnTo)}
+      onPress={() => signInWithOAuth('google', returnTo)}
       startContent={<Icon icon="flat-color-icons:google" width={24} />}
       variant="bordered"
     >
       Continue with Google
     </Button>
     <Button
-      onClick={signInWithGithub.bind(null, returnTo)}
+      onPress={() => signInWithOAuth('github', returnTo)}
       startContent={
         <Icon className="text-default-500" icon="fe:github" width={24} />
       }
@@ -64,28 +37,6 @@ export const SignInPlatformSection = ({ returnTo }) => (
     </Button>
   </div>
 );
-
-const signUpSchema = z
-  .object({
-    confirmPassword: z
-      .string()
-      .min(1, { message: "Required" })
-      .min(6, { message: "Password must have 6 or more characters" }),
-    email: z.string().min(1, { message: "Required" }).email(),
-    password: z
-      .string()
-      .min(1, { message: "Required" })
-      .min(6, { message: "Password must have 6 or more characters" }),
-    /*
-  legal: z.literal(true, {
-    errorMap: () => ({message: 'Required'}),
-  }),
-  */
-  })
-  .refine((form) => form.password === form.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
 
 const StatusAlertBox = ({ status }) => {
   if (status === "checkEmail") {
@@ -109,57 +60,36 @@ export const EmailAuthForm = ({ view, returnTo }) => {
     handleSubmit,
     register,
     formState: { errors, isLoading },
-    setError,
     control,
-  } = useForm({
+  } = useTreemapForm({
     resolver: view === "signUp" ? zodResolver(signUpSchema) : nullResolver(),
     //reValidateMode: 'onBlur',
   });
   const [status, setStatus] = useState();
 
-  const signUp = useCallback(
-    async (formData) => {
-      const { data, error } = await supabase.auth.signUp({
-        ...formData,
-        options: { emailRedirectTo: returnTo },
-      });
-      if (error) {
-        setError("root.form", { type: "form", message: error.message });
-      } else {
-        const { user, session } = data;
-        if (user && !session) {
-          setStatus("checkEmail");
-        } else if (user) {
-          setStatus("success");
-          redirect(returnTo ?? defaultReturnTo);
-        }
-      }
-    },
-    [returnTo, setError]
-  );
+  const signIn2 = useCallback(
+    formData => signIn(formData, returnTo),
+    [returnTo]
+  )
 
-  const signIn = useCallback(
-    async (formData) => {
-      const { error } = await supabase.auth
-        .signInWithPassword(formData)
-        .catch((error) => {
-          setError("root.server", { type: "server", message: error.message });
-          console.error(error);
-        });
-      if (error) {
-        setError("root.form", { type: "form", message: error.message });
-      } else {
-        setStatus("Success!");
-        redirect(returnTo ?? defaultReturnTo);
+  const signUp2 = useCallback(
+    async formData => {
+      const result = await signUp(formData, returnTo)
+      const {user, session} = result
+      if (user && !session) {
+        setStatus("checkEmail");
+      } else if (user) {
+        setStatus("success");
       }
+      return result
     },
-    [returnTo, setError]
+    [returnTo]
   );
 
   return (
     <form
       className="flex flex-col gap-3"
-      action={handleSubmit(view === "signUp" ? signUp : signIn)}
+      action={handleSubmit(view === 'signUp' ? signUp2 : signIn2)}
     >
       <Input
         {...register("email")}

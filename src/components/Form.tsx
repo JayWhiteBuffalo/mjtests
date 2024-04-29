@@ -105,6 +105,18 @@ export const RecursiveErrors = ({errors, showPath}) =>
 export const FieldDescription = ({children, className, ...rest}) =>
   <p className={clsx('text-foreground-600 text-sm', className)} {...rest}>{children}</p>
 
+export const extractErrors = (obj, setError) => {
+  if (typeof obj === 'object' && obj.issues instanceof Array) {
+    // Zod issues array
+    for (const {code, message, path} of obj.issues) {
+      setError(path.join('.') || 'root', {type: code, message})
+    }
+  } else if (typeof obj === 'object' && typeof obj.error === 'string') {
+    // General purpose form error
+    setError('root.form', {type: 'form', message: obj.error})
+  }
+}
+
 export const useTreemapForm = options => {
   const methods = useForm(options)
   const {setError, handleSubmit: handleSubmit_, control, register: register_} = methods
@@ -112,15 +124,7 @@ export const useTreemapForm = options => {
     action => handleSubmit_(async formData => {
       try {
         const obj = await action(formData)
-        if (typeof obj === 'object' && obj.issues instanceof Array) {
-          // Zod issues array
-          for (const {code, message, path} of obj.issues) {
-            setError(path.join('.') || 'root', {type: code, message})
-          }
-        } else if (typeof obj === 'object' && typeof obj.error === 'string') {
-          // General purpose form error
-          setError('root.form', {type: 'form', message: obj.error})
-        }
+        extractErrors(obj, setError)
       } catch (error) {
         setError('root.server', {type: 'server', message: error.message})
       }
@@ -136,16 +140,7 @@ export const useTreemapForm = options => {
     [register_, control]
   )
 
-  const registerChecked = useCallback(
-    (name, value, options) => ({
-      ...register_(name, options),
-      defaultChecked: get(control._defaultValues, name) === value,
-      value,
-    }),
-    [register_, control]
-  )
-
-  return {...methods, handleSubmit, register, registerChecked}
+  return {...methods, handleSubmit, register}
 }
 
 export const FormErrors = ({errors}) =>

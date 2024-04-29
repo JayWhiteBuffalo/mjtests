@@ -1,3 +1,5 @@
+import '@mantine/core/styles.css'
+import '@mantine/dropzone/styles.css'
 import {MantineProvider} from '@mantine/core'
 import {NextUIProvider} from '@nextui-org/react'
 import {ThemeProvider as NextThemesProvider} from 'next-themes'

@@ -39,4 +39,6 @@ export const createRouteHandlerClient = () => {
   )
 }
 
+export const createServerActionClient = createRouteHandlerClient
+
 export default createServerClient

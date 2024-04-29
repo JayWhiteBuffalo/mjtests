@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     try {
       await supabase.auth.verifyOtp({type, token_hash})
         .then(throwOnError)
-      return NextResponse.redirect(`{origin}{next}`)
+      return NextResponse.redirect(`${origin}${next}`)
     } catch (error) {}
   }
 

@@ -9,11 +9,13 @@ export const makeMain = ({getRoute, Page}) => {
     if (!canUseAdmin(user)) {
       redirect('/business')
     }
+
     const route = await getRoute(params)
     const rootPageKey = route[1]?.segment
     if (rootPageKey && !canUseRootPage(user, rootPageKey)) {
       return <UnauthorizedPage />
     }
+
     return (
       <main
         className="mb-[30vh]"
