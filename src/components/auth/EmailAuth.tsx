@@ -14,7 +14,7 @@ import { PasswordInput } from "./Input";
 import { Controller } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {signIn, signUp, signInWithOAuth} from '@app/(shop)/auth/ServerAction'
+import {signIn as signInAction, signUp as signUpAction, signInWithOAuth} from '@app/(shop)/auth/ServerAction'
 import {signUpSchema} from '@app/(shop)/auth/Schema'
 
 export const SignInPlatformSection = ({ returnTo }) => (
@@ -59,7 +59,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isLoading },
+    formState: { errors, isSubmitting },
     control,
   } = useTreemapForm({
     resolver: view === "signUp" ? zodResolver(signUpSchema) : nullResolver(),
@@ -67,14 +67,14 @@ export const EmailAuthForm = ({ view, returnTo }) => {
   });
   const [status, setStatus] = useState();
 
-  const signIn2 = useCallback(
-    formData => signIn(formData, returnTo),
+  const signIn = useCallback(
+    formData => signInAction(formData, returnTo),
     [returnTo]
   )
 
-  const signUp2 = useCallback(
+  const signUp = useCallback(
     async formData => {
-      const result = await signUp(formData, returnTo)
+      const result = await signUpAction(formData, returnTo)
       const {user, session} = result
       if (user && !session) {
         setStatus("checkEmail");
@@ -89,7 +89,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
   return (
     <form
       className="flex flex-col gap-3"
-      action={handleSubmit(view === 'signUp' ? signUp2 : signIn2)}
+      action={handleSubmit(view === 'signUp' ? signUp : signIn)}
     >
       <Input
         {...register("email")}
@@ -115,7 +115,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       {view === "signIn" ? (
         <div className="flex justify-between items-center px-2">
           {/* Remember me doens't do anything right now */}
-          <Checkbox className="py-4" size="sm">
+          <Checkbox className="py-4" size="sm" defaultSelected>
             Remember me
           </Checkbox>
           <Link
@@ -168,7 +168,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
         </>
       )}
 
-      <Button color="primary" isLoading={isLoading} type="submit">
+      <Button color="primary" isLoading={isSubmitting} type="submit">
         {view === "signIn" ? "Log In" : "Sign Up"}
       </Button>
 

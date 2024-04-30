@@ -2,7 +2,6 @@ import type {Database} from '../supabase/schema'
 import {createServerClient, type CookieOptions} from '@supabase/ssr'
 import {NextResponse} from 'next/server'
 import {supabaseUrl} from './Env'
-import {throwOnError} from '@util/SupabaseUtil'
 
 export const updateSession = async ({request}) => {
   let response = NextResponse.next({

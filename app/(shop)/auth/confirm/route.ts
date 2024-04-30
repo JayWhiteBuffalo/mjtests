@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? defaultReturnTo
+  const next = searchParams.get('next')
+  const returnTo = searchParams.get('returnTo')
+
   const {origin} = new URL(request.nextUrl)
 
   if (token_hash && type) {
@@ -19,7 +21,12 @@ export async function GET(request: NextRequest) {
     try {
       await supabase.auth.verifyOtp({type, token_hash})
         .then(throwOnError)
-      return NextResponse.redirect(`${origin}${next}`)
+
+      if (next) {
+        return NextResponse.redirect(`${origin}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+      } else {
+        return NextResponse.redirect(returnTo ?? defaultReturnTo)
+      }
     } catch (error) {}
   }
 

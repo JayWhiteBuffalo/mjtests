@@ -7,15 +7,21 @@ import {throwOnError} from '@util/SupabaseUtil'
 // Endpoint for non-PKCE workflows
 export async function GET(request: NextRequest) {
   const {searchParams, origin} = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? defaultReturnTo;
+  const code = searchParams.get("code")
+  const next = searchParams.get("next")
+  const returnTo = searchParams.get('returnTo')
 
   if (code) {
     const supabase = createRouteHandlerClient()
     try {
       await supabase.auth.exchangeCodeForSession(code)
         .then(throwOnError)
-      return NextResponse.redirect(`${origin}${next}`);
+
+      if (next) {
+        return NextResponse.redirect(`${origin}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+      } else {
+        return NextResponse.redirect(returnTo ?? defaultReturnTo)
+      }
     } catch (error) {}
   }
 

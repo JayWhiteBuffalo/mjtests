@@ -1,61 +1,59 @@
 "use client";
-import { AlertBox } from "@components/Form";
 import { AuthSection, AuthTitle } from "./AuthSection";
 import { Button } from "@nextui-org/react";
 import { HiKey } from "react-icons/hi";
 import { PasswordInput } from "./Input";
-import { Present } from "@util/Present";
-import { useState, useCallback } from "react";
-import supabase from "@api/supabaseBrowser";
+import { useCallback } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {FormErrors, useTreemapForm} from "@components/Form";
+import {updatePasswordSchema} from '@app/(shop)/auth/Schema'
+import {updatePassword as updatePasswordAction} from '@app/(shop)/auth/ServerAction'
 
-const StatusAlertBox = ({ status }) =>
-  status === "passwordUpdated" ? (
-    <AlertBox color="success">
-      <p>Your password has been updated</p>
-    </AlertBox>
-  ) : undefined;
+export const UpdatePasswordForm = ({returnTo}) => {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useTreemapForm({
+    resolver: zodResolver(updatePasswordSchema),
+  });
 
-export const UpdatePasswordForm = () => {
-  const [response, setResponse] = useState(
-    Present.resolve({}).reactWorkaround()
-  );
-
-  const updatePassword = useCallback(async (formData) => {
-    setResponse(Present.pend);
-    const { error } = await supabase.auth.updateUser({
-      password: formData.password,
-    });
-    setResponse(
-      error
-        ? Present.reject(error)
-        : Present.resolve({ status: "passwordUpdated" })
-    );
-  }, []);
+  const updatePassword = useCallback(
+    formData => updatePasswordAction(formData, returnTo),
+    [returnTo]
+  )
 
   return (
-    <form id="auth-update-password" action={updatePassword}>
+    <form className="flex flex-col gap-3" action={handleSubmit(updatePassword)}>
       <PasswordInput
+        {...register("password")}
+        errorMessage={errors.password?.message}
+        isInvalid={errors.password != null}
         isRequired
         label="New Password"
-        name="password"
         placeholder="Enter your new password"
       />
 
+      <PasswordInput
+        {...register("confirmPassword")}
+        isInvalid={errors.confirmPassword != null}
+        isRequired
+        label="Confirm Password"
+        placeholder="Confirm your password"
+        errorMessage={errors.confirmPassword?.message}
+      />
+
       <Button
-        className="w-full my-4"
+        className="w-full"
         color="primary"
-        isLoading={response.pending()}
+        isLoading={isSubmitting}
         startContent={<HiKey className="text-xl" />}
         type="submit"
       >
         Update password
       </Button>
 
-      {response
-        .then(StatusAlertBox, (error) => (
-          <p className="text-red-600">{error.message}</p>
-        ))
-        .orPending()}
+      <FormErrors errors={errors} />
     </form>
   );
 };

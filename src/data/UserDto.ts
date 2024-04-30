@@ -2,7 +2,6 @@ import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
 import supabase from "@api/supabaseServer"
 import {prisma} from '@/db'
-import {throwOnError} from '@util/SupabaseUtil'
 
 const UserDto = {
   async canSee(user, userId) {

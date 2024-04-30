@@ -1,0 +1,14 @@
+import {Transition} from '@components/auth/Transition'
+import {headers} from 'next/headers'
+
+export default async ({searchParams}) => {
+  const referrer = headers().get('Referer')
+
+  return (
+    <Transition
+      autoReturn={referrer != null}
+      method={searchParams.method}
+      returnTo={searchParams.returnTo}
+    />
+  )
+}
