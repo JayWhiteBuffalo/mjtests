@@ -34,7 +34,12 @@ export const Transition = ({method, returnTo = defaultReturnTo, autoReturn = tru
       <p>
         {messages[method ?? 'default']}
       </p>
-      <p>Redirecting…</p>
+
+      {
+        autoReturn 
+          ? <p>Redirecting…</p>
+          : undefined
+      }
 
       <Link as={NextLink} href={returnTo}>
         Continue
