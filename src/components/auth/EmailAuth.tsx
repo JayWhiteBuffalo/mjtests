@@ -153,11 +153,11 @@ export const EmailAuthForm = ({ view, returnTo }) => {
                   size="sm"
                 >
                   I agree with the&nbsp;
-                  <Link href="#" size="sm">
+                  <Link href="/help/terms" size="sm">
                     Terms
                   </Link>
                   &nbsp; and&nbsp;
-                  <Link href="#" size="sm">
+                  <Link href="/help/privacy" size="sm">
                     Privacy Policy
                   </Link>
                 </Checkbox>
