@@ -26,7 +26,9 @@ export const GET = async (request: NextRequest) => {
       } else {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   // return the user to an error page with some instructions
