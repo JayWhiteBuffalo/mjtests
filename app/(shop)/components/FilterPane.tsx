@@ -311,9 +311,9 @@ const LocationFilterSection = ({filter, onChange}) => {
       </FilterSectionHeader>
 
       <FilterItem>
-        <label id="location.distance.label" className="flex-1">Distance (mi)</label>
+        <label htmlFor="location.distance" className="flex-1">Distance (mi)</label>
         <Slider
-          aria-labelledby="location.distance.label"
+          id="location.distance"
           maxValue={bound[1]}
           minValue={bound[0]}
           onChange={distance => onChange({location: {...filter.location, distance}})}

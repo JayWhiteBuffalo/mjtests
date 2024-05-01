@@ -99,7 +99,7 @@ export const RecursiveErrors = ({errors, showPath}) =>
       <FieldError
         key={path.join('.')}
         error={error}
-        path={!!showPath ? path : undefined}
+        path={showPath ? path : undefined}
       />
     )}
   </>
@@ -136,6 +136,7 @@ export const useForm = options => {
         console.error(errors)
       }
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setError, rhfHandleSubmit]
   )
 

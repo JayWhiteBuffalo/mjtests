@@ -9,7 +9,7 @@ export const getRoute = async params =>
     segment: 'success',
   }]
 
-const Page = async ({}) =>
+const Page = async () =>
   <AlertBox color="green-500 m-8">
     <span>Thank you for applying with {siteName}!. We will contact you shortly about your application.</span>
   </AlertBox>

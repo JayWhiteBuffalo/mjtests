@@ -39,7 +39,7 @@ export const makeStorageUrl = (bucketName, path) => {
 
 export const extractStorageUrl = (url) => {
   const match = url.match(
-    /^https?\:\/\/(\w+).supabase.co\/storage\/v1\/object\/public\/(\w+)\/(.*)$/
+    /^https?:\/\/(\w+).supabase.co\/storage\/v1\/object\/public\/(\w+)\/(.*)$/
   );
   if (match) {
     const [_, supabaseId, bucketName, path] = match;

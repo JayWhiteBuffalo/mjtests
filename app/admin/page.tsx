@@ -8,7 +8,7 @@ export const getRoute = async () => [{
   segment: 'admin'
 }]
 
-const Page = async ({}) => {
+const Page = async () => {
   return (
     <div className="my-2 px-4">Welcome to {siteName} Management Console!</div>
   )
