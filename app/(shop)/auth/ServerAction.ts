@@ -58,13 +58,13 @@ export const signOut = async () => {
   redirect('/auth')
 }
 
-export const resetPasswordForEmail = async (formData, returnTo = defaultReturnTo) => {
+export const resetPassword = async (formData, returnTo = defaultReturnTo) => {
   const supabase = createServerActionClient()
   const result = resetPasswordSchema.safeParse(formData)
   if (!result.success) {
     return {issues: result.error.issues}
   }
-
+console.log(returnTo, makeReturnToUrl(returnTo))
   try {
     await supabase.auth.resetPasswordForEmail(
       result.data.email,

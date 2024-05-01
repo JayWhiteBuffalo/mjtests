@@ -119,7 +119,11 @@ export const EmailAuthForm = ({ view, returnTo }) => {
             Remember me
           </Checkbox>
           <Link
-            href="/auth/change-password"
+            as={NextLink}
+            href={{
+              pathname: '/auth/change-password',
+              query: returnTo ? {returnTo} : {},
+            }}
             className="text-default-500"
             size="sm"
           >

@@ -1,12 +1,14 @@
 "use client";
 import NextLink from "next/link"
-import supabase from "@api/supabaseBrowser";
 import { AlertBox } from "@components/Form";
 import { AuthSection, AuthTitle } from "./AuthSection";
 import { HiOutlineMail } from "react-icons/hi";
 import { Input, Link, Button } from "@nextui-org/react";
-import { Present } from "@util/Present";
-import { useState, useCallback } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {FormErrors, useTreemapForm} from "@components/Form";
+import {resetPassword as resetPasswordAction} from '@app/(shop)/auth/ServerAction'
+import {resetPasswordSchema} from '@app/(shop)/auth/Schema'
+import {useCallback} from "react";
 
 const StatusAlertBox = ({ status }) =>
   status === "checkEmail" ? (
@@ -15,28 +17,26 @@ const StatusAlertBox = ({ status }) =>
     </AlertBox>
   ) : undefined;
 
-export const ResetPasswordForm = ({}) => {
-  const [response, setResponse] = useState(
-    Present.resolve({}).reactWorkaround()
-  );
+export const ResetPasswordForm = ({returnTo}) => {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = useTreemapForm({
+    resolver: zodResolver(resetPasswordSchema),
+  });
 
-  const resetPassword = useCallback(async (formData) => {
-    setResponse(Present.pend);
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      formData.get("email"),
-      { redirectTo: `${new URL(window.location).origin}/auth/update-password` }
-    );
-    setResponse(
-      error ? Present.reject(error) : Present.resolve({ status: "checkEmail" })
-    );
-  }, []);
+  const resetPassword = useCallback(
+    formData => resetPasswordAction(formData, returnTo),
+    [returnTo]
+  )
 
   return (
-    <form id="auth-forgot-password" action={resetPassword}>
+    <form className="flex flex-col gap-3" action={handleSubmit(resetPassword)}>
       <Input
+        {...register("email")}
         isRequired
         label="Email Address"
-        name="email"
         placeholder="Enter your email"
         type="email"
         variant="bordered"
@@ -45,18 +45,15 @@ export const ResetPasswordForm = ({}) => {
       <Button
         className="w-full my-4"
         color="primary"
-        isLoading={response.pending()}
+        isLoading={isSubmitting}
         startContent={<HiOutlineMail className="text-xl" />}
         type="submit"
       >
         Send reset password instructions
       </Button>
 
-      {response
-        .then(StatusAlertBox, (error) => (
-          <p className="text-red-600">{error.message}</p>
-        ))
-        .orPending()}
+      <FormErrors errors={errors} />
+      {isSubmitSuccessful ? <StatusAlertBox status="checkEmail" /> : undefined}
     </form>
   );
 };
@@ -66,7 +63,7 @@ export const ResetPassword = ({returnTo}) =>
     <header>
       <AuthTitle>Reset Password</AuthTitle>
     </header>
-    <ResetPasswordForm />
+    <ResetPasswordForm returnTo={returnTo} />
 
     <p className="text-center">
       <Link 

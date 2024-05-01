@@ -63,6 +63,6 @@ export const UpdatePassword = () => (
     <header>
       <AuthTitle>Update Password</AuthTitle>
     </header>
-    <UpdatePasswordForm />
+    <UpdatePasswordForm returnTo={returnTo} />
   </AuthSection>
 );

@@ -6,14 +6,13 @@ import {throwOnError} from '@util/SupabaseUtil'
 
 // Endpoint for PKCE workflows, implemented around supabase.auth.verifyOtp
 // See https://supabase.com/docs/guides/auth/server-side/email-based-auth-with-pkce-flow-for-ssr
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
+export const GET = async (request: NextRequest) => {
+  const {searchParams} = new URL(request.url)
+  const host = request.headers.get('Host')
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const next = searchParams.get('next')
   const returnTo = searchParams.get('returnTo')
-
-  const {origin} = new URL(request.nextUrl)
 
   if (token_hash && type) {
     const supabase = createRouteHandlerClient()
@@ -23,7 +22,7 @@ export async function GET(request: NextRequest) {
         .then(throwOnError)
 
       if (next) {
-        return NextResponse.redirect(`${origin}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+        return NextResponse.redirect(`http://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
       } else {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }
@@ -31,5 +30,5 @@ export async function GET(request: NextRequest) {
   }
 
   // return the user to an error page with some instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`http://${host}/auth/auth-code-error`)
 }

@@ -5,8 +5,9 @@ import {defaultReturnTo} from '@components/Site'
 import {throwOnError} from '@util/SupabaseUtil'
 
 // Endpoint for non-PKCE workflows
-export async function GET(request: NextRequest) {
-  const {searchParams, origin} = new URL(request.url);
+export const GET = async (request: NextRequest) => {
+  const {searchParams} = new URL(request.url)
+  const host = request.headers.get('Host')
   const code = searchParams.get("code")
   const next = searchParams.get("next")
   const returnTo = searchParams.get('returnTo')
@@ -18,12 +19,12 @@ export async function GET(request: NextRequest) {
         .then(throwOnError)
 
       if (next) {
-        return NextResponse.redirect(`${origin}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+        return NextResponse.redirect(`htttp://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
       } else {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }
     } catch (error) {}
   }
 
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`http://${host}/auth/auth-code-error`)
 }
