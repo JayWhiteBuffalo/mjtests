@@ -16,6 +16,8 @@ module.exports = {
     'no-restricted-globals': 'off',
     'react/display-name': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'no-undef': 'warn',
+    'jsx-a11y/no-autofocus': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {
