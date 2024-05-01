@@ -19,7 +19,7 @@ export const GET = async (request: NextRequest) => {
         .then(throwOnError)
 
       if (next) {
-        return NextResponse.redirect(`htttp://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+        return NextResponse.redirect(`http://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
       } else {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }
