@@ -1,4 +1,3 @@
-import type {Database} from '../supabase/schema'
 import {createServerClient, type CookieOptions} from '@supabase/ssr'
 import {NextResponse} from 'next/server'
 import {supabaseUrl} from './Env'
@@ -10,7 +9,7 @@ export const updateSession = async ({request}) => {
     },
   })
 
-  const supabase = createServerClient<Database>(
+  const supabase = createServerClient(
     supabaseUrl,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -56,7 +55,6 @@ export const updateSession = async ({request}) => {
     }
   )
 
-  //await supabase.auth.refreshSession()
   const user = (await supabase.auth.getUser()).data?.user
 
   return {user, response, supabase}

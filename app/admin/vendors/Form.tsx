@@ -9,12 +9,12 @@ import {ImageInput} from '@app/admin/components/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
 import {preprocessFormData} from './Schema'
 import {PreviewContainer} from './Pane'
-import {useTreemapForm, nullResolver, FieldLayout, FieldError, FormErrors, Watch} from '@components/Form'
+import {useForm, nullResolver, FieldLayout, FieldError, FormErrors, Watch} from '@components/Form'
 import {VendorScheduleInput} from '@app/admin/components/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({vendor, imageRefs, isAdmin, action}) => {
-  const {register, handleSubmit, formState: {errors}, control} = useTreemapForm({
+  const {register, handleSubmit, formState: {errors}, control} = useForm({
     resolver: nullResolver(),
     defaultValues: vendor,
   })

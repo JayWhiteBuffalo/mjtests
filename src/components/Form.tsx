@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import ObjectUtil from '@util/ObjectUtil'
 import {CgClose} from 'react-icons/cg'
 import {Children, cloneElement, useId, useCallback} from 'react'
-import {get, useForm, useWatch} from 'react-hook-form'
+import {get, useForm as useRhfForm, useWatch} from 'react-hook-form'
 import {HiCheckCircle, HiInformationCircle} from 'react-icons/hi'
 
 export const InputWithError = ({children, errors, name}) => {
@@ -82,6 +82,9 @@ export const FieldLayout = ({label, description, topDescription, bottomDescripti
   )
 }
 
+export const FieldDescription = ({children, className, ...rest}) =>
+  <p className={clsx('text-foreground-600 text-sm', className)} {...rest}>{children}</p>
+
 export const FieldError = ({error, path, className, ...rest}) =>
   error?.message != null
     ? <p className={clsx('FieldError text-sm text-danger', className)} {...rest}>
@@ -89,7 +92,6 @@ export const FieldError = ({error, path, className, ...rest}) =>
         {error.message}
       </p>
     : undefined
-
 
 export const RecursiveErrors = ({errors, showPath}) =>
   <>
@@ -102,8 +104,8 @@ export const RecursiveErrors = ({errors, showPath}) =>
     )}
   </>
 
-export const FieldDescription = ({children, className, ...rest}) =>
-  <p className={clsx('text-foreground-600 text-sm', className)} {...rest}>{children}</p>
+export const FormErrors = ({errors}) =>
+  <RecursiveErrors errors={errors?.root} />
 
 export const extractErrors = (obj, setError) => {
   if (typeof obj === 'object' && obj.issues instanceof Array) {
@@ -117,11 +119,11 @@ export const extractErrors = (obj, setError) => {
   }
 }
 
-export const useTreemapForm = options => {
-  const methods = useForm(options)
-  const {setError, handleSubmit: handleSubmit_, control, register: register_} = methods
+export const useForm = options => {
+  const methods = useRhfForm(options)
+  const {setError, handleSubmit: rhfHandleSubmit, control, register: rhfRegister} = methods
   const handleSubmit = useCallback(
-    action => handleSubmit_(async formData => {
+    action => rhfHandleSubmit(async formData => {
       try {
         const obj = await action(formData)
         extractErrors(obj, setError)
@@ -129,27 +131,19 @@ export const useTreemapForm = options => {
         setError('root.server', {type: 'server', message: error.message})
       }
     }),
-    [setError, handleSubmit_]
+    [setError, rhfHandleSubmit]
   )
 
   const register = useCallback(
     (name, options) => ({
-      ...register_(name, options),
+      ...rhfRegister(name, options),
       defaultValue: get(control._defaultValues, name),
     }),
-    [register_, control]
+    [rhfRegister, control]
   )
 
   return {...methods, handleSubmit, register}
 }
-
-export const FormErrors = ({errors}) =>
-  <RecursiveErrors errors={errors?.root} />
-
-export const FormField = ({children}) =>
-  <div className="my-4">
-    {children}
-  </div>
 
 export const RemoveButton = ({onClick, className}) =>
   <button

@@ -11,7 +11,7 @@ import {TerpeneInput} from '@app/admin/components/TerpeneInput'
 import {Treemap} from '@/Treemap'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {useController, Controller} from 'react-hook-form'
-import {Watch, nullResolver, useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
+import {Watch, nullResolver, useForm, FieldLayout, FormErrors} from '@components/Form'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -19,7 +19,7 @@ const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
 const sortedProductTypes = ArrayUtil.sortBy(Treemap.productTypes, x => x.name)
 
 export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, publish, saveDraft}) => {
-  const {register, handleSubmit, formState: {errors}, control, watch} = useTreemapForm({
+  const {register, handleSubmit, formState: {errors}, control, watch} = useForm({
     resolver: nullResolver(),
     defaultValues: product,
   })

@@ -5,7 +5,7 @@ import { AuthSection, AuthTitle } from "./AuthSection";
 import { HiOutlineMail } from "react-icons/hi";
 import { Input, Link, Button } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {FormErrors, useTreemapForm} from "@components/Form";
+import {FormErrors, useForm} from "@components/Form";
 import {resetPassword as resetPasswordAction} from '@app/(shop)/auth/ServerAction'
 import {resetPasswordSchema} from '@app/(shop)/auth/Schema'
 import {useCallback} from "react";
@@ -22,7 +22,7 @@ export const ResetPasswordForm = ({returnTo}) => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useTreemapForm({
+  } = useForm({
     resolver: zodResolver(resetPasswordSchema),
   });
 

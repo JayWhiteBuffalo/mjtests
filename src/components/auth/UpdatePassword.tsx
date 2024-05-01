@@ -5,7 +5,7 @@ import { HiKey } from "react-icons/hi";
 import { PasswordInput } from "./Input";
 import { useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {FormErrors, useTreemapForm} from "@components/Form";
+import {FormErrors, useForm} from "@components/Form";
 import {updatePasswordSchema} from '@app/(shop)/auth/Schema'
 import {updatePassword as updatePasswordAction} from '@app/(shop)/auth/ServerAction'
 
@@ -14,7 +14,7 @@ export const UpdatePasswordForm = ({returnTo}) => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useTreemapForm({
+  } = useForm({
     resolver: zodResolver(updatePasswordSchema),
   });
 

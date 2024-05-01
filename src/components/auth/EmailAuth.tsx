@@ -8,7 +8,7 @@ import {
   FormErrors,
   nullResolver,
   AlertBox,
-  useTreemapForm,
+  useForm,
 } from "@components/Form";
 import { PasswordInput } from "./Input";
 import { Controller } from "react-hook-form";
@@ -61,7 +61,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
     register,
     formState: { errors, isSubmitting },
     control,
-  } = useTreemapForm({
+  } = useForm({
     resolver: view === "signUp" ? zodResolver(signUpSchema) : nullResolver(),
     //reValidateMode: 'onBlur',
   });

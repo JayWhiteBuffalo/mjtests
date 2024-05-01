@@ -4,12 +4,12 @@ import {FormattedInput} from '@components/FormattedInput'
 import {formSchema} from './Schema'
 import {orEmpty} from '@util/ValidationUtil'
 import {useController} from 'react-hook-form'
-import {useTreemapForm, FieldLayout, FormErrors} from '@components/Form'
+import {useForm, FieldLayout, FormErrors} from '@components/Form'
 import {VendorUtil} from '@util/VendorUtil'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 export const Form = ({user, action}) => {
-  const {control, register, handleSubmit, formState: {errors}} = useTreemapForm({
+  const {control, register, handleSubmit, formState: {errors}} = useForm({
     resolver: zodResolver(formSchema),
   })
 

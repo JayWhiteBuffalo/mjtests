@@ -32,7 +32,7 @@ const shouldRedirectLoggedOut = pathname => {
   return false
 }
 
-export async function middleware(request) {
+export const middleware = async request => {
   if (!httpBasicAuth(request)) {
     return new NextResponse('Authentication required', {
       status: 401,
@@ -47,7 +47,7 @@ export async function middleware(request) {
   const {response, supabase, user} = await updateSession({request})
 
   // Redirect to login page for logged out users accessing protected routes
-  if (shouldRedirectLoggedOut(request.nextUrl.pathname) && !user) {
+  if (!user && shouldRedirectLoggedOut(request.nextUrl.pathname)) {
     const redirectUrl = new URL('/auth', request.nextUrl)
     redirectUrl.searchParams.set('returnTo', request.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)
