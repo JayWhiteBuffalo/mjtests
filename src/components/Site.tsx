@@ -1,9 +1,10 @@
 import Image from 'next/image'
+import logoImage from '@/public/mjtests-340px.png'
 
 export const Logo = ({...rest}) =>
   <Image
     alt={`${siteName} logo`}
-    src="/mjtests-centered.png"
+    src={logoImage.src}
     width={340}
     height={340}
     {...rest}
