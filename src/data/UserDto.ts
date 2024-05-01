@@ -54,7 +54,6 @@ const UserDto = {
       if (user) {
         user.loggedIn = true
         user.authUser = authUser
-        user.email = authUser.email
         return user
       }
     }

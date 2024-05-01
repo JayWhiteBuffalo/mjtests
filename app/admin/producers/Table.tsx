@@ -5,7 +5,7 @@ import {Button} from '@nextui-org/react'
 import {TMTable, ActionHeaderCell, makeColumns, LocationCell} from '@components/Table'
 
 const NameCell = ({item: producer}) =>
-  <BlueLink href={`/admin/producers/${producer.id}`} className="p-4">
+  <BlueLink href={`/admin/producers/${producer.id}`} className="py-4">
     {producer.name}
   </BlueLink>
 

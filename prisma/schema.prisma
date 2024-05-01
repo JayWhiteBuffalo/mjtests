@@ -1,203 +1,208 @@
-
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions", "multiSchema"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  extensions = [postgis]
-  schemas = ["private"]
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pg_graphql(schema: "graphql"), pg_stat_statements(schema: "extensions"), pgcrypto(schema: "extensions"), pgjwt(schema: "extensions"), pgsodium(schema: "pgsodium"), postgis(schema: "postgis"), supabase_vault, uuid_ossp(map: "uuid-ossp", schema: "extensions")]
+  schemas    = ["extensions", "postgis", "private"]
 }
 
 model BusinessRequest {
-  id String @id
-  producer Json?
-  referrer String?
-  status String
-  type String
-  user Json
-  vendor Json?
-
-  archived Boolean @default(false)
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id], name: "createdBy")
+  id          String   @id
+  producer    Json?
+  referrer    String?
+  status      String
+  type        String
+  user        Json
+  vendor      Json?
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
   createdById String
-  updatedAt DateTime @updatedAt
-  updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
+  updatedAt   DateTime @updatedAt
   updatedById String
-  version Int @default(1)
+  version     Int      @default(1)
+  createdBy   User     @relation("createdBy", fields: [createdById], references: [id])
+  updatedBy   User     @relation("updatedBy", fields: [updatedById], references: [id])
 
   @@schema("private")
 }
 
 model ImageRef {
-  assetId String?
-  fileSize Int?
-  lastModified DateTime?
+  assetId          String?
+  fileSize         Int?
+  lastModified     DateTime?
   originalFilename String?
-  producer Producer? @relation(fields: [producerId], references: [id], name: "all")
-  producerId String?
-  producerMain Producer[] @relation("main")
-  product Product? @relation(fields: [productId], references: [id], name: "all")
-  productId String?
-  productMain Product[] @relation("main")
-  publicId String @id
-  size Int[]
-  updatedAt DateTime @updatedAt
-  uploadedBy User? @relation(fields: [uploadedById], references: [id])
-  uploadedById String?
-  vendor Vendor? @relation(fields: [vendorId], references: [id], name: "all")
-  vendorId String?
-  vendorMain Vendor[] @relation("main")
+  producerId       String?
+  productId        String?
+  publicId         String     @id
+  size             Int[]
+  updatedAt        DateTime   @updatedAt
+  uploadedById     String?
+  vendorId         String?
+  producer         Producer?  @relation("all", fields: [producerId], references: [id])
+  product          Product?   @relation("all", fields: [productId], references: [id])
+  uploadedBy       User?      @relation(fields: [uploadedById], references: [id])
+  vendor           Vendor?    @relation("all", fields: [vendorId], references: [id])
+  producerMain     Producer[] @relation("main")
+  productMain      Product[]  @relation("main")
+  vendorMain       Vendor[]   @relation("main")
 
   @@schema("private")
 }
 
 model Producer {
-  contact Json
-  flags Json
-  id String @id
-  imageRefs ImageRef[] @relation("all")
-  license Json
-  location Json
-  mainImageRef ImageRef? @relation(fields: [mainImageRefId], references: [publicId], name: "main")
+  contact        Json
+  flags          Json
+  id             String           @id
+  license        Json
+  location       Json
   mainImageRefId String?
-  name String
-  products Product[]
-  signupStatus Json
-  slug String @unique
-  users UserOnProducer[]
-
-  archived Boolean @default(false)
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id], name: "createdBy")
-  createdById String
-  updatedAt DateTime @updatedAt
-  updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
-  updatedById String
-  version Int @default(1)
+  name           String
+  signupStatus   Json
+  slug           String           @unique
+  archived       Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  createdById    String
+  updatedAt      DateTime         @updatedAt
+  updatedById    String
+  version        Int              @default(1)
+  imageRefs      ImageRef[]       @relation("all")
+  createdBy      User             @relation("createdBy", fields: [createdById], references: [id])
+  mainImageRef   ImageRef?        @relation("main", fields: [mainImageRefId], references: [publicId])
+  updatedBy      User             @relation("updatedBy", fields: [updatedById], references: [id])
+  products       Product[]
+  users          UserOnProducer[]
 
   @@schema("private")
 }
 
 model Product {
-  batch String?
-  brand String?
+  batch           String?
+  brand           String?
   concentrateType String?
-  cultivar String?
-  flags Json
-  id String @id
-  imageRefs ImageRef[] @relation("all")
-  isDraft Boolean
-  mainImageRef ImageRef? @relation(fields: [mainImageRefId], references: [publicId], name: "main")
-  mainImageRefId String?
-  name String
+  cultivar        String?
+  flags           Json
+  id              String     @id
+  isDraft         Boolean
+  mainImageRefId  String?
+  name            String
   normalizedTerps Json?
-  potency Json
-  price Float?
-  pricePerGram Float?
-  producer Producer? @relation(fields: [producerId], references: [id])
-  producerId String?
-  productType String?
-  rating Json?
-  slug String? @unique
-  subspecies String?
-  terps Json?
-  vendor Vendor? @relation(fields: [vendorId], references: [id])
-  vendorId String?
-  weight Float?
-
-  archived Boolean @default(false)
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id], name: "createdBy")
-  createdById String
-  updatedAt DateTime @updatedAt
-  updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
-  updatedById String
-  version Int @default(1)
+  potency         Json
+  price           Float?
+  pricePerGram    Float?
+  producerId      String?
+  productType     String?
+  rating          Json?
+  slug            String?    @unique
+  subspecies      String?
+  terps           Json?
+  vendorId        String?
+  weight          Float?
+  archived        Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  createdById     String
+  updatedAt       DateTime   @updatedAt
+  updatedById     String
+  version         Int        @default(1)
+  imageRefs       ImageRef[] @relation("all")
+  createdBy       User       @relation("createdBy", fields: [createdById], references: [id])
+  mainImageRef    ImageRef?  @relation("main", fields: [mainImageRefId], references: [publicId])
+  producer        Producer?  @relation(fields: [producerId], references: [id])
+  updatedBy       User       @relation("updatedBy", fields: [updatedById], references: [id])
+  vendor          Vendor?    @relation(fields: [vendorId], references: [id])
 
   @@schema("private")
 }
 
 model User {
-  id String @id
-  name String?
-  producers UserOnProducer[]
-  profileImageUrl String?
-  roles String[] @default([])
-  vendors UserOnVendor[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id                      String            @id
+  name                    String?
+  profileImageUrl         String?
+  roles                   String[]          @default([])
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  email                   String
   createdBusinessRequests BusinessRequest[] @relation("createdBy")
-  createdProducers Producer[] @relation("createdBy")
-  createdProducts Product[] @relation("createdBy")
-  createdVendors Vendor[] @relation("createdBy")
   updatedBusinessRequests BusinessRequest[] @relation("updatedBy")
-  updatedProducers Producer[] @relation("updatedBy")
-  updatedProducts Product[] @relation("updatedBy")
-  updatedVendors Vendor[] @relation("updatedBy")
-  uploadedImageRefs ImageRef[]
+  uploadedImageRefs       ImageRef[]
+  createdProducers        Producer[]        @relation("createdBy")
+  updatedProducers        Producer[]        @relation("updatedBy")
+  createdProducts         Product[]         @relation("createdBy")
+  updatedProducts         Product[]         @relation("updatedBy")
+  producers               UserOnProducer[]
+  vendors                 UserOnVendor[]
+  createdVendors          Vendor[]          @relation("createdBy")
+  updatedVendors          Vendor[]          @relation("updatedBy")
 
   @@schema("private")
 }
 
 model UserOnProducer {
-  role String
-  updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id])
-  userId String
-  producer Producer @relation(fields: [producerId], references: [id])
+  role       String
+  updatedAt  DateTime @updatedAt
+  userId     String
   producerId String
+  producer   Producer @relation(fields: [producerId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@id([userId, producerId])
   @@schema("private")
 }
 
 model UserOnVendor {
-  role String
+  role      String
   updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id])
-  userId String
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-  vendorId String
+  userId    String
+  vendorId  String
+  user      User     @relation(fields: [userId], references: [id])
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
 
   @@id([userId, vendorId])
   @@schema("private")
 }
 
 model Vendor {
-  contact Json
-  flags Json
-  id String @id
-  imageRefs ImageRef[] @relation("all")
-  latLng Unsupported("postgis.geometry(Point, 4326)")?
-  license Json
-  location Json
-  mainImageRef ImageRef? @relation(fields: [mainImageRefId], references: [publicId], name: "main")
-  mainImageRefId String?
-  name String @unique
+  contact         Json
+  flags           Json
+  id              String                   @id
+  latLng          Unsupported("postgis.geometry")?
+  license         Json
+  location        Json
+  mainImageRefId  String?
+  name            String                   @unique
   operatingStatus String
-  products Product[]
-  rating Json?
-  schedule Json
-  signupStatus Json
-  slug String @unique
-  users UserOnVendor[]
+  rating          Json?
+  schedule        Json
+  signupStatus    Json
+  slug            String                   @unique
+  archived        Boolean                  @default(false)
+  createdAt       DateTime                 @default(now())
+  createdById     String
+  updatedAt       DateTime                 @updatedAt
+  updatedById     String
+  version         Int                      @default(1)
+  imageRefs       ImageRef[]               @relation("all")
+  products        Product[]
+  users           UserOnVendor[]
+  createdBy       User                     @relation("createdBy", fields: [createdById], references: [id])
+  mainImageRef    ImageRef?                @relation("main", fields: [mainImageRefId], references: [publicId])
+  updatedBy       User                     @relation("updatedBy", fields: [updatedById], references: [id])
 
-  archived Boolean @default(false)
-  createdAt DateTime @default(now())
-  createdBy User @relation(fields: [createdById], references: [id], name: "createdBy")
-  createdById String
-  updatedAt DateTime @updatedAt
-  updatedBy User @relation(fields: [updatedById], references: [id], name: "updatedBy")
-  updatedById String
-  version Int @default(1)
-
-  @@index([latLng], name: "blockgroup_idx", type: Gist)
+  @@index([latLng], map: "blockgroup_idx", type: Gist)
   @@schema("private")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+
+  @@schema("postgis")
 }

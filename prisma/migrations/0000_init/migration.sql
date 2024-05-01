@@ -1,5 +1,11 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "extensions";
+
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "postgis";
+
 -- CreateExtension
-CREATE EXTENSION IF NOT EXISTS "postgis";
+CREATE EXTENSION IF NOT EXISTS "postgis" WITH SCHEMA "postgis";
 
 -- CreateTable
 CREATE TABLE "private"."BusinessRequest" (
@@ -99,6 +105,7 @@ CREATE TABLE "private"."User" (
     "roles" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -128,7 +135,7 @@ CREATE TABLE "private"."Vendor" (
     "contact" JSONB NOT NULL,
     "flags" JSONB NOT NULL,
     "id" TEXT NOT NULL,
-    "latLng" postgis.geometry(Point, 4326),
+    "latLng" postgis.geometry,
     "license" JSONB NOT NULL,
     "location" JSONB NOT NULL,
     "mainImageRefId" TEXT,
@@ -182,13 +189,16 @@ ALTER TABLE "private"."ImageRef" ADD CONSTRAINT "ImageRef_uploadedById_fkey" FOR
 ALTER TABLE "private"."ImageRef" ADD CONSTRAINT "ImageRef_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "private"."Vendor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "private"."Producer" ADD CONSTRAINT "Producer_mainImageRefId_fkey" FOREIGN KEY ("mainImageRefId") REFERENCES "private"."ImageRef"("publicId") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "private"."Producer" ADD CONSTRAINT "Producer_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "private"."Producer" ADD CONSTRAINT "Producer_mainImageRefId_fkey" FOREIGN KEY ("mainImageRefId") REFERENCES "private"."ImageRef"("publicId") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "private"."Producer" ADD CONSTRAINT "Producer_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_mainImageRefId_fkey" FOREIGN KEY ("mainImageRefId") REFERENCES "private"."ImageRef"("publicId") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -197,19 +207,16 @@ ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_mainImageRefId_fkey" FOR
 ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_producerId_fkey" FOREIGN KEY ("producerId") REFERENCES "private"."Producer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "private"."Vendor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "private"."UserOnProducer" ADD CONSTRAINT "UserOnProducer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "private"."Product" ADD CONSTRAINT "Product_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "private"."Vendor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "private"."UserOnProducer" ADD CONSTRAINT "UserOnProducer_producerId_fkey" FOREIGN KEY ("producerId") REFERENCES "private"."Producer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "private"."UserOnProducer" ADD CONSTRAINT "UserOnProducer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "private"."UserOnVendor" ADD CONSTRAINT "UserOnVendor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -218,10 +225,10 @@ ALTER TABLE "private"."UserOnVendor" ADD CONSTRAINT "UserOnVendor_userId_fkey" F
 ALTER TABLE "private"."UserOnVendor" ADD CONSTRAINT "UserOnVendor_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "private"."Vendor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "private"."Vendor" ADD CONSTRAINT "Vendor_mainImageRefId_fkey" FOREIGN KEY ("mainImageRefId") REFERENCES "private"."ImageRef"("publicId") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "private"."Vendor" ADD CONSTRAINT "Vendor_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "private"."Vendor" ADD CONSTRAINT "Vendor_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "private"."Vendor" ADD CONSTRAINT "Vendor_mainImageRefId_fkey" FOREIGN KEY ("mainImageRefId") REFERENCES "private"."ImageRef"("publicId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "private"."Vendor" ADD CONSTRAINT "Vendor_updatedById_fkey" FOREIGN KEY ("updatedById") REFERENCES "private"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

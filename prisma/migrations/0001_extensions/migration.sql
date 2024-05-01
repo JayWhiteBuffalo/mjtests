@@ -1,0 +1,10 @@
+create schema if not exists pgsodium;
+create schema if not exists graphql;
+create schema if not exists vault;
+create extension if not exists "pg_graphql" with schema graphql;
+create extension if not exists "pg_stat_statements" with schema extensions;
+create extension if not exists "pgcrypto" with schema extensions;
+create extension if not exists "pgjwt" with schema extensions;
+create extension if not exists "pgsodium" with schema pgsodium;
+create extension if not exists "uuid-ossp" with schema extensions;
+create extension if not exists "supabase_vault" with schema vault;

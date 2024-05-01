@@ -8,7 +8,9 @@ import {AdminPane} from '@app/admin/components/Pane'
 
 export const VendorSection = ({vendor}) =>
   <InfoSection>
-    <h2>Vendor</h2>
+    <header>
+      <h2>Vendor</h2>
+    </header>
     <dl>
       <dt>Store name</dt>
       <dd>{vendor.name}</dd>
@@ -26,7 +28,9 @@ export const VendorSection = ({vendor}) =>
 
 export const ProducerSection = ({producer}) =>
   <InfoSection>
-    <h2>Producer</h2>
+    <header>
+      <h2>Producer</h2>
+    </header>
     <dl>
       <dt>Producer name</dt>
       <dd>{producer.name}</dd>
