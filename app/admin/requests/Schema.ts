@@ -1,5 +1,5 @@
 import ObjectUtil from '@util/ObjectUtil'
-import {license} from '@app/admin/vendors/Schema'
+import {licenseNumber, licenseState} from '@app/admin/vendors/Schema'
 import {unempty} from '@util/ValidationUtil'
 import {z} from 'zod'
 
@@ -7,7 +7,8 @@ export const apiSchema = z.object({
   producer: z.object({
     address: z.string().min(10).max(300).optional(),
     email: z.string().email().max(255).optional(),
-    license,
+    licenseNumber,
+    licenseState,
     name: z.string().min(1, {message: 'Please enter a name'}).max(100),
     tel: z.string().optional(),
     url: z.string().url().max(255).optional(),
@@ -22,30 +23,23 @@ export const apiSchema = z.object({
   vendor: z.object({
     address: z.string().min(10).max(300),
     email: z.string().email().max(255).optional(),
-    license,
+    licenseNumber,
+    licenseState,
     name: z.string().min(1, {message: 'Please enter a name'}).max(100),
     tel: z.string().optional(),
     url: z.string().url().max(255).optional(),
   }).nullable(),
 })
 
-const preprocessProducer = formProducer =>
-  ({
-    ...ObjectUtil.mapValue(formProducer, unempty),
-    license: {
-      number: unempty(formProducer.license.number),
-      state: 'Oklahoma',
-    },
-  })
+const preprocessProducer = formProducer => ({
+  ...ObjectUtil.mapValue(formProducer, unempty),
+  licenseState: 'Oklahoma',
+})
 
-const preprocessVendor = formVendor =>
-  ({
-    ...ObjectUtil.mapValue(formVendor, unempty),
-    license: {
-      number: unempty(formVendor.license.number),
-      state: 'Oklahoma',
-    },
-  })
+const preprocessVendor = formVendor => ({
+  ...ObjectUtil.mapValue(formVendor, unempty),
+  licenseState: 'Oklahoma',
+})
 
 const preprocessFormData = formData => ({
   producer: formData.producer ? preprocessProducer(formData.producer) : null,

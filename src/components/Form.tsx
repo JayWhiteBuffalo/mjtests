@@ -130,6 +130,11 @@ export const useForm = options => {
       } catch (error) {
         setError('root.server', {type: 'server', message: error.message})
       }
+
+      const {errors} = control._formState
+      if (ObjectUtil.isNotEmpty(errors)) {
+        console.error(errors)
+      }
     }),
     [setError, rhfHandleSubmit]
   )

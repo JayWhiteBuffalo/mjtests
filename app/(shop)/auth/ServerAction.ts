@@ -64,7 +64,7 @@ export const resetPassword = async (formData, returnTo = defaultReturnTo) => {
   if (!result.success) {
     return {issues: result.error.issues}
   }
-console.log(returnTo, makeReturnToUrl(returnTo))
+
   try {
     await supabase.auth.resetPasswordForEmail(
       result.data.email,

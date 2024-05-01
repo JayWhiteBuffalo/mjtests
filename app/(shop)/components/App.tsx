@@ -72,7 +72,6 @@ export const AppContainer = ({initial}) => {
   }, [initial, pathname])
 
   const onPopState = useCallback(event => {
-    console.log('popstate', event.state)
     if (event.state) {
       //dispatch({type: 'route.set', pathname, query: Object.fromEntries(searchParams)})
     }

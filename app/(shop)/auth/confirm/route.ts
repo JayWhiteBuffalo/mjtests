@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest) => {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

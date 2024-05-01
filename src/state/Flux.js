@@ -100,7 +100,7 @@ export class Dispatcher {
   dispatch(action) {
     const actionFn = ObjectUtil.getByPath(this.actions, action.type.split('.'))
     if (typeof actionFn === 'function') {
-      console.log(action)
+      console.info(action)
       actionFn?.(action)
     } else {
       console.warn(`Invalid action with type=${action.type}`, action)

@@ -22,11 +22,12 @@ const schedule = z.object({
   ),
 })
 
-export const licenseNumber = z.string().regex(VendorUtil.ommaNumberPattern).optional()
+export const licenseNumber = z.string().regex(VendorUtil.ommaNumberPattern, 'Invalid format')
+export const licenseState = z.literal('Oklahoma')
 export const license = 
   z.object({
-    number: licenseNumber,
-    state: z.literal('Oklahoma'),
+    number: licenseNumber.optional(),
+    state: licenseState.optional(),
   })
 
 export const dbSchema = z.object({
