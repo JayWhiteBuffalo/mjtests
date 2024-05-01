@@ -125,7 +125,7 @@ model User {
   roles                   String[]          @default([])
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
-  email                   String
+  email                   String            @unique
   createdBusinessRequests BusinessRequest[] @relation("createdBy")
   updatedBusinessRequests BusinessRequest[] @relation("updatedBy")
   uploadedImageRefs       ImageRef[]
