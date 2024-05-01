@@ -1,4 +1,4 @@
-export default {
+const FnUtil = {
   identity: x => x,
   void: _ => void 0,
 
@@ -19,3 +19,5 @@ export default {
     return yf
   },
 }
+
+export default FnUtil
