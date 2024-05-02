@@ -6,6 +6,7 @@ import {redirect} from 'next/navigation'
 export const makeMain = ({getRoute, Page}) => {
   const Main = async ({params}) => {
     const user = await UserDto.getCurrent()
+    console.log('user', user)
     if (!canUseAdmin(user)) {
       redirect('/business')
     }

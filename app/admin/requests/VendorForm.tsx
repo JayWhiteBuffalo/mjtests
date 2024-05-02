@@ -51,7 +51,9 @@ export const Form = ({user, action}) => {
 
         <FieldLayout
           error={errors.vendor?.name}
-          description="This is the public facing name of your dispensary, for example <i>Acme Joint Emporium."
+          description={
+            <span>This is the name of your dispensary, for example <i>Acme Joint Emporium.</i></span>
+          }
           label="Name of dispensary"
         >
           <Input
