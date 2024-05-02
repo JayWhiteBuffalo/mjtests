@@ -162,7 +162,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               isInvalid={'operatingStatus' in errors}
               label="Is your store open?"
               onValueChange={field.onChange}
-              value={[field.value]}
+              value={field.value}
             >
               <Radio
                 description="Store is in business."
@@ -174,11 +174,15 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
                 value="temporarilyClosed">
                 Temporarily closed
               </Radio>
-              <Radio
-                description="Store is closed and will not reopen."
-                value="permanentlyClosed">
-                Permanently closed
-              </Radio>
+              {
+                (isAdmin || field.value === 'permanentlyClosed') ?
+                  <Radio
+                    description="Store is closed and will not reopen."
+                    value="permanentlyClosed">
+                    Permanently closed
+                  </Radio>
+                  : undefined
+              }
             </RadioGroup>
           }
         />

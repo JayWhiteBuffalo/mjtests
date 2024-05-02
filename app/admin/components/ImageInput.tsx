@@ -44,14 +44,14 @@ const Item = ({publicId, selected, onDelete, ...rest}) =>
 
 export const ImageDropzone = ({onDrop, ...rest}) =>
   <Dropzone
-    onDrop={onDrop}
-    onReject={files => console.warn('DropzoneInput rejected files', files)}
     accept={IMAGE_MIME_TYPE}
     maxSize={10 << 20}
+    onDrop={onDrop}
+    onReject={files => console.warn('DropzoneInput rejected files', files)}
     {...rest}
   >
     <Dropzone.Idle>
-      <TbPhoto className="w-12 h-12 dimmed mt-2" strokeWidth={2} />
+      <TbPhoto className="w-12 h-12 text-gray-200 mt-2" strokeWidth={2} />
     </Dropzone.Idle>
     <Dropzone.Accept>
       <TbUpload className="w-12 h-12 text-blue-600 mt-2" strokeWidth={2} />
