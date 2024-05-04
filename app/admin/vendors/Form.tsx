@@ -14,7 +14,7 @@ import {VendorScheduleInput} from '@app/admin/components/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({vendor, imageRefs, isAdmin, action}) => {
-  const {register, handleSubmit, formState: {errors}, control} = useForm({
+  const {register, handleSubmit, formState: {errors, isSubmitting}, control} = useForm({
     resolver: nullResolver(),
     defaultValues: vendor,
   })
@@ -253,7 +253,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
       </section>
 
       <FormErrors errors={errors} />
-      <Button type="submit">Save</Button>
+      <Button type="submit" isLoading={isSubmitting}>Save</Button>
 
       <hr className="my-4 border-gray-400" />
       <section>
