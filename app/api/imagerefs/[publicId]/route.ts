@@ -1,7 +1,8 @@
+import UserDto from '@/data/UserDto'
 import ImageRefDto from '@data/ImageRefDto'
 
-
 export const DELETE = async (request, {params}) => {
+  const user = await UserDto.getCurrent()
   const imageRef = await ImageRefDto.get(params.publicId)
   if (!imageRef) {
     return Response.json({}, {status: 404})
@@ -10,5 +11,5 @@ export const DELETE = async (request, {params}) => {
     return Response.json({}, {status: 403})
   }
   await ImageRefDto.delete(params.publicId)
-  return Response.json({}, {status: 204})
+  return new Response(null, {status: 204})
 }

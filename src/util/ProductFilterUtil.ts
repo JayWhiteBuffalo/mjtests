@@ -214,6 +214,7 @@ export const ProductFilterUtil = {
       concentrateType: ProductFilterUtil.flagsToPrisma(filter.concentrateTypes),
       cultivar: ProductFilterUtil.flagsToPrisma(filter.cultivars),
       //location
+      isDraft: false,
       price: ProductFilterUtil.rangeToPrisma(filter.price),
       pricePerGram: ProductFilterUtil.rangeToPrisma(filter.pricePerGram),
       productType: ProductFilterUtil.flagsToPrisma(filter.productTypes),

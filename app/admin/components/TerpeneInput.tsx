@@ -8,8 +8,8 @@ import {TerpeneSelector} from '@components/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {unNan, mapDefined} from '@util/ValidationUtil'
 
-
-export const TerpeneInput = ({terps, errors, onChange}) => {
+/*
+export const TerpeneInputStyle1 = ({terps, errors, onChange}) => {
   const entries = ArrayUtil.sortBy(Object.entries(terps), ([terpName, _]) => Treemap.terpenesByName[terpName].index)
 
   return (
@@ -49,6 +49,80 @@ export const TerpeneInput = ({terps, errors, onChange}) => {
     </div>
   )
 }
+*/
+
+export const PotencyTableInput = ({potency, errors, onChange}) => {
+  const makePotencyRow = name =>
+    <>
+      <div className="contents">
+        <label htmlFor={`potency.${name}`}>{name}</label>
+        <PotencyInput
+          className="mr-4"
+          id={`potency.${name}`}
+          onChange={value => onChange({...potency, [name]: value})}
+          value={potency[name]}
+        />
+      </div>
+      <FieldError className="col-end-[-1]" error={errors?.[name]} />
+    </>
+
+  return (
+    <div
+      className="grid items-center"
+      style={{gridTemplateColumns: '240px 120px'}}
+    >
+      <div className="contents font-bold">
+        <p>Ingredient</p>
+        <div>
+          <p>Concentration</p>
+          <span className="text-xs font-normal">(% by weight)</span>
+        </div>
+      </div>
+
+      {makePotencyRow('thc', 'THC %')}
+      {makePotencyRow('thca', 'THCA %')}
+      {makePotencyRow('delta8', 'Delta-8 %')}
+      {makePotencyRow('cbd', 'CBD %')}
+
+      <FieldError error={errors} />
+    </div>
+  )
+}
+
+export const TerpeneInput = ({terps, errors, onChange}) => {
+  const terpProps = Treemap.terpenes.filter(x => x.core)
+
+  return (
+    <div
+      className="grid items-center"
+      style={{gridTemplateColumns: '240px 120px'}}
+    >
+      <div className="contents font-bold">
+        <p>Terpene</p>
+        <div>
+          <p>Concentration</p>
+          <span className="text-xs font-normal">(% by weight)</span>
+        </div>
+      </div>
+      {terpProps.map(({name}) =>
+        <Fragment key={name}>
+          <div className="contents">
+            <label htmlFor={`terps.${name}`}>{name}</label>
+            <PotencyInput
+              className="mr-4"
+              id={`terps.${name}`}
+              onChange={value => onChange({...terps, [name]: value})}
+              value={terps[name]}
+            />
+          </div>
+          <FieldError className="col-end-[-1]" error={errors?.[name]} />
+        </Fragment>
+      )}
+
+      <FieldError error={errors} />
+    </div>
+  )
+}
 
 const formatPercent = x => {
   if (x !== undefined) {
@@ -70,6 +144,7 @@ export const PotencyInput = forwardRef(({...rest}, ref) =>
     format={formatPercent}
     parse={parsePercent}
     ref={ref}
+    placeholder="00.0000%"
     step={1e-4}
     {...rest}
   />

@@ -22,7 +22,7 @@ const Page = async ({user, productId}) => {
 
   return (
     <Form
-      {...await getFormProps(user)}
+      {...await getFormProps(user, productId)}
       product={product}
       publish={publish.bind(null, productId)}
       saveDraft={saveDraft.bind(null, productId)}

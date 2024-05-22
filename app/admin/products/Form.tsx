@@ -3,7 +3,7 @@ import ArrayUtil from '@util/ArrayUtil'
 import {AdminOnlyText} from '@app/admin/components/AdminForm'
 import {ImageInput} from '@app/admin/components/ImageInput'
 import {Input, Button} from '@nextui-org/react'
-import {PotencyInput} from '@app/admin/components/TerpeneInput'
+import {PotencyInput, PotencyTableInput} from '@app/admin/components/TerpeneInput'
 import {preprocessFormData} from './Schema'
 import {PreviewContainer} from './Pane'
 import {TerpeneInput} from '@app/admin/components/TerpeneInput'
@@ -163,29 +163,17 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           />
         </FieldLayout>
 
-        <FieldLayout
-          //bottomDescription="Max precision 1ppm"
-          error={errors.potency?.thc}
-          label="THC Potency (%)"
-          description="Enter the total THC content, as a percent of concentration by weight."
-        >
-          <PotencyInput
-            {...useController({control, name: 'potency.thc'}).field}
-            placeholder="00.0000%"
-          />
-        </FieldLayout>
-
-        <FieldLayout
-          //bottomDescription="Max precision 1ppm"
-          error={errors.potency?.cbd}
-          label="THC Potency (%)"
-          description="Enter the total CBD content, as a percent of concentration by weight."
-        >
-          <PotencyInput
-            {...useController({control, name: 'potency.cbd'}).field}
-            placeholder="00.0000%"
-          />
-        </FieldLayout>
+        <Controller
+          control={control}
+          name="potency"
+          render={({field, fieldState}) =>
+            <PotencyTableInput
+              errors={fieldState.error}
+              onChange={field.onChange}
+              potency={field.value ?? {}}
+            />
+          }
+        />
 
         <Controller
           control={control}
@@ -240,8 +228,17 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
       <FormErrors errors={errors} />
 
       <div className="flex gap-2">
-        <Button type="submit">Save as Draft</Button>
-        <Button type="submit" color="secondary" formAction={handleSubmit(publish)}>Publish</Button>
+        <Button 
+          className={product.isDraft ? undefined : 'hidden'}
+          type="submit"
+        >Save as Draft</Button>
+        <Button
+          type="submit" 
+          color="secondary" 
+          formAction={handleSubmit(publish)}
+        >
+          {product.isDraft ? 'Publish' : 'Save and publish'}
+        </Button>
       </div>
 
       <hr className="my-4 border-gray-400" />

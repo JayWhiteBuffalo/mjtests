@@ -89,6 +89,9 @@ export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors,
       size: [data.width, data.height],
     }))
     setImageRefs(imageRefs => [...imageRefs, ...newImageRefs])
+    if (imageRefs.length === 0) {
+      onChange(newImageRefs[0].publicId)
+    }
     await fetch(`/api/imagerefs`, {
       method: 'POST',
       headers: {
@@ -96,9 +99,7 @@ export const ImageInput = ({mainImageRefId, imageRefs: initialImageRefs, errors,
       },
       body: JSON.stringify({imageRefs: newImageRefs}),
     })
-    if (mainImageRefId == null && imageRefs.length === 0) {
-      onChange(newImageRefs[0].publicId)
-    }
+
   }, [onChange, mainImageRefId, imageRefs, imageRefFields])
 
   const onDelete = useCallback(async index => {
