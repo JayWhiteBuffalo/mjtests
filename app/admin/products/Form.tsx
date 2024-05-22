@@ -1,7 +1,6 @@
 'use client'
 import ArrayUtil from '@util/ArrayUtil'
 import {AdminOnlyText} from '@app/admin/components/AdminForm'
-import {Dropdown, Typeahead} from '@components/Dropdown'
 import {ImageInput} from '@app/admin/components/ImageInput'
 import {Input, Button} from '@nextui-org/react'
 import {PotencyInput} from '@app/admin/components/TerpeneInput'
@@ -10,8 +9,10 @@ import {PreviewContainer} from './Pane'
 import {TerpeneInput} from '@app/admin/components/TerpeneInput'
 import {Treemap} from '@/Treemap'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
-import {useController, Controller} from 'react-hook-form'
+import {useController, Controller, FormProvider} from 'react-hook-form'
 import {Watch, nullResolver, useForm, FieldLayout, FormErrors} from '@components/Form'
+import { DropdownAdapter } from '@/components/DropdownAdapter'
+import { AutocompleteAdapter } from '@/components/AutocompleteAdapter'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -19,13 +20,15 @@ const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
 const sortedProductTypes = ArrayUtil.sortBy(Treemap.productTypes, x => x.name)
 
 export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, publish, saveDraft}) => {
-  const {register, handleSubmit, formState: {errors}, control, watch} = useForm({
+  const methods = useForm({
     resolver: nullResolver(),
     defaultValues: product,
   })
+  const {register, handleSubmit, formState: {errors}, control, watch} = methods
   const productType = watch('productType')
 
   return (
+    <FormProvider {...methods}>
     <form className="AdminForm" action={handleSubmit(saveDraft)}>
       <section>
         <h2>General</h2>
@@ -45,9 +48,9 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           error={errors.productType}
           label="Product Type"
         >
-          <Dropdown
-            {...useController({control, name: 'productType'}).field}
+          <DropdownAdapter
             items={sortedProductTypes}
+            name="productType"
             placeholder="Select product type"
           />
         </FieldLayout>
@@ -56,13 +59,10 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           label="Concentrate Type"
           error={errors.concentrateType}
         >
-          <Dropdown
-            {...useController({
-              control,
-              name: 'concentrateType',
-              disabled: productType !== 'concentrate',
-            }).field}
+          <DropdownAdapter
+            isDisabled={productType !== 'concentrate'}
             items={Treemap.concentrateTypes}
+            name="concentrateType"
             placeholder="Select concentrate type"
           />
         </FieldLayout>
@@ -71,8 +71,9 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           label="Brand"
           error={errors.brand}
         >
-          <Typeahead
-            {...useController({control, name: 'brand'}).field}
+          <AutocompleteAdapter
+            allowsCustomValue
+            name="brand"
             TypeaheadStore={BrandTypeaheadStore}
           />
         </FieldLayout>
@@ -86,9 +87,9 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           error={errors.concentrateType}
           label="Dispensary"
         >
-          <Dropdown
-            {...useController({control, name: 'vendorId'}).field}
+          <DropdownAdapter
             items={vendorItems}
+            name="vendorId"
             readOnly={!isAdmin && product.vendorId != null}
           />
         </FieldLayout>
@@ -124,9 +125,9 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           error={errors.producerId}
           label="Grower"
         >
-          <Dropdown
-            {...useController({control, name: 'producerId'}).field}
+          <DropdownAdapter
             items={producerItems}
+            name="producerId"
             readOnly={!isAdmin && product.producerId != null}
           />
         </FieldLayout>
@@ -144,9 +145,9 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           error={errors.subspecies}
           label="Subspecies"
         >
-          <Dropdown
-            {...useController({control, name: 'subspecies'}).field}
+          <DropdownAdapter
             items={Treemap.subspecies}
+            name="subspecies"
             placeholder="Select subspecies"
           />
         </FieldLayout>
@@ -155,31 +156,34 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
           label="Cultivar"
           error={errors.cultivar}
         >
-          <Typeahead
-            {...useController({control, name: 'cultivar'}).field}
+          <AutocompleteAdapter
+            allowsCustomValue
+            name="cultivar"
             TypeaheadStore={CultivarTypeaheadStore}
           />
         </FieldLayout>
 
         <FieldLayout
-          bottomDescription="Max precision 1ppm"
+          //bottomDescription="Max precision 1ppm"
           error={errors.potency?.thc}
           label="THC Potency (%)"
           description="Enter the total THC content, as a percent of concentration by weight."
         >
           <PotencyInput
             {...useController({control, name: 'potency.thc'}).field}
+            placeholder="00.0000%"
           />
         </FieldLayout>
 
         <FieldLayout
-          bottomDescription="Max precision 1ppm"
+          //bottomDescription="Max precision 1ppm"
           error={errors.potency?.cbd}
           label="THC Potency (%)"
           description="Enter the total CBD content, as a percent of concentration by weight."
         >
           <PotencyInput
             {...useController({control, name: 'potency.cbd'}).field}
+            placeholder="00.0000%"
           />
         </FieldLayout>
 
@@ -213,7 +217,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
         />
       </section>
 
-      <section>
+      <section className="hidden">
         <h2>SEO</h2>
 
         <FieldLayout
@@ -251,6 +255,7 @@ export const Form = ({product, vendorItems, producerItems, imageRefs, isAdmin, p
         />
       </section>
     </form>
+    </FormProvider>
   )
 }
 

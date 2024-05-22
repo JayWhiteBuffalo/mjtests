@@ -23,6 +23,7 @@ const Page = async ({user}) => {
         vendorId: {in: vendorIds},
       },
       include: {vendor: true},
+      orderBy: {name: 'asc'},
     })
 
   } else if (user.roles.includes('producer')) {
@@ -32,6 +33,7 @@ const Page = async ({user}) => {
         producerId: {in: producerIds},
       },
       include: {vendor: true},
+      orderBy: {name: 'asc'},
     })
 
   } else {

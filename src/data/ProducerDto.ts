@@ -51,6 +51,8 @@ const ProducerDto = {
   },
 
   async findMany(options) {
+    options ??= {}
+    options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawProducers = await prisma.producer.findMany(options)
     return await ArrayUtil.asyncFilter(rawProducers, raw => ProducerDto.canSee(user, raw.id))

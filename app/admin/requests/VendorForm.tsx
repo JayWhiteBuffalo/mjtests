@@ -3,17 +3,19 @@ import {Button, Input, Textarea} from '@nextui-org/react'
 import {FormattedInput} from '@components/FormattedInput'
 import {formSchema} from './Schema'
 import {orEmpty} from '@util/ValidationUtil'
-import {useController} from 'react-hook-form'
+import {FormProvider, useController} from 'react-hook-form'
 import {useForm, FieldLayout, FormErrors} from '@components/Form'
 import {VendorUtil} from '@util/VendorUtil'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 export const Form = ({user, action}) => {
-  const {control, register, handleSubmit, formState: {errors}} = useForm({
+  const methods = useForm({
     resolver: zodResolver(formSchema),
   })
+  const {control, register, handleSubmit, formState: {errors}} = methods
 
   return (
+    <FormProvider {...methods}>
     <form className="AdminForm" action={handleSubmit(action)}>
       <section>
         <h2>About you</h2>
@@ -146,5 +148,6 @@ export const Form = ({user, action}) => {
       <FormErrors errors={errors} />
       <Button type="submit">Submit</Button>
     </form>
+    </FormProvider>
   )
 }

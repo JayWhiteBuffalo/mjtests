@@ -82,8 +82,8 @@ export const ProductPane = ({product, canEdit}) =>
         <dt>Rating</dt>
         <dd><code>{JSON.stringify(product.rating)}</code></dd>
 
-        <dt>Slug</dt>
-        <dd><code>{product.slug}</code></dd>
+        <dt className="hidden">Slug</dt>
+        <dd className="hidden"><code>{product.slug}</code></dd>
 
         <dt>Published</dt>
         <dd>

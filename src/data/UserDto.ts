@@ -81,6 +81,8 @@ const UserDto = {
   },
 
   async findMany(options) {
+    options ??= {}
+    options.orderBy ??= {name: 'asc'}
     const currentUser = await UserDto.getCurrent()
     const rawUsers = await prisma.user.findMany(options)
     return await ArrayUtil.asyncFilter(rawUsers, raw => UserDto.canSee(currentUser, raw.id))

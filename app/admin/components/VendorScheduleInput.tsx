@@ -198,11 +198,13 @@ export const VendorScheduleInput = ({schedule, errors, onChange}) =>
       errors={errors?.week}
     />
     <FieldError error={errors?.week} />
+    {/*
     <HolidayHours
       special={schedule.special}
       onChange={special => onChange({...schedule, special})}
       errors={errors?.special}
     />
     <FieldError error={errors?.special} />
+    */}
   </>
 

@@ -2,7 +2,7 @@
 import {AdminOnlyText} from '@app/admin/components/AdminForm'
 import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
 import {Button, Input, Textarea, RadioGroup, Radio} from '@nextui-org/react'
-import {Controller, useController} from 'react-hook-form'
+import {Controller, FormProvider, useController} from 'react-hook-form'
 import {FormattedInput} from '@components/FormattedInput'
 import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@app/admin/components/ImageInput'
@@ -14,12 +14,14 @@ import {VendorScheduleInput} from '@app/admin/components/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({vendor, imageRefs, isAdmin, action}) => {
-  const {register, handleSubmit, formState: {errors, isSubmitting}, control} = useForm({
+  const methods = useForm({
     resolver: nullResolver(),
     defaultValues: vendor,
   })
+  const {register, handleSubmit, formState: {errors, isSubmitting}, control} = methods
 
   return (
+    <FormProvider {...methods}>
     <form className="AdminForm" action={handleSubmit(action)}>
       <section>
         <h2>Store</h2>
@@ -234,7 +236,7 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
         </FieldLayout>
       </section>
 
-      <section>
+      <section className="hidden">
         <h2>SEO</h2>
 
         <FieldLayout
@@ -266,5 +268,6 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
         />
       </section>
     </form>
+    </FormProvider>
   )
 }

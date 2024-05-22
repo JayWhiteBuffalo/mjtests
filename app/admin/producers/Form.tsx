@@ -1,7 +1,7 @@
 'use client'
 import {AdminOnlyText} from '@app/admin/components/AdminForm'
 import {Button, Input, Textarea} from '@nextui-org/react'
-import {Controller, useController} from 'react-hook-form'
+import {Controller, FormProvider, useController} from 'react-hook-form'
 import {FormattedInput} from '@components/FormattedInput'
 import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@app/admin/components/ImageInput'
@@ -10,12 +10,14 @@ import {useForm, nullResolver, FormErrors, FieldLayout} from '@components/Form'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({producer, isAdmin, imageRefs, action}) => {
-  const {register, handleSubmit, formState: {errors}, control} = useForm({
+  const methods = useForm({
     resolver: nullResolver(),
     defaultValues: producer,
   })
+  const {register, handleSubmit, formState: {errors}, control} = methods
 
   return (
+    <FormProvider {...methods}>
     <form className="AdminForm" action={handleSubmit(action)}>
       <section>
         <h2>Producer</h2>
@@ -153,5 +155,6 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
       <FormErrors errors={errors} />
       <Button type="submit">Save</Button>
     </form>
+    </FormProvider>
   )
 }

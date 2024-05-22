@@ -89,6 +89,8 @@ const ProductDto = {
   },
 
   async findMany(options) {
+    options ??= {}
+    options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawProducts = await prisma.product.findMany(options)
     return await ArrayUtil.asyncFilter(rawProducts, raw => ProductDto.canSee(user, raw.id))
@@ -120,6 +122,7 @@ const ProductDto = {
           id,
           createdById: user.id,
           updatedById: user.id,
+          slug: id,
         }],
       })
       return id

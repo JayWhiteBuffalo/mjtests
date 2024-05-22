@@ -68,6 +68,8 @@ const ImageRefDto = {
   },
 
   async findMany(options) {
+    options ??= {}
+    options.orderBy ??= {lastModified: 'dasc'}
     const user = await UserDto.getCurrent()
     const rawImageRefs = await prisma.imageRef.findMany(options)
     return await ArrayUtil.asyncFilter(rawImageRefs, raw => ImageRefDto.canSee(user, raw.id))

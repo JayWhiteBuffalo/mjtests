@@ -20,6 +20,7 @@ const Page = async ({user}) => {
           some: {userId: user.id},
         },
       },
+      orderBy: {name: 'asc'},
     })
   } else {
     producers = []

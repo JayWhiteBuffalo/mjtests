@@ -1,3 +1,4 @@
+'use server'
 import ImageRefDto from '@data/ImageRefDto'
 import ProducerDto from '@data/ProducerDto'
 import ProductDto from '@data/ProductDto'

@@ -41,8 +41,8 @@ export const VendorPane = ({vendor, canEdit}) =>
         <dt>Rating</dt>
         <dd><code>{JSON.stringify(vendor.rating)}</code></dd>
 
-        <dt>Slug</dt>
-        <dd><code>{vendor.slug}</code></dd>
+        <dt className="hidden">Slug</dt>
+        <dd className="hidden"><code>{vendor.slug}</code></dd>
 
         <dt>Signup status</dt>
         <dd><code>{JSON.stringify(vendor.signupStatus)}</code></dd>
