@@ -12,8 +12,7 @@ import {UrlUtil} from '@util/UrlUtil'
 
 export const FilteredProductStore = new (class extends FluxFieldStore {
   constructor() {
-    super()
-    this.value = {}
+    super({})
     this.fetcher = new SerialFetcher((filter, signal) => {
       const query = ProductFilterUtil.toQuery(filter)
       const url = UrlUtil.makeUrl('/api/products', query)

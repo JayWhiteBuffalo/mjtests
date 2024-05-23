@@ -6,7 +6,7 @@ import {BlueLink} from '@/feature/shared/component/Link'
 import {Button, Spinner} from '@nextui-org/react'
 import {None, Unknown, InfoSection} from '@/feature/shared/component/InfoSection'
 import {Present} from '@util/Present'
-import {Product} from '@/feature/shop/component/ProductList'
+import {ProductItem} from '@/feature/shop/component/ProductList'
 import {Treemap} from '@/Treemap'
 import {useFluxStore} from '@/state/Flux'
 import {VendorStore} from '@/feature/admin/state/DataStore'
@@ -186,10 +186,10 @@ export const PreviewContainer = ({product}) => {
     .then(vendor => (
       <div className="flex gap-4 flex-wrap">
         <ul className="w-[360px] bg-white">
-          <Product product={{...product, vendor}} mode="full" />
+          <ProductItem product={{...product, vendor}} mode="full" />
         </ul>
         <ul className="w-[280px] bg-white">
-          <Product product={{...product, vendor}} mode="compact" />
+          <ProductItem product={{...product, vendor}} mode="compact" />
         </ul>
       </div>
     ))

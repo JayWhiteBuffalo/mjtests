@@ -34,8 +34,11 @@ import {
   FloatingFocusManager,
   useListNavigation,
 } from '@floating-ui/react'
-import {useState, useCallback, useRef, forwardRef} from 'react'
+import {useState, useCallback, useRef, forwardRef, type ReactNode, type HTMLProps, type PropsWithChildren, type KeyboardEvent} from 'react'
 import {Treemap} from '@/Treemap'
+import type {ProductSort} from '@/feature/shop/type/Shop'
+import type {ProductListMode} from '@/feature/shop/type/Ui'
+import {nullthrows} from '@/util/nullthrows'
 
 const sortItemProps = [
   {
@@ -55,7 +58,10 @@ const sortItemProps = [
   },
 ]
 
-const SortDropdown = ({sortBy, onChange}) => {
+const SortDropdown = ({sortBy, onChange}: {
+  sortBy: ProductSort
+  onChange: (sortBy: ProductSort) => void
+}) => {
   let selectedProps = sortItemProps.find(x => x.key === sortBy)
   const itemProps = sortItemProps
   if (!selectedProps && sortBy.startsWith('terps.')) {
@@ -67,6 +73,7 @@ const SortDropdown = ({sortBy, onChange}) => {
     }
     itemProps.push(selectedProps)
   }
+  nullthrows(selectedProps)
 
   return (
     <Dropdown classNames={{content: 'min-w-30'}}>
@@ -104,7 +111,10 @@ const SortDropdownContainer = () => {
   )
 }
 
-const ToggleFilterPane = ({showFilterPane, onClick}) => (
+const ToggleFilterPane = ({showFilterPane, onClick}: {
+  showFilterPane: boolean
+  onClick: () => void
+}) => (
   <Button
     className="ToggleFilterPane"
     onPress={onClick}
@@ -148,8 +158,11 @@ const modeItemProps = [
   },
 ]
 
-const ProductListModeSelector = ({mode, onChange}) => {
-  const selectedProps = modeItemProps.find(x => x.key === mode)
+const ProductListModeSelector = ({mode, onChange}: {
+  mode: ProductListMode
+  onChange: (mode: ProductListMode) => void
+}) => {
+  const selectedProps = modeItemProps.find(x => x.key === mode)!
 
   return (
     <Dropdown classNames={{content: 'min-w-20'}}>
@@ -185,7 +198,10 @@ const ProductListModeSelectorContainer = () => {
   )
 }
 
-const FilterKeyword = ({keyword, onChange}) => (
+const FilterKeyword = ({keyword, onChange}: {
+  keyword: string
+  onChange: (keyword: string) => void
+}) => (
   <Input
     className="flex-1 basis-40"
     id="filterKeyword"
@@ -208,8 +224,14 @@ const FilterKeywordContainer = () => {
   )
 }
 
-const MapKeywordItem = forwardRef(
-  ({children, className, active, ...rest}, ref) => (
+export type MapKeywordItemProps = {
+  children: ReactNode
+  className?: string
+  active: boolean
+} & HTMLProps<HTMLButtonElement>
+
+const MapKeywordItem = forwardRef<HTMLButtonElement, MapKeywordItemProps>(
+  ({children, className, active, ...rest}: PropsWithChildren<MapKeywordItemProps>, ref) => (
     <button
       className={`${className} ${active ? 'active' : ''}`}
       ref={ref}
@@ -231,6 +253,14 @@ const MapKeyword = ({
   geolocationInProgress,
   onSelectCity,
   onGeolocate,
+}: {
+  keyword: string
+  items: Array<{name: string}>
+  exact: boolean
+  onChangeKeyword: (keyword: string) => void
+  geolocationInProgress: boolean
+  onSelectCity: (item: {name: string}) => void
+  onGeolocate: () => void
 }) => {
   const [open, setOpen] = useState(false)
   const {refs, floatingStyles, context} = useFloating({
@@ -263,7 +293,7 @@ const MapKeyword = ({
   ])
 
   const onKeyDown = useCallback(
-    event => {
+    (event: KeyboardEvent) => {
       if (event.key === 'Enter' && activeIndex != null) {
         if (activeIndex === 0) {
           onGeolocate()
@@ -278,7 +308,7 @@ const MapKeyword = ({
   )
 
   const onChange = useCallback(
-    event => {
+    (event: KeyboardEvent) => {
       setActiveIndex(0)
       setOpen(true)
       onChangeKeyword(event.target.value)

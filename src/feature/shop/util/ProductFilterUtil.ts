@@ -1,32 +1,35 @@
 import ArrayUtil from '@/util/ArrayUtil'
-import FlagObjectUtil from '@util/FlagObjectUtil'
+import FlagObjectUtil, {type FlagObject} from '@util/FlagObjectUtil'
 import {memoize} from '@util/FnUtil'
 import MathUtil from '@util/MathUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import StringUtil from '@util/StringUtil'
+import type {LocationFilter, ProductFilter, ProductFlagsFilter, ProductSort, Subspecies, TerpFilters} from '@/feature/shop/type/Shop'
+import type {Product} from '@prisma/client'
+import type {OptionalNumberRange} from '@/util/NumberRange'
+
+const defaultFilter = Object.freeze({
+  brands: {},
+  concentrateTypes: {},
+  cultivars: {},
+  flags: {},
+  keyword: '',
+  location: {distance: undefined, center: [35.481918, -97.508469]},
+  potency: {thc: [undefined, undefined], cbd: [undefined, undefined]},
+  price: [undefined, undefined],
+  pricePerGram: [undefined, undefined],
+  productTypes: {},
+  sortBy: 'distance',
+  subspecies: {},
+  terps: {},
+  vendors: {},
+  weight: [undefined, undefined],
+})
 
 export const ProductFilterUtil = {
-  defaultFilter: memoize(() =>
-    Object.freeze({
-      brands: {},
-      concentrateTypes: {},
-      cultivars: {},
-      flags: {},
-      keyword: '',
-      location: {distance: undefined, center: [35.481918, -97.508469]},
-      potency: {thc: [undefined, undefined], cbd: [undefined, undefined]},
-      price: [undefined, undefined],
-      pricePerGram: [undefined, undefined],
-      productTypes: {},
-      sortBy: 'distance',
-      subspecies: {},
-      terps: {},
-      vendors: {},
-      weight: [undefined, undefined],
-    }),
-  ),
+  defaultFilter: (): ProductFilter => defaultFilter,
 
-  isEmpty(filter_) {
+  isEmpty(filter_: ProductFilter): boolean {
     const filter = ObjectUtil.deepClone(filter_)
     delete filter.sortBy
     delete filter.location.center
@@ -39,12 +42,12 @@ export const ProductFilterUtil = {
     return ObjectUtil.isEmpty(diff)
   },
 
-  testProductFilter(filter, product) {
+  testProductFilter(filter: ProductFilter, product: Product): boolean {
     return (
       ProductFilterUtil.testKeywordFilter(filter.keyword, product) &&
-      MathUtil.inRange(filter.price, product.price) &&
-      MathUtil.inRange(filter.pricePerGram, product.pricePerGram) &&
-      MathUtil.inRange(filter.weight, product.weight) &&
+      //MathUtil.inRange(filter.price, product.price) &&
+      //MathUtil.inRange(filter.pricePerGram, product.pricePerGram) &&
+      //MathUtil.inRange(filter.weight, product.weight) &&
       MathUtil.inRange(filter.potency.thc, product.potency.thc) &&
       MathUtil.inRange(filter.potency.cbd, product.potency.cbd) &&
       ProductFilterUtil.testSubspeciesFilter(filter.subspecies, product) &&
@@ -63,7 +66,7 @@ export const ProductFilterUtil = {
     )
   },
 
-  testTerpFilter(filterTerps, productTerps) {
+  testTerpFilter(filterTerps: TerpFilters, productTerps) {
     for (const terpName in filterTerps) {
       if (
         !MathUtil.inRange(filterTerps[terpName], productTerps[terpName] || 0)
@@ -74,7 +77,7 @@ export const ProductFilterUtil = {
     return true
   },
 
-  testKeywordFilter(keyword, product) {
+  testKeywordFilter(keyword: string, product: Product) {
     const normalize = StringUtil.normalizeForSearch
     const normKeyword = normalize(keyword)
     return (
@@ -85,7 +88,7 @@ export const ProductFilterUtil = {
     )
   },
 
-  testSubspeciesFilter(subspecies, product) {
+  testSubspeciesFilter(subspecies: FlagObject<Subspecies>, product: Product) {
     return (
       ObjectUtil.isEmpty(subspecies) ||
       subspecies[product.subspecies] ||
@@ -94,14 +97,14 @@ export const ProductFilterUtil = {
     )
   },
 
-  testLocationFilter(filterLocation, product) {
+  testLocationFilter(filterLocation: LocationFilter, product: Product) {
     return (
       filterLocation.distance === undefined ||
       (product.vendor.distance ?? Infinity) <= filterLocation.distance * 1609.34
     )
   },
 
-  testFlagsFilter(filterFlags, product) {
+  testFlagsFilter(filterFlags: ProductFlagsFilter, product: Product) {
     if (filterFlags.openNow) {
       if (!product.vendor.openStatus.isOpen) {
         return false
@@ -114,7 +117,7 @@ export const ProductFilterUtil = {
     )
   },
 
-  fromQuery(query) {
+  fromQuery(query: Record<string, string>) {
     const defaultFilter = ProductFilterUtil.defaultFilter()
     return {
       brands: ProductFilterUtil.flagsFromUrl(query.brands),
@@ -143,7 +146,7 @@ export const ProductFilterUtil = {
     }
   },
 
-  toQuery(filter) {
+  toQuery(filter: ProductFilter) {
     const defaultFilter = ProductFilterUtil.defaultFilter()
     return {
       ...ProductFilterUtil.terpsToUrl(filter.terps),
@@ -167,7 +170,7 @@ export const ProductFilterUtil = {
     }
   },
 
-  terpsFromUrl(query) {
+  terpsFromUrl(query: Record<string, string>): TerpFilters {
     const terps = {}
     for (const paramName in query) {
       const match = /^terps\.(.+)$/.exec(paramName)
@@ -179,14 +182,14 @@ export const ProductFilterUtil = {
     return terps
   },
 
-  terpsToUrl(terps) {
+  terpsToUrl(terps: TerpFilters): Record<string, string> {
     return ObjectUtil.map(terps, (terpName, range) => [
       `terps.${terpName}`,
       ProductFilterUtil.rangeToUrl(range),
     ])
   },
 
-  flagsFromUrl(urlValue) {
+  flagsFromUrl(urlValue?: string): ProductFlagsFilter {
     return urlValue != null
       ? FlagObjectUtil.fromIterable(urlValue.split(','))
       : {}
@@ -224,7 +227,7 @@ export const ProductFilterUtil = {
     return point.map(x => x.toString()).join(',')
   },
 
-  toPrisma(filter) {
+  toPrisma(filter: ProductFilter) {
     const where = {
       AND: [].concat(
         ProductFilterUtil.keywordToPrisma(filter.keyword),
@@ -252,7 +255,7 @@ export const ProductFilterUtil = {
     return {where, orderBy: ProductFilterUtil.sortToPrisma(filter.sortBy)}
   },
 
-  sortToPrisma(sortBy) {
+  sortToPrisma(sortBy: ProductSort) {
     if (sortBy === 'distance') {
       return {name: 'asc'}
     } else if (sortBy === 'name') {
@@ -273,7 +276,7 @@ export const ProductFilterUtil = {
     }
   },
 
-  rangeToPrisma(range) {
+  rangeToPrisma(range: OptionalNumberRange) {
     if (range.some(x => x != null)) {
       return {
         gte: range[0],

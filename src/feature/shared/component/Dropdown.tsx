@@ -20,14 +20,18 @@ import {
 import {HiOutlineChevronDown} from 'react-icons/hi'
 import {setRef} from '@util/ReactUtil'
 import {useFluxStore} from '@/state/Flux'
-import {useState, useRef, useCallback, useEffect, forwardRef} from 'react'
+import {useState, useRef, useCallback, useEffect, forwardRef, type HTMLAttributes} from 'react'
+
+export type DropdownMenuButtonProps = {
+  disabled?: boolean
+} & HTMLAttributes<HTMLButtonElement>
 
 export const DropdownMenuButton = ({
   className,
   disabled,
   children,
   ...rest
-}) => (
+}: DropdownMenuButtonProps) => (
   <button
     className={clsx(
       'px-1 text-sm',
@@ -47,9 +51,17 @@ type DropdownItem = {
   name: string
 }
 
+export type ItemsProps = {
+  items: Array<DropdownItem>
+  onChange: (value: string) => void
+  activeIndex: number
+  getItemProps: (props: any) => any
+  listRef: any
+} & HTMLAttributes<HTMLUListElement>
+
 const Items = forwardRef(
   (
-    {className, items, getItemProps, listRef, activeIndex, onChange, ...rest},
+    {className, items, getItemProps, listRef, activeIndex, onChange, ...rest}: ItemsProps,
     ref,
   ) => (
     <ul
@@ -101,7 +113,9 @@ const commonMiddleware = ({padding = 8} = {}) => [
   }),
 ]
 
-const DropdownTopMenu = ({onClose}) => (
+const DropdownTopMenu = ({onClose}: {
+  onClose: () => void
+}) => (
   <div className="flex justify-between items-end">
     <DropdownMenuButton className="DropdownCloseButton" onClick={onClose}>
       Done
@@ -109,8 +123,14 @@ const DropdownTopMenu = ({onClose}) => (
   </div>
 )
 
-const DropdownTrigger = forwardRef(
-  ({placeholder, value, readOnly, className, ...rest}, ref) => {
+export type DropdownTriggerProps = {
+  placeholder?: string
+  value?: string
+  readOnly?: boolean
+} & HTMLAttributes<HTMLButtonElement>
+
+const DropdownTrigger = forwardRef<HTMLButtonElement, DropdownTriggerProps>(
+  ({placeholder, value, readOnly, className, ...rest}: DropdownTriggerProps, ref) => {
     let text
     if (value != null) {
       text = value
@@ -145,7 +165,7 @@ const DropdownTrigger = forwardRef(
 )
 DropdownTrigger.displayName = 'DropdownTrigger'
 
-type DropdownProps = {
+export type DropdownProps = {
   items: Array<DropdownItem>
   onChange: (value: string) => void
   placeholder?: string

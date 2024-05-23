@@ -1,33 +1,35 @@
-const StringUtil = {
-  normalizeForSearch: x => x.toLowerCase().replaceAll(/\s/g, ''),
+import type {TypeaheadItem} from '@/state/TypeaheadStore'
 
-  keywordSearch: items => keyword => {
+const StringUtil = {
+  normalizeForSearch: (x: string) => x.toLowerCase().replaceAll(/\s/g, ''),
+
+  keywordSearch: (items: TypeaheadItem[]) => (keyword: string) => {
     const normKeyword = StringUtil.normalizeForSearch(keyword)
     return items.filter(item =>
       StringUtil.normalizeForSearch(item.name).includes(normKeyword),
     )
   },
 
-  wordsFromSpaced(s) {
+  wordsFromSpaced(s: string) {
     return s
       .replace(/[^\w\s]/, '')
       .split(/\s+/)
-      .map(x => x.toLowerCase())
+      .map((x: string) => x.toLowerCase())
   },
 
-  wordsToSpaced: words => words.join(' '),
-  wordsToKebab: words => words.join('-'),
-  wordsToSnake: words => words.join('_'),
+  wordsToSpaced: (words: string[]) => words.join(' '),
+  wordsToKebab: (words: string[]) => words.join('-'),
+  wordsToSnake: (words: string[]) => words.join('_'),
 
-  wordsToLowerCamel(words) {
+  wordsToLowerCamel(words: string[]) {
     return words
-      .map((word, i) =>
+      .map((word: string, i: number) =>
         i !== 0 ? word.substring(0, 1).toUpperCase() + word.substring(1) : word,
       )
       .join('')
   },
 
-  toLowerCamel(s) {
+  toLowerCamel(s: string) {
     return StringUtil.wordsToLowerCamel(StringUtil.wordsFromSpaced(s))
   },
 

@@ -3,7 +3,7 @@ import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import FlagObjectUtil from '@util/FlagObjectUtil'
 import ObjectUtil from '@util/ObjectUtil'
-import {Button, Checkbox, Input} from '@nextui-org/react'
+import {Button, Checkbox, Input, type ButtonProps} from '@nextui-org/react'
 import {DropdownMenuButton} from '@/feature/shared/component/Dropdown'
 import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {HiOutlineChevronDown} from 'react-icons/hi'
@@ -23,15 +23,20 @@ import {
   FloatingFocusManager,
 } from '@floating-ui/react'
 import {useFluxStore} from '@/state/Flux'
-import {useState, useRef, useCallback, forwardRef} from 'react'
+import {useState, useRef, useCallback, forwardRef, type HTMLAttributes} from 'react'
 
 type MultiDropdownItem = {
   key: string
   name: string
 }
 
-const MultiDropdownTrigger = forwardRef(
-  ({placeholder, values, className, ...rest}, ref) => {
+export type MultiDropdownTriggerProps = {
+  placeholder: string
+  values: object
+} & ButtonProps
+
+const MultiDropdownTrigger = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({placeholder, values, className, ...rest}: MultiDropdownTriggerProps, ref) => {
     const selectedCount = ObjectUtil.size(values)
     const text =
       (selectedCount === 0 && placeholder && (
@@ -57,6 +62,16 @@ const MultiDropdownTrigger = forwardRef(
 )
 MultiDropdownTrigger.displayName = 'MultiDropdownTrigger'
 
+export type ItemsProps = {
+  className: string
+  items: Array<MultiDropdownItem>
+  values: object
+  getItemProps: (props: any) => any
+  listRef: any
+  activeIndex: number
+  onChange: (values: object) => void
+} & HTMLAttributes<HTMLUListElement>
+
 const Items = forwardRef(
   (
     {
@@ -68,7 +83,7 @@ const Items = forwardRef(
       activeIndex,
       onChange,
       ...rest
-    },
+    }: ItemsProps,
     ref,
   ) => (
     <ul
@@ -129,7 +144,14 @@ const commonMiddleware = () => [
   }),
 ]
 
-const SmallMultiDropdownTopMenu = ({values, items, onChange, onClose}) => (
+export type SmallMultiDropdownTopMenuProps = {
+  items: Array<MultiDropdownItem>
+  values: object
+  onChange: (values: object) => void
+  onClose: () => void
+}
+
+const SmallMultiDropdownTopMenu = ({values, items, onChange, onClose}: SmallMultiDropdownTopMenuProps) => (
   <div className="flex justify-between items-end">
     {items.length && (
       <div>
@@ -266,7 +288,13 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
   )
 }
 
-const Search = ({id, keyword, onChange}) => (
+export type SearchProps = {
+  id: string
+  keyword: string
+  onChange: (keyword: string) => void
+}
+
+const Search = ({id, keyword, onChange}: SearchProps) => (
   <Input
     className="max-w-[600px] mb-1"
     id={id}

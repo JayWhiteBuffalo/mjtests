@@ -1,3 +1,5 @@
+import type {NumberRange, OptionalNumberRange} from '@/util/NumberRange'
+
 export default {
   orNan: (x: number | null | undefined): number => x ?? NaN,
 
@@ -12,7 +14,7 @@ export default {
     return Math.round(x * power) / power
   },
 
-  divide(x, y) {
+  divide(x: number, y: number) {
     let rem = x % y
     if (rem < 0) {
       rem += Math.abs(y)
@@ -20,18 +22,18 @@ export default {
     return [(x - rem) / y, rem]
   },
 
-  inRange(range, x) {
+  inRange(range: NumberRange, x: number): boolean {
     return (
       (range[0] === undefined || range[0] <= x) &&
       (range[1] === undefined || x <= range[1])
     )
   },
 
-  mapRange(range, f) {
-    return range.map(x => (x !== undefined ? f(x) : x))
+  mapRange(range: OptionalNumberRange, f: (x: number | undefined) => number) {
+    return range.map(x => (x !== undefined ? f(x) : x)) as OptionalNumberRange
   },
 
-  dot(xs, ys) {
+  dot(xs: number[], ys: number[]) {
     let x = 0
     for (let i = 0; i < xs.length; i++) {
       x += xs[i] * ys[i]
@@ -40,8 +42,8 @@ export default {
   },
 
   // A simple linear congruential generator with 16-bit state and 8-bit output.
-  lcg8: function* (seed) {
-    const iter = state => (25385 * state + 1) % 0x10000
+  lcg8: function* (seed?: number) {
+    const iter = (state: number) => (25385 * state + 1) % 0x10000
     let state = iter(seed != null ? seed % 0x10000 : 0)
     while (true) {
       state = iter(state)
@@ -51,7 +53,7 @@ export default {
 
   // from leaflet's Earth.distanceTo
   // distance between two geographical points using spherical law of cosines approximation
-  earthDistance(latlng1, latlng2) {
+  earthDistance(latlng1: [number, number], latlng2: [number, number]): number {
     // Mean Earth Radius, as recommended for use by
     // the International Union of Geodesy and Geophysics,
     // see https://rosettacode.org/wiki/Haversine_formula

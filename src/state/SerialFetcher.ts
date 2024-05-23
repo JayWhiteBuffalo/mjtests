@@ -1,8 +1,10 @@
 import {voidFn} from '@util/FnUtil'
 
+export type MakeFetch = (args: any, signal: AbortSignal) => Promise<any>
 export class SerialFetcher {
-  constructor(makeFetch) {
-    this.makeFetch = makeFetch
+  aborter?: AbortController
+
+  constructor(public makeFetch: MakeFetch) {
   }
 
   fetch(args) {
@@ -23,6 +25,6 @@ export class SerialFetcher {
   }
 
   abort() {
-    this.aborter.abort()
+    this.aborter?.abort()
   }
 }

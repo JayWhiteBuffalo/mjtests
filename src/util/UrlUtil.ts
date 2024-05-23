@@ -1,3 +1,5 @@
+import {parse} from 'path'
+
 export const UrlUtil = {
   makeUrl(pathname, query) {
     const url = new URL(
@@ -10,5 +12,13 @@ export const UrlUtil = {
       }
     }
     return url
+  },
+
+  parseQuery(search: string) {
+    const result: Record<string, string> = {}
+    for (const [key, value] of new URLSearchParams(search)) {
+      result[key] = value
+    }
+    return result
   },
 }

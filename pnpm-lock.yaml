@@ -111,6 +111,9 @@ importers:
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
+      '@types/open-location-code':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.2
@@ -1667,6 +1670,9 @@ packages:
 
   '@types/node@20.12.12':
     resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
+
+  '@types/open-location-code@1.0.0':
+    resolution: {integrity: sha512-1z3SQXyDqJjKZEvvEX3gOaBx30EIiB1FkTPIIrxrdcC0R5Hc8sJFvI7X5TeBH6ApFEOQVM9s2/cn/OLQQRn17w==}
 
   '@types/phoenix@1.6.4':
     resolution: {integrity: sha512-B34A7uot1Cv0XtaHRYDATltAdKx0BvVKNgYNqE4WjtPUa4VQJM7kxeXcVKaH+KS+kCmZ+6w+QaUdcljiheiBJA==}
@@ -5703,6 +5709,8 @@ snapshots:
   '@types/node@20.12.12':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/open-location-code@1.0.0': {}
 
   '@types/phoenix@1.6.4': {}
 

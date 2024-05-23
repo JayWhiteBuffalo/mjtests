@@ -21,8 +21,12 @@ import {SmallMultiDropdown, LargeMultiDropdown} from '@/feature/shared/component
 import {TerpeneSelector} from '@/feature/shared/component/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {useFluxStore, dispatch} from '@/state/Flux'
+import type {PotencyFilters, ProductFilter, TerpFilters, TerpName} from '@/feature/shop/type/Shop'
+import type {NumberRange, OptionalNumberRange} from '@/util/NumberRange'
 
-export const ClearFilterButton = ({onClick}) => (
+export const ClearFilterButton = ({onClick}: {
+  onClick: () => void,
+}) => (
   <Button
     className="-my-1"
     isIconOnly
@@ -61,7 +65,10 @@ const FilterItem = ({children}) => (
   </div>
 )
 
-const CommonFilterSection = ({filter, onChange}) => {
+const CommonFilterSection = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const defaultFilter = ProductFilterUtil.defaultFilter()
   const clearButton = !ObjectUtil.equals(filter.flags, defaultFilter.flags) ? (
     <ClearFilterButton onClick={() => onChange({flags: defaultFilter.flags})} />
@@ -87,7 +94,10 @@ const CommonFilterSection = ({filter, onChange}) => {
   )
 }
 
-const ProductTypeFilterSection = ({filter, onChange}) => {
+const ProductTypeFilterSection = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const defaultFilter = ProductFilterUtil.defaultFilter()
   const clearButton = !(
     ObjectUtil.equals(filter.productTypes, defaultFilter.productTypes) &&
@@ -156,7 +166,10 @@ const ProductTypeFilterSection = ({filter, onChange}) => {
   )
 }
 
-const SpeciesFilterSection = ({filter, onChange}) => {
+const SpeciesFilterSection = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const defaultFilter = ProductFilterUtil.defaultFilter()
   const clearButton = !(
     ObjectUtil.equals(filter.subspecies, defaultFilter.subspecies) &&
@@ -204,7 +217,10 @@ const SpeciesFilterSection = ({filter, onChange}) => {
   )
 }
 
-const PotencyFilterSection = ({filter, onChange}) => {
+const PotencyFilterSection = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const defaultFilter = ProductFilterUtil.defaultFilter()
   const clearButton = !(
     ObjectUtil.deepEquals(filter.potency, defaultFilter.potency) &&
@@ -235,14 +251,17 @@ const PotencyFilterSection = ({filter, onChange}) => {
   )
 }
 
-const PotencyFilter = ({potency, onChange}) => (
+const PotencyFilter = ({potency, onChange}: {
+  potency: PotencyFilters,
+  onChange: (potency: PotencyFilters) => void,
+}) => (
   <>
     <FilterItem>
       <label className="flex-1" htmlFor="potency.thc.min">
         Total THC (%)
       </label>
       <IntervalTextbox
-        bound={[0, 1].map(x => x * 100)}
+        bound={[0, 1].map(x => x * 100) as NumberRange}
         id="potency.thc"
         onChange={range =>
           onChange({...potency, thc: MathUtil.mapRange(range, x => x / 100)})
@@ -259,7 +278,7 @@ const PotencyFilter = ({potency, onChange}) => (
         Total CBD (%)
       </label>
       <IntervalTextbox
-        bound={[0, 1].map(x => x * 100)}
+        bound={[0, 1].map(x => x * 100) as NumberRange}
         id="potency.cbd"
         onChange={range =>
           onChange({...potency, cbd: MathUtil.mapRange(range, x => x / 100)})
@@ -273,72 +292,81 @@ const PotencyFilter = ({potency, onChange}) => (
   </>
 )
 
-const WeightFilter = ({range, onChange}) => (
-  <FilterItem>
-    <label className="flex-1" htmlFor="weight.min">
-      Weight (g)
-    </label>
-    <IntervalTextbox
-      bound={[0, 100]}
-      id="weight"
-      onChange={onChange}
-      step={0.5}
-      value={range}
-    />
-  </FilterItem>
-)
+// const WeightFilter = ({range, onChange}: {
+//   range: OptionalNumberRange,
+//   onChange: (range: OptionalNumberRange) => void,
+// }) => (
+//   <FilterItem>
+//     <label className="flex-1" htmlFor="weight.min">
+//       Weight (g)
+//     </label>
+//     <IntervalTextbox
+//       bound={[0, 100]}
+//       id="weight"
+//       onChange={onChange}
+//       step={0.5}
+//       value={range}
+//     />
+//   </FilterItem>
+// )
 
-const PriceFilterSection = ({filter, onChange}) => {
-  const defaultFilter = ProductFilterUtil.defaultFilter()
-  const clearButton = !(
-    ArrayUtil.equals(filter.price, defaultFilter.price) &&
-    ArrayUtil.equals(filter.pricePerGram, defaultFilter.pricePerGram)
-  ) ? (
-    <ClearFilterButton
-      onClick={() =>
-        onChange({
-          price: defaultFilter.price,
-          pricePerGram: defaultFilter.pricePerGram,
-        })
-      }
-    />
-  ) : undefined
+// const PriceFilterSection = ({filter, onChange}: {
+//   filter: ProductFilter,
+//   onChange: (filter: Partial<ProductFilter>) => void,
+// }) => {
+//   const defaultFilter = ProductFilterUtil.defaultFilter()
+//   const clearButton = !(
+//     ArrayUtil.equals(filter.price, defaultFilter.price) &&
+//     ArrayUtil.equals(filter.pricePerGram, defaultFilter.pricePerGram)
+//   ) ? (
+//     <ClearFilterButton
+//       onClick={() =>
+//         onChange({
+//           price: defaultFilter.price,
+//           pricePerGram: defaultFilter.pricePerGram,
+//         })
+//       }
+//     />
+//   ) : undefined
 
-  return (
-    <FilterSection>
-      <FilterSectionHeader>
-        <span>Price</span>
-        {clearButton}
-      </FilterSectionHeader>
-      <FilterItem>
-        <label className="flex-1" htmlFor="price.min">
-          Price ($)
-        </label>
-        <IntervalTextbox
-          bound={[0, 1000]}
-          id="price"
-          onChange={price => onChange({price})}
-          step={0.1}
-          value={filter.price}
-        />
-      </FilterItem>
-      <FilterItem>
-        <label className="flex-1" htmlFor="pricePerGram.min">
-          Price per gram ($/g)
-        </label>
-        <IntervalTextbox
-          bound={[0, 1000]}
-          id="pricePerGram"
-          onChange={pricePerGram => onChange({pricePerGram})}
-          step={0.1}
-          value={filter.pricePerGram}
-        />
-      </FilterItem>
-    </FilterSection>
-  )
-}
+//   return (
+//     <FilterSection>
+//       <FilterSectionHeader>
+//         <span>Price</span>
+//         {clearButton}
+//       </FilterSectionHeader>
+//       <FilterItem>
+//         <label className="flex-1" htmlFor="price.min">
+//           Price ($)
+//         </label>
+//         <IntervalTextbox
+//           bound={[0, 1000]}
+//           id="price"
+//           onChange={price => onChange({price})}
+//           step={0.1}
+//           value={filter.price}
+//         />
+//       </FilterItem>
+//       <FilterItem>
+//         <label className="flex-1" htmlFor="pricePerGram.min">
+//           Price per gram ($/g)
+//         </label>
+//         <IntervalTextbox
+//           bound={[0, 1000]}
+//           id="pricePerGram"
+//           onChange={pricePerGram => onChange({pricePerGram})}
+//           step={0.1}
+//           value={filter.pricePerGram}
+//         />
+//       </FilterItem>
+//     </FilterSection>
+//   )
+// }
 
-const LocationFilterSection = ({filter, onChange}) => {
+const LocationFilterSection = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const bound = [0, 30]
 
   const defaultFilter = ProductFilterUtil.defaultFilter()
@@ -401,7 +429,10 @@ const LocationFilterSection = ({filter, onChange}) => {
   )
 }
 
-const FilterLeftPane = ({filter, onChange}) => (
+const FilterLeftPane = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => (
   <div className="py-3 px-2">
     <ErrorBoundary>
       <CommonFilterSection filter={filter} onChange={onChange} />
@@ -424,7 +455,13 @@ const FilterLeftPane = ({filter, onChange}) => (
   </div>
 )
 
-const TerpFilterItem = ({terpName, range, bound, onChange, onRemove}) => {
+const TerpFilterItem = ({terpName, range, bound, onChange, onRemove}: {
+  terpName: TerpName,
+  range: OptionalNumberRange,
+  bound: NumberRange,
+  onChange: (range: OptionalNumberRange) => void,
+  onRemove: () => void,
+}) => {
   const color = Treemap.terpenesByName[terpName].color
   return (
     <FilterItem>
@@ -436,7 +473,7 @@ const TerpFilterItem = ({terpName, range, bound, onChange, onRemove}) => {
         {terpName} (%)
       </label>
       <IntervalTextbox
-        bound={bound.map(x => x * 100)}
+        bound={bound.map(x => x * 100) as NumberRange}
         id={'terps.' + terpName}
         onChange={range => onChange(MathUtil.mapRange(range, x => x / 100))}
         step={0.1}
@@ -447,7 +484,10 @@ const TerpFilterItem = ({terpName, range, bound, onChange, onRemove}) => {
   )
 }
 
-export const TerpsFilterSection = ({terps, onChange}) => {
+export const TerpsFilterSection = ({terps, onChange}: {
+  terps: TerpFilters,
+  onChange: (terps: TerpFilters) => void,
+}) => {
   const entries = ArrayUtil.sortBy(
     Object.entries(terps),
     ([terpName, _]) => Treemap.terpenesByName[terpName].index,
@@ -483,7 +523,7 @@ export const TerpsFilterSection = ({terps, onChange}) => {
   )
 }
 
-const getMostPotentFilter = terps => {
+const getMostPotentFilter = (terps: TerpFilters) => {
   const entries = Object.entries(terps)
   if (entries.length !== 0) {
     const [terpName, range] = ArrayUtil.sortBy(entries, ([_, range]) => -range[0])[0]
@@ -494,7 +534,10 @@ const getMostPotentFilter = terps => {
   return undefined
 }
 
-const FilterRightPane = ({filter, onChange, onRemoveTerp}) => {
+const FilterRightPane = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => {
   const onTerpsChange = terps => {
     const mostPotent = getMostPotentFilter(terps)
     let sortBy = undefined
@@ -517,7 +560,6 @@ const FilterRightPane = ({filter, onChange, onRemoveTerp}) => {
         <TerpsFilterSection
           terps={filter.terps}
           onChange={onTerpsChange}
-          onRemove={onRemoveTerp}
         />
       </ErrorBoundary>
     </div>
@@ -525,13 +567,15 @@ const FilterRightPane = ({filter, onChange, onRemoveTerp}) => {
   )
 }
 
-const FilterPane = ({filter, onChange, onRemoveTerp}) => (
+const FilterPane = ({filter, onChange}: {
+  filter: ProductFilter,
+  onChange: (filter: Partial<ProductFilter>) => void,
+}) => (
   <form className="FilterPane grid border-t border-gray-300">
     <FilterLeftPane filter={filter} onChange={onChange} />
     <FilterRightPane
       filter={filter}
       onChange={onChange}
-      onRemoveTerp={onRemoveTerp}
     />
   </form>
 )

@@ -3,12 +3,21 @@ import {jsonOnOk} from '@util/FetchUtil'
 import {Present} from '@util/Present'
 import {SerialFetcher} from '@/state/SerialFetcher'
 
-export class TypeaheadStore extends FluxStore {
-  constructor(fieldName) {
+export type TypeaheadItem = {
+  key: string
+  name: string
+}
+
+export class TypeaheadStore extends FluxStore<undefined> {
+  byKey: Record<string, Present<TypeaheadItem>> = {}
+  items: Present<TypeaheadItem[]> = Present.pend
+  searchFetcher: SerialFetcher
+  lookupFetcher: LookupFetcher
+  lastKeyword: string | undefined
+  valid: boolean = false
+
+  constructor(public fieldName: string) {
     super()
-    this.byKey = {}
-    this.items = Present.pend
-    this.fieldName = fieldName
     this.searchFetcher = new SerialFetcher((keyword, signal) =>
       fetch(
         `/api/${this.fieldName}/typeahead?keyword=${encodeURIComponent(keyword)}`,
@@ -18,7 +27,7 @@ export class TypeaheadStore extends FluxStore {
     this.lookupFetcher = new LookupFetcher(fieldName)
   }
 
-  search = keyword => {
+  search = (keyword: string): TypeaheadItem[] => {
     if (this.lastKeyword !== keyword) {
       this.valid = false
       this.lastKeyword = keyword
@@ -41,14 +50,12 @@ export class TypeaheadStore extends FluxStore {
     return this.items.orElse(() => [])
   }
 
-  getByKeys = keys =>
+  getByKeys = (keys: string[]) =>
     keys.map(key => this.byKey[key]?.get() ?? {key, name: key})
 }
 
 class LookupFetcher {
-  constructor(fieldName) {
-    this.fieldName = fieldName
-  }
+  constructor(public fieldName: string) {}
 
   async fetch(keys) {
     const response = await fetch(`/api/${this.fieldName}/items`, {
@@ -60,13 +67,15 @@ class LookupFetcher {
 }
 
 export class KeyedTypeaheadStore extends TypeaheadStore {
-  constructor(fieldName) {
+  lookupFetcher: LookupFetcher
+
+  constructor(fieldName: string) {
     super(fieldName)
     this.lookupFetcher = new LookupFetcher(fieldName)
   }
 
-  getByKeys = keys => {
-    const missing = []
+  getByKeys = (keys: string[]): TypeaheadItem[] => {
+    const missing = [] as string[]
 
     const items = keys.map(key => {
       if (!(key in this.byKey)) {

@@ -191,7 +191,10 @@ export const useForm = options => {
   return {...methods, handleSubmit, register}
 }
 
-export const RemoveButton = ({onClick, className}) => (
+export const RemoveButton = ({onClick, className}: {
+  onClick: () => void
+  className?: string
+}) => (
   <button className={clsx('ml-2', className)} onClick={onClick} type="button">
     <CgClose size="1.5em" />
   </button>

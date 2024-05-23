@@ -35,10 +35,15 @@ import {
   OpenStatus,
   VendorRating,
 } from './VendorPopup'
+import {type Product, type Vendor} from '@prisma/client'
+import type {ProductFilter} from '@/feature/shop/type/Shop'
+import type {ProductListMode} from '@/feature/shop/type/Ui'
 
 const emDash = '—'
 
-const ProductTypeLabel = ({product}) => (
+const ProductTypeLabel = ({product}: {
+  product: Product
+}) => (
   <div className="text-gray-500 text-sm font-bold leading-none uppercase">
     {Treemap.productTypesByKey[product.productType]?.name}
     {product.productType === 'concentrate'
@@ -47,7 +52,9 @@ const ProductTypeLabel = ({product}) => (
   </div>
 )
 
-const ProductChips = ({product}) => (
+const ProductChips = ({product}: {
+  product: Product
+}) => (
   // openNow, closing soon
   <div className="flex flex-wrap gap-1 mb-1">
     {product.subspecies ? (
@@ -90,7 +97,9 @@ const ProductChips = ({product}) => (
   </div>
 )
 
-const VendorNameButton = ({vendor}) => (
+const VendorNameButton = ({vendor}: {
+  vendor: Vendor
+}) => (
   <Popover placement="top" shouldCloseOnInteractOutside={() => true}>
     <PopoverTrigger>
       <BlueButton>{vendor.name}</BlueButton>
@@ -103,7 +112,9 @@ const VendorNameButton = ({vendor}) => (
   </Popover>
 )
 
-const ProductSubheader = ({product}) =>
+const ProductSubheader = ({product}: {
+  product: Product
+}) =>
   product.vendor ? (
     <div className="flex justify-between">
       <span className="text-sm">
@@ -123,7 +134,9 @@ const ProductSubheader = ({product}) =>
     </div>
   ) : undefined
 
-export const ProductAttributeList = ({product}) => (
+export const ProductAttributeList = ({product}: {
+  product: Product
+}) => (
   <dl className="ProductAttributeList py-1 border-t border-gray-400">
     {product.brand ? (
       <>
@@ -146,7 +159,7 @@ export const ProductAttributeList = ({product}) => (
       </>
     ) : undefined} */}
 
-    {product.potency.thc != null ? (
+    {product.potency?.thc != null ? (
       <>
         <dt>Total THC</dt>
         <dd>
@@ -155,7 +168,7 @@ export const ProductAttributeList = ({product}) => (
       </>
     ) : undefined}
 
-    {product.potency.thca != null ? (
+    {product.potency?.thca != null ? (
       <>
         <dt>THCa</dt>
         <dd>
@@ -164,7 +177,7 @@ export const ProductAttributeList = ({product}) => (
       </>
     ) : undefined}
 
-    {product.potency.delta8 != null ? (
+    {product.potency?.delta8 != null ? (
       <>
         <dt>Delta-8</dt>
         <dd>
@@ -173,7 +186,7 @@ export const ProductAttributeList = ({product}) => (
       </>
     ) : undefined}
 
-    {product.potency.cbd > 0 ? (
+    {product.potency?.cbd > 0 ? (
       <>
         <dt>Total CBD</dt>
         <dd>
@@ -184,7 +197,11 @@ export const ProductAttributeList = ({product}) => (
   </dl>
 )
 
-const TerpItem = ({enabled = false, terpName, value}) => {
+const TerpItem = ({enabled = false, terpName, value}: {
+  enabled: boolean
+  terpName: TerpName
+  value: number
+}) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const arrowRef = useRef()
   const {refs, floatingStyles, context} = useFloating({
@@ -246,7 +263,10 @@ export const PriceList = ({priceList}) => (
   </ul>
 )
 
-export const Product = ({product, mode}) => {
+export const ProductItem = ({product, mode}: {
+  product: Product
+  mode: ProductListMode
+}) => {
   const terpEntries = ArrayUtil.sortBy(
     Object.entries(product.terps || []),
     ([_, x]) => -x,
@@ -304,7 +324,11 @@ export const Product = ({product, mode}) => {
   )
 }
 
-const ProductList = ({filter, products, mode}) => (
+const ProductList = ({filter, products, mode}: {
+  filter: ProductFilter
+  products: Product[]
+  mode: ProductListMode
+}) => (
   <>
     {products.length !== 0 && ProductFilterUtil.isEmpty(filter) ? (
       <p>
@@ -322,7 +346,7 @@ const ProductList = ({filter, products, mode}) => (
     >
       {products.map(product => (
         <ErrorBoundary key={product.id}>
-          <Product mode={mode} product={product} />
+          <ProductItem mode={mode} product={product} />
         </ErrorBoundary>
       ))}
     </ul>

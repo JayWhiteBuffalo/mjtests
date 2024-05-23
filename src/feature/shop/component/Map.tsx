@@ -22,9 +22,12 @@ import {
   shift,
   FloatingPortal,
 } from '@floating-ui/react'
-import {useState, useRef, useEffect, useCallback, forwardRef} from 'react'
+import {useState, useRef, useEffect, useCallback, forwardRef, type HTMLAttributes} from 'react'
 import {VendorPopupContentContainer} from './VendorPopup'
 import {useLastPresent} from '@util/useLastPresent'
+import type {Vendor} from '@prisma/client'
+import type {IconOptions} from 'leaflet'
+import type {ShopLayout} from '@/feature/shop/type/Ui'
 
 const blueIcon = {
   iconUrl: require('leaflet-color-markers/img/marker-icon-2x-blue.png'),
@@ -44,9 +47,15 @@ const redIcon = {
   shadowSize: [41, 41],
 }
 
-const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
+const Map = ({center, zoom, vendors, onChange, expandMapPane}: {
+  center: [number, number]
+  zoom: number
+  vendors: Array<Vendor>
+  onChange: (map: {center: [number, number], zoom: number}) => void
+  expandMapPane: boolean
+}) => {
   const containerRef = useRef(null)
-  const [map, setMap] = useState()
+  const [map, setMap] = useState<L.Map>()
 
   const [initialOptions, _] = useState({center, zoom})
   useEffect(() => {
@@ -133,10 +142,17 @@ export const MapContainer = () => {
   )
 }
 
+export type ReactMarkerIconProps = {
+  type: 'icon' | 'shadow'
+  options: IconOptions
+  alt: string
+} & HTMLAttributes<HTMLImageElement>
+
 const ReactMarkerIcon = forwardRef(
-  ({type, options, style, alt, className, ...rest}, ref) => {
+  ({type, options, style, alt, className, ...rest}: ReactMarkerIconProps, ref) => {
     const anchor = options[`${type}Anchor`] || options.iconAnchor
     const size = options[`${type}Size`] || options.iconSize
+
     return (
       <Image
         alt={alt}
@@ -161,7 +177,12 @@ const ReactMarkerIcon = forwardRef(
 )
 ReactMarkerIcon.displayName = 'ReactMarkerIcon'
 
-const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) => (
+export type ReactMarkerProps = {
+  iconOptions: IconOptions
+  alt: string
+} & HTMLAttributes<HTMLDivElement>
+
+const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}: ReactMarkerProps, ref) => (
   <>
     <ReactMarkerIcon
       ref={ref}
@@ -178,7 +199,10 @@ const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) => (
 ))
 ReactMarker.displayName = 'ReactMarker'
 
-const VendorMarker = ({vendor, map}) => {
+const VendorMarker = ({vendor, map}: {
+  vendor: Vendor
+  map: L.Map
+}) => {
   const [pos, setPos] = useState(map.latLngToLayerPoint(vendor.latLng).round())
 
   useEffect(() => {
@@ -228,8 +252,11 @@ const VendorMarker = ({vendor, map}) => {
   )
 }
 
-const MapOverlay = ({vendors, map}) => {
-  const layerRef = useRef()
+const MapOverlay = ({vendors, map}: {
+  vendors: Array<Vendor>
+  map: L.Map
+}) => {
+  const layerRef = useRef<HTMLDivElement>()
   const [anim, setAnim] = useState(false)
 
   useEffect(() => {
@@ -278,7 +305,11 @@ const ControlWrapper = L.Control.extend({
   },
 })
 
-const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) => (
+const LayoutButtons = ({expandMapPane, pinMapPane, onChange}: {
+  expandMapPane: boolean
+  pinMapPane: boolean
+  onChange?: (layout: Partial<ShopLayout>) => void
+}) => (
   <div className="leaflet-bar leafle-control">
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a

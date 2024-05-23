@@ -1,20 +1,16 @@
 export class JsonApiError extends Error {
-  constructor(data, response) {
+  constructor(public data, public response: Response) {
     super(`${response.status} ${response.statusText}`)
-    this.data = data
-    this.response = response
   }
 }
 
 export class TextApiError extends Error {
-  constructor(text, response) {
+  constructor(public text: string, public response: Response) {
     super(`${response.status} ${response.statusText}: ${text}`)
-    this.text = text
-    this.response = response
   }
 }
 
-export const jsonOnOk = async response => {
+export const jsonOnOk = async (response: Response) => {
   if (response.ok) {
     return response.json()
   } else {

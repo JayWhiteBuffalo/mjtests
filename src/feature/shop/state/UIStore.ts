@@ -1,9 +1,18 @@
+import type {ProductFilter} from '@/feature/shop/type/Shop'
+import type {ShopLayout, ShopMap, ShopRoute} from '@/feature/shop/type/Ui'
 import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {FluxFieldStore, dispatch} from '@/state/Flux'
 import {UrlUtil} from '@util/UrlUtil'
 
-export const RouteStore = new (class extends FluxFieldStore {
-  replace(query) {
+export const RouteStore = new (class extends FluxFieldStore<ShopRoute> {
+  constructor() {
+    super({
+      pathname: window.location.pathname,
+      query: UrlUtil.parseQuery(window.location.search),
+    })
+  }
+  
+  replace(query: Record<string, string>) {
     const url = UrlUtil.makeUrl(this.value.pathname, {
       ...this.value.query,
       ...query,
@@ -12,10 +21,9 @@ export const RouteStore = new (class extends FluxFieldStore {
   }
 })()
 
-export const FilterStore = new (class extends FluxFieldStore {
+export const FilterStore = new (class extends FluxFieldStore<ProductFilter> {
   constructor() {
-    super()
-    this.value = ProductFilterUtil.defaultFilter()
+    super(ProductFilterUtil.defaultFilter())
   }
 
   set(changes) {
@@ -31,16 +39,15 @@ export const FilterStore = new (class extends FluxFieldStore {
   }
 })()
 
-export const LayoutStore = new (class extends FluxFieldStore {
+export const LayoutStore = new (class extends FluxFieldStore<ShopLayout> {
   constructor() {
-    super()
-    this.value = {
+    super({
       expandMapPane: false,
       pinMapPane: false,
       productListMode: 'full',
       showFilterPane: true,
       showMapPane: true,
-    }
+    })
   }
 
   get() {
@@ -48,20 +55,19 @@ export const LayoutStore = new (class extends FluxFieldStore {
   }
 })()
 
-export const MapStore = new (class extends FluxFieldStore {
+export const MapStore = new (class extends FluxFieldStore<ShopMap> {
   constructor() {
-    super()
-    this.value = {
+    super({
       center: [35.481918, -97.508469],
       zoom: 10,
       keyword: '',
       city: undefined,
       filterFollowsMap: true,
       geolocationInProgress: false,
-    }
+    })
   }
 
-  set(changes) {
+  set(changes: Partial<ShopMap>) {
     super.set(changes)
 
     const map = MapStore.get()

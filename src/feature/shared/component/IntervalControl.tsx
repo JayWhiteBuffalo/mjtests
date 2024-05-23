@@ -1,19 +1,16 @@
 import clsx from 'clsx'
 import {orEmpty} from '@util/ValidationUtil'
-import {Input} from '@nextui-org/react'
-import {useState, useEffect, useCallback} from 'react'
-
-type IntervalTextboxProps = {
-  id: string
-  bound: [number, number]
-  value: [number, number]
-  step?: number
-  onChange: (interval: [number, number]) => void
-}
+import {Input, type InputProps} from '@nextui-org/react'
+import {useState, useEffect, useCallback, type FocusEvent, type KeyboardEvent} from 'react'
+import type {NumberRange, OptionalNumberRange} from '@/util/NumberRange'
 
 const enDash = '–'
 
-export const IntervalLabel = ({bound, value, labelFn}) => {
+export const IntervalLabel = ({bound, value, labelFn}: {
+  bound: NumberRange
+  value: NumberRange
+  labelFn?: (x: number) => string
+}) => {
   const f = labelFn || (x => x)
 
   const text = () => {
@@ -35,7 +32,13 @@ export const IntervalLabel = ({bound, value, labelFn}) => {
   return <span className="IntervalLabel">{text()}</span>
 }
 
-const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
+export type IntervalTextboxItemProps = {
+  bound: NumberRange
+  value: number | undefined
+  onChange: (value: number | undefined) => void
+} & Omit<InputProps, 'value' | 'onValueChange'>
+
+const IntervalTextboxItem = ({bound, value, onChange, ...rest}: IntervalTextboxItemProps) => {
   const [focus, setFocus] = useState(false)
   const [text, setText] = useState(orEmpty(value))
 
@@ -49,7 +52,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   }, [value, focus, text])
 
   const validate = useCallback(
-    xString => {
+    (xString: string): number | undefined => {
       if (xString === '') {
         return undefined
       }
@@ -69,7 +72,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   )
 
   const onBlur = useCallback(
-    event => {
+    (event: FocusEvent<HTMLInputElement>) => {
       setFocus(false)
       const x = validate(event.target.value)
       if (x !== value) {
@@ -80,7 +83,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   )
 
   const onKeyDown = useCallback(
-    event => {
+    (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         const x = validate(event.target.value)
         setText(orEmpty(x))
@@ -91,7 +94,7 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   )
 
   const onValueChange = useCallback(
-    value => {
+    (value: string) => {
       setText(value)
       const x = +value
       if (bound[0] <= x && x <= bound[1]) {
@@ -119,6 +122,15 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
       {...rest}
     />
   )
+}
+
+export type IntervalTextboxProps = {
+  id: string
+  bound: NumberRange
+  value: OptionalNumberRange
+  step?: number
+  onChange: (interval: OptionalNumberRange) => void
+  className?: string
 }
 
 export const IntervalTextbox = ({

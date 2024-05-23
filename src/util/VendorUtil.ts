@@ -59,7 +59,7 @@ export const VendorUtil = {
 
   ommaNumberPattern: /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/,
 
-  parsePartialOmmaNumber(x) {
+  parsePartialOmmaNumber(x: string) {
     x = x.replace(/[^\w]/g, '')
     return [x.substring(0, 4), x.substring(4, 8), x.substring(8)]
       .filter(segment => segment !== '')

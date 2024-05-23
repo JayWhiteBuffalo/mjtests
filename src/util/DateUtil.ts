@@ -1,7 +1,7 @@
 import MathUtil from '@util/MathUtil'
 
 const DateUtil = {
-  formatYmd(year, month, day) {
+  formatYmd(year: number, month: number, day: number) {
     return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
   },
 
@@ -19,11 +19,11 @@ const DateUtil = {
     return 3600 * now.getHours() + 60 * now.getMinutes() + now.getSeconds()
   },
 
-  parseYmd(date) {
-    return date.split('-').map(x => +x)
+  parseYmd(date: string) {
+    return date.split('-').map((x: string | number) => +x)
   },
 
-  addYmd(date, d) {
+  addYmd(date: string, d: number) {
     const [year, month, day] = DateUtil.parseYmd(date)
     const dateUtc = new Date(Date.UTC(year, month - 1, day + d))
     return DateUtil.formatYmd(
@@ -33,7 +33,7 @@ const DateUtil = {
     )
   },
 
-  formatAmPm(time) {
+  formatAmPm(time: number) {
     const [time_, _second] = MathUtil.divide(time, 60)
     const [hour, minute] = MathUtil.divide(time_, 60)
     return [
@@ -45,7 +45,7 @@ const DateUtil = {
     ].join('')
   },
 
-  formatShortAmPm(time) {
+  formatShortAmPm(time: number) {
     const [time_, _second] = MathUtil.divide(time, 60)
     const [hour, minute] = MathUtil.divide(time_, 60)
     return [
@@ -55,7 +55,7 @@ const DateUtil = {
     ].join('')
   },
 
-  parseAmPm(x) {
+  parseAmPm(x: string) {
     const match = x.toLowerCase().match(/^(\d+):?(\d+)?\s*((a|p)m?)?/)
     if (match) {
       const hour = +match[1]

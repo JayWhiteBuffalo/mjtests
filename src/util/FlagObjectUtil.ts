@@ -1,6 +1,6 @@
 import {identity} from '@util/FnUtil'
 
-export type FlagObject = Record<string, true>
+export type FlagObject<T = string> = Record<T, true>
 
 // Utility module for objects whose values are `true`.
 const FlagObjectUtil = {
