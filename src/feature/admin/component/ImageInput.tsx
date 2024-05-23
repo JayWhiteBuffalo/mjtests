@@ -111,7 +111,7 @@ export const ImageInput = ({
 
   const onDelete = useCallback(
     async index => {
-      setImageRefs(ArrayUtil.splice(imageRefs, index, 1))
+      setImageRefs(imageRefs.toSpliced(index, 1))
       const imageRef = imageRefs[index]
 
       if (imageRef.publicId === mainImageRefId) {

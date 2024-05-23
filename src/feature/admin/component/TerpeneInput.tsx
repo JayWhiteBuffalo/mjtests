@@ -52,10 +52,10 @@ export const TerpeneInputStyle1 = ({terps, errors, onChange}) => {
 */
 
 export const PotencyTableInput = ({potency, errors, onChange}) => {
-  const makePotencyRow = name => (
+  const makePotencyRow = (name, label) => (
     <>
       <div className="contents">
-        <label htmlFor={`potency.${name}`}>{name}</label>
+        <label htmlFor={`potency.${name}`}>{label}</label>
         <PotencyInput
           className="mr-4"
           id={`potency.${name}`}
@@ -69,7 +69,7 @@ export const PotencyTableInput = ({potency, errors, onChange}) => {
 
   return (
     <div
-      className="grid items-center"
+      className="grid items-center gap-2"
       style={{gridTemplateColumns: '240px 120px'}}
     >
       <div className="contents font-bold">
@@ -95,7 +95,7 @@ export const TerpeneInput = ({terps, errors, onChange}) => {
 
   return (
     <div
-      className="grid items-center"
+      className="grid items-center gap-2"
       style={{gridTemplateColumns: '240px 120px'}}
     >
       <div className="contents font-bold">

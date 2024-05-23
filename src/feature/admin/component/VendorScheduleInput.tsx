@@ -159,7 +159,7 @@ const WeekHours = ({week, errors, onChange}) => (
         <DaySchedule
           className="mr-4"
           onChange={daySchedule =>
-            onChange(ArrayUtil.splice(week, ix, 1, daySchedule))
+            onChange(week.toSpliced(ix, 1, daySchedule))
           }
           value={week[ix]}
         />
