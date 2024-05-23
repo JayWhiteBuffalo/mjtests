@@ -1,16 +1,24 @@
 
 export default {
+  orNan: (x: number | null | undefined): number => x ?? NaN,
+
+  unnan: (x: number): number | undefined => (!Number.isNaN(x) ? x : undefined),
+
+  sum(xs: number[]): number {
+    return xs.reduce((x, y) => x + y, 0)
+  },
+
+  roundTo(x: number, precision: number): number {
+    const power = Math.pow(10, precision)
+    return Math.round(x * power) / power
+  },
+
   divide(x, y) {
     let rem = x % y
     if (rem < 0) {
       rem += Math.abs(y)
     }
     return [(x - rem) / y, rem]
-  },
-
-  roundTo(x, precision) {
-    const power = Math.pow(10, precision)
-    return Math.round(x * power) / power
   },
 
   inRange(range, x) {
@@ -28,14 +36,6 @@ export default {
       x += xs[i] * ys[i]
     }
     return x
-  },
-
-  sum(xs) {
-    let sum = 0
-    for (const x of xs) {
-      sum += x
-    }
-    return sum
   },
 
   // A simple linear congruential generator with 16-bit state and 8-bit output.

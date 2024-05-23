@@ -1,11 +1,11 @@
 import FlagObjectUtil from '@util/FlagObjectUtil'
-import FnUtil from '@util/FnUtil'
+import {memoize} from '@util/FnUtil'
 import MathUtil from '@util/MathUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import StringUtil from '@util/StringUtil'
 
 export const ProductFilterUtil = {
-  defaultFilter: FnUtil.memoize(() =>
+  defaultFilter: memoize(() =>
     Object.freeze({
       brands: {},
       concentrateTypes: {},

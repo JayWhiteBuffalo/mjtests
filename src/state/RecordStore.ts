@@ -3,31 +3,34 @@ import {FluxStore} from './Flux'
 import {jsonOnOk} from '@util/FetchUtil'
 import {Present} from '@util/Present'
 
-export class RecordStore extends FluxStore {
-  constructor(fieldName) {
+export class RecordStore<
+  Row,
+  Id extends string | number = string,
+> extends FluxStore<Record<Id, Promise<Row | undefined>>> {
+  promisesById = {} as Record<Id, Promise<Row | undefined>>
+  presentsById = {} as Record<Id, Present<Row | undefined>>
+
+  constructor(public fieldName: string) {
     super()
-    this.promisesById = {}
-    this.presentsById = {}
-    this.fieldName = fieldName
   }
 
   get = () => this.promisesById
 
-  fetch(id) {
+  fetch(id: Id): Promise<Row| undefined> {
     return fetch(`/api/${this.fieldName}/${id}/`)
       .then(jsonOnOk)
   }
 
-  getById = id => this.getPresentById(id).get()
+  getById = (id: Id) => this.getPresentById(id).get()
 
-  getPromiseById = id => {
+  getPromiseById = (id: Id) => {
     if (!this.promisesById[id]) {
       this.promisesById[id] = this.fetch(id)
     }
     return this.promisesById[id]
   }
 
-  getPresentById = id => {
+  getPresentById = (id: Id) => {
     if (!this.presentsById[id]) {
       Present.xferFromPromise(
         this.getPromiseById(id),
@@ -38,7 +41,7 @@ export class RecordStore extends FluxStore {
     return this.presentsById[id]
   }
 
-  invalidate(id) {
+  invalidate(id: Id) {
     delete this.presentsById[id]
     delete this.promisesById[id]
     this.notify()

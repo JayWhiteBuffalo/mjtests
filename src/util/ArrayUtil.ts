@@ -1,19 +1,18 @@
+import {isIterable} from '@util/IteratorUtil'
 
 const ArrayUtil = {
-  sortBy(xs, f) {
+  sortBy<X, Metric>(xs: X[], f: (a: X) => Metric): X[] {
     return xs.toSorted((x, y) => ArrayUtil.valueCompare(f(x), f(y)))
   },
 
-  sortInPlaceBy(xs, f) {
-    return xs.sort((x, y) => ArrayUtil.valueCompare(f(x), f(y)))
+  sortInPlaceBy<X, Metric>(xs: readonly X[], f: (a: X) => Metric): X[] {
+    return [...xs].sort((x, y) => ArrayUtil.valueCompare(f(x), f(y)))
+  },
+  equals<A>(xs: A[], ys: A[]): boolean {
+    return xs.length === ys.length && xs.every((x, i) => x === ys[i])
   },
 
-  equals(xs, ys) {
-    return xs.length === ys.length
-      && xs.every((x, i) => x === ys[i])
-  },
-
-  lexicalCompare(xs, ys) {
+  lexicalCompare<A>(xs: A[], ys: A[]): number {
     for (let i = 0; i < Math.min(xs.length, ys.length); i += 1) {
       const d = ArrayUtil.valueCompare(xs[i], ys[i])
       if (d !== 0) {
@@ -24,14 +23,20 @@ const ArrayUtil = {
     return xs.length - ys.length
   },
 
-  valueCompare(x, y) {
+  valueCompare(x: unknown, y: unknown): number {
     if (typeof x !== typeof y) {
       return ArrayUtil.valueCompare(typeof x, typeof y)
     } else if (typeof x === 'string') {
-      return x < y ? -1 : x === y ? 0 : 1
+      return x < (y as string) ? -1 : x === y ? 0 : 1
     } else if (typeof x === 'number') {
-      return x - y
-    } else if (typeof x === 'object' && x instanceof Array) {
+      return x - (y as number)
+    } else if (typeof x === 'boolean') {
+      return +x - +(y as boolean)
+    } else if (
+      typeof x === 'object' &&
+      x instanceof Array &&
+      y instanceof Array
+    ) {
       return ArrayUtil.lexicalCompare(x, y)
     } else if (x === y) {
       return 0
@@ -40,19 +45,19 @@ const ArrayUtil = {
     }
   },
 
-  range(a, b) {
-    const xs = []
+  range(a: number, b: number): number[] {
+    const xs = [] as number[]
     for (let x = a; x < b; x++) {
       xs.push(x)
     }
     return xs
   },
 
-  distinct(xs, f) {
-    const map = new Map()
-    const ys = []
+  distinct<X, Key = X>(xs: X[], getKey?: (x: X) => Key): X[] {
+    const map = new Map() as Map<Key, true>
+    const ys = [] as X[]
     for (const x of xs) {
-      const key = f ? f(x) : x
+      const key = getKey ? getKey(x) : (x as unknown as Key)
       if (!map.get(key)) {
         map.set(key, true)
         ys.push(x)
@@ -61,13 +66,36 @@ const ArrayUtil = {
     return ys
   },
 
-  splice(xs, start, deleteCount, ...items) {
-    return [...xs.slice(0, start), ...items, ...xs.slice(start + deleteCount)]
-  },
-
-  async asyncFilter(xs, pred) {
+  async asyncFilter<X>(
+    xs: X[],
+    pred: (x: X) => Promise<boolean>,
+  ): Promise<X[]> {
     const tests = await Promise.all(xs.map(x => pred(x)))
     return xs.filter((_, i) => tests[i])
+  },
+
+  // Filters out falsy elements
+  compact<X>(xs: (X | null | undefined)[]): X[] {
+    return xs.filter(x => !!x) as X[]
+  },
+
+  // Flattens a mix of iterables and non-iterables
+  extend<X>(...xs: X[] | X[][]): X[] {
+    const ys = [] as X[]
+    for (const x of xs) {
+      if (isIterable(x)) {
+        for (const xItem of x as X[]) {
+          ys.push(xItem)
+        }
+      } else {
+        ys.push(x as X)
+      }
+    }
+    return ys
+  },
+
+  compactExtend<X>(...xs: (X | X[] | null | undefined)[]): X[] {
+    return ArrayUtil.compact(ArrayUtil.extend(...xs)) as X[]
   },
 }
 

@@ -3,29 +3,41 @@ import {useEffect, useState} from 'react'
 import ObjectUtil from '@util/ObjectUtil'
 import ReObjectUtil from '@util/ReObjectUtil'
 
-export class FluxStore {
+export type Listener<Change = never> = (change?: Change) => void
+
+export class FluxStore<Value = undefined, Change = never> {
+  listenerId: number
+  listeners: Record<number, Listener<Change>>
+
   constructor() {
     this.listenerId = 0
     this.listeners = {}
   }
 
-  get() {}
+  get(): Value {
+    return undefined as Value
+  }
 
-  subscribe(listener) {
-    const listenerId = this.listenerId += 1
+  subscribe(listener: Listener<Change>): () => void {
+    const listenerId = (this.listenerId += 1)
     this.listeners[listenerId] = listener
     return () => delete this.listeners[listenerId]
   }
 
-  notify(change) {
+  notify(change?: Change) {
     for (const listenerId in this.listeners) {
       this.listeners[listenerId](change)
     }
   }
 }
 
-export class ComputedStore extends FluxStore {
-  constructor(fluxStores, f) {
+export class ComputedStore<A> extends FluxStore<A> {
+  fluxStores: FluxStore<unknown>[]
+  f: (...args: unknown[]) => A
+  _dirty: boolean
+  value?: A
+
+  constructor(fluxStores: FluxStore<unknown>[], f: (...args: unknown[]) => A) {
     super()
     this.fluxStores = fluxStores
     this.f = f
@@ -43,27 +55,28 @@ export class ComputedStore extends FluxStore {
     }
   }
 
-  get() {
+  get(): A {
     if (this._dirty) {
       this._dirty = false
       const states = this.fluxStores.map(store => store.get())
       this.value = this.f(...states)
     }
-    return this.value
+    return this.value as A
   }
 }
 
-export class FluxFieldStore extends FluxStore {
-  constructor() {
+export class FluxFieldStore<
+  Value extends Record<string, unknown>,
+> extends FluxStore<Value> {
+  constructor(public value: Value) {
     super()
-    this.value = {}
   }
 
-  get() {
+  get(): Value {
     return this.value
   }
 
-  set(changes) {
+  set(changes: Partial<Value>) {
     const newValue = ReObjectUtil.merge(this.value, changes)
 
     if (this.value !== newValue) {
@@ -76,42 +89,45 @@ export class FluxFieldStore extends FluxStore {
   }
 }
 
-export const FluxContainer = (fluxStores, C) => () =>
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  C(...fluxStores.map(useFluxStore))
-
-export const useFluxStore = fluxStore => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+export const useFluxStore: <Value>(
+  fluxStore: FluxStore<Value>,
+) => Value = fluxStore => {
   const [_, forceUpdate] = useState({})
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    return fluxStore.subscribe(() => forceUpdate({}))
-  }, [fluxStore])
+  useEffect(() => fluxStore.subscribe(() => forceUpdate({})), [fluxStore])
 
   return fluxStore.get()
 }
 
+export type FluxAction = Record<string, unknown> & {type: string}
+export type FluxActionFn = (action: FluxAction) => void
+type FluxActionFns = Record<string, FluxActionFn | unknown>
+
 export class Dispatcher {
+  actions: FluxActionFns
+
   constructor() {
     this.actions = {}
   }
 
-  dispatch(action) {
+  dispatch(action: FluxAction) {
     const actionFn = ObjectUtil.getByPath(this.actions, action.type.split('.'))
     if (typeof actionFn === 'function') {
-      console.info(action)
-      actionFn?.(action)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((window as any).logFluxAction !== false) {
+        console.info(action)
+      }
+      actionFn(action)
     } else {
       console.warn(`Invalid action with type=${action.type}`, action)
     }
   }
 
-  registerActions(actions) {
+  registerActions(actions: FluxActionFns): () => void {
     ObjectUtil.deepMergeInto(this.actions, ObjectUtil.deepClone(actions))
-    return () => ObjectUtil.deepDeleteWith(this.actions, actions)
+    return () => void ObjectUtil.deepDeleteWith(this.actions, actions)
   }
 }
 
 export const dispatcher = new Dispatcher()
-export const dispatch = dispatcher.dispatch.bind(dispatcher)
+export const dispatch: (action: FluxAction) => void =
+  dispatcher.dispatch.bind(dispatcher)

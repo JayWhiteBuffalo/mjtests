@@ -1,4 +1,4 @@
-import FnUtil from '@util/FnUtil'
+import {voidFn} from '@util/FnUtil'
 
 export class SerialFetcher {
   constructor(makeFetch) {
@@ -14,7 +14,7 @@ export class SerialFetcher {
       .catch(error => {
         if (error?.code === 20) {
           // DOMException.ABORT_ERR
-          return new Promise(FnUtil.void)
+          return new Promise(voidFn)
         } else {
           throw error
         }

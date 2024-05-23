@@ -1,5 +1,10 @@
+import {callOptionalCallable, type OptionalCallable} from '@/util/FnUtil'
+import {immerable} from 'immer'
+
+export type PresentStatus = 'done' | 'error' | 'pending'
+
 /*
-An immutable, algebraic data type representing the status of some computation that may fail.
+An immutable, algebraic data type representing the status of some computation that may fail. 
 
 It is either a pending status, an error, or a result:
 
@@ -9,43 +14,56 @@ It is either a pending status, an error, or a result:
 
 Present behaves like a synchronous promise.
 */
-export class Present {
-  constructor(status, valueOrError) {
+export class Present<out Value> {
+  status: PresentStatus
+  value?: Value
+  error?: Error;
+
+  [immerable] = true
+
+  constructor(status: PresentStatus, valueOrError?: Value | Error) {
     this.status = status
     if (status === 'done') {
-      this.value = valueOrError
+      this.value = valueOrError as Value
     } else if (status === 'error') {
-      this.error = valueOrError
+      this.error = valueOrError as Error
     } else {
       this.status = 'pending'
     }
   }
 
-  static resolve(x) { return new Present('done', x) }
-  static reject(error) { return new Present('error', error) }
-  static pend = new Present('pending')
+  static resolve<A>(x: A): Present<A> {
+    return new Present('done', x)
+  }
+  static reject(error: Error): Present<never> {
+    return new Present('error', error) as Present<never>
+  }
+  static pend: Present<never> = new Present('pending')
 
-  then(f, g) {
+  then<B>(
+    f: (a: Value) => B | Present<B>,
+    g?: (error: Error) => B | Present<B>,
+  ): Present<B> {
     if (this.status === 'done' && f) {
       try {
-        const y = f(this.value)
+        const y = f(this.value!)
         return y instanceof Present ? y : new Present('done', y)
       } catch (error) {
         return new Present('error', error)
       }
     } else if (this.status === 'error' && g) {
       try {
-        const y = g(this.error)
+        const y = g(this.error!)
         return y instanceof Present ? y : new Present('done', y)
       } catch (error) {
         return new Present('error', error)
       }
     } else {
-      return this
+      return this as unknown as Present<never>
     }
   }
 
-  finally(f) {
+  finally(f: () => void): Present<Value> {
     if (this.pending()) {
       return this
     }
@@ -58,27 +76,37 @@ export class Present {
     }
   }
 
-  isSettled() { return this.status !== 'pending' }
-  done() { return this.status === 'done'}
-  resolved() { return this.status === 'done'}
-  rejected() { return this.status === 'error'}
-  pending() { return this.status === 'pending'}
+  isSettled(): boolean {
+    return this.status !== 'pending'
+  }
+  done(): boolean {
+    return this.status === 'done'
+  }
+  resolved(): boolean {
+    return this.status === 'done'
+  }
+  rejected(): boolean {
+    return this.status === 'error'
+  }
+  pending(): boolean {
+    return this.status === 'pending'
+  }
 
-  get() {
+  get(): Value | undefined {
     if (this.status === 'done') {
       return this.value
-    } else if (this.status === 'error') {
-      throw this.error
     } else {
       return undefined
     }
   }
 
-  getError() { return this.status === 'error' ? this.error : undefined }
+  getError(): Error | undefined {
+    return this.status === 'error' ? this.error : undefined
+  }
 
-  defined() {
+  defined(): Value {
     if (this.status === 'done') {
-      return this.value
+      return this.value!
     } else if (this.status === 'error') {
       throw this.error
     } else {
@@ -86,55 +114,65 @@ export class Present {
     }
   }
 
-  orElse(y, z) {
+  orElse<Else>(b: Else | ((error?: Error) => Else)): Value | Else {
     if (this.status === 'done') {
-      return this.value
+      return this.value!
     } else if (this.status === 'error') {
-      return typeof y === 'function' ? y(this.error) : y
+      return typeof b === 'function'
+        ? (b as (error: Error) => Else)(this.error!)
+        : b
     } else {
-      return arguments.length === 2
-        ? (typeof z === 'function' ? z() : z)
-        : (typeof y === 'function' ? y() : y)
+      return callOptionalCallable(b)
     }
   }
 
-  orPending(z) {
+  orElse3<B, C>(
+    onError: B | ((error: Error) => B),
+    onPending: OptionalCallable<C>,
+  ): Value | B | C {
     if (this.status === 'done') {
-      return this.value
+      return this.value!
+    } else if (this.status === 'error') {
+      return typeof onError === 'function'
+        ? (onError as (error: Error) => B)(this.error!)
+        : onError
+    } else {
+      return callOptionalCallable(onPending)
+    }
+  }
+
+  orPending<B>(b: OptionalCallable<B>): Value | B {
+    if (this.status === 'done') {
+      return this.value!
     } else if (this.status === 'error') {
       throw this.error
     } else {
-      return typeof z === 'function' ? z() : z
+      return callOptionalCallable(b)
     }
   }
 
-  static all(presents) {
-    const xs = []
+  static all<A>(presents: Present<A>[]): Present<A[]> {
+    const xs: A[] = []
     for (const present of presents) {
       if (present.done()) {
-        xs.push(present.value)
+        xs.push(present.value!)
       } else {
-        return present
+        return present as Present<never>
       }
     }
     return Present.resolve(xs)
   }
 
-  static allSettled(presents) {
-    const xs = []
+  static allSettled<A>(presents: Present<A>[]): Present<Present<A>[]> {
     for (const present of presents) {
-      if (present.done()) {
-        xs.push({status: 'done', value: present.value})
-      } else if (present.rejected()) {
-        xs.push({status: 'error', reason: present.error})
-      } else {
-        return present
+      if (!present.isSettled()) {
+        return present as Present<never>
       }
     }
-    return Present.resolve(xs)
+    return Present.resolve(presents)
   }
 
-  static race(presents) {
+  static race<A>(presents: Present<A>[]): Present<A> {
     for (const present of presents) {
       if (present.done() || present.rejected()) {
         return present
@@ -143,13 +181,13 @@ export class Present {
     return Present.pend
   }
 
-  static any(presents) {
-    const errors = []
+  static any<A>(presents: Present<A>[]): Present<A> {
+    const errors: Error[] = []
     for (const present of presents) {
       if (present.done()) {
         return present
       } else if (present.rejected()) {
-        errors.push(present.error)
+        errors.push(present.error!)
       } else {
         return present
       }
@@ -157,27 +195,51 @@ export class Present {
     return Present.reject(AggregateError(errors))
   }
 
-  toPromise() {
+  toPromise(): Promise<Value> {
     return new Promise((resolve, reject) => {
       if (this.status === 'done') {
-        resolve(this.value)
+        resolve(this.value!)
       } else if (this.status === 'error') {
         reject(this.error)
       }
     })
   }
 
-  static xferFromPromise(promise, setter) {
+  static xferFromPromise<A>(
+    promise: Promise<A>,
+    setter: (present: Present<A>) => void,
+  ): Promise<void> {
     setter(Present.pend)
     return promise.then(
-      value => setter(Present.resolve(value)),
-      error => setter(Present.reject(error)),
+      (value: A) => setter(Present.resolve(value)),
+      (error: Error) => setter(Present.reject(error)),
     )
   }
 
   // Dirty workaround for bad interactions between React and then()
-  reactWorkaround() {
-    this.then = Present.prototype.then;
+  reactWorkaround(): Present<Value> {
+    this.then = Present.prototype.then
     return this
   }
+
+  static fromObject<A>({status, value, error}: PresentObject<A>): Present<A> {
+    return new Present(
+      status,
+      status === 'done' ? value : status === 'error' ? error : undefined,
+    ) as Present<A>
+  }
+
+  toObject(): PresentObject<Value> {
+    return {
+      status: this.status,
+      value: this.value,
+      error: this.error,
+    }
+  }
+}
+
+export type PresentObject<out X> = {
+  status: PresentStatus
+  value?: X
+  error?: unknown
 }
