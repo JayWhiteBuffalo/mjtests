@@ -13,7 +13,10 @@ const RouteActions = {
 }
 
 const FilterActions = {
-  set: ({filter}) => FilterStore.set(filter),
+  set: ({filter}) => {
+    FilterStore.set(filter)
+  },
+
   addTerp: ({terpName}) => {
     const terps = {
       [terpName]: [undefined, undefined],

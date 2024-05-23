@@ -8,6 +8,7 @@ import {prisma} from '@/db'
 import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
+import {custom} from 'zod'
 
 const ProductDto = {
   async canSee(user, productId) {
@@ -93,14 +94,20 @@ const ProductDto = {
     return await ProductDto._getRaw(productId)
   },
 
-  async findMany(options) {
-    options ??= {}
+  async findMany(options = {}) {
+    let extraOrderBy
+    if (options.orderBy?.normalizedTerps) {
+      options = {...options}
+      extraOrderBy = options.orderBy
+      delete options.orderBy
+    }
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawProducts = await prisma.product.findMany(options)
-    return await ArrayUtil.asyncFilter(rawProducts, raw =>
+    const products = await ArrayUtil.asyncFilter(rawProducts, raw =>
       ProductDto.canSee(user, raw.id),
     )
+    return ProductFilterUtil.applyTerpeneSort(products, extraOrderBy)
   },
 
   async createOrUpdate(productId, product) {

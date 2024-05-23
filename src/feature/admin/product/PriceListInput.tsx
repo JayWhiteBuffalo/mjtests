@@ -91,7 +91,6 @@ export const PriceListInput = ({defaultPriceList, errors, onChange}: {
     }
 
     setPriceList(list)
-    console.log(validatePriceList(list))
     onChange(validatePriceList(list))
   }
 

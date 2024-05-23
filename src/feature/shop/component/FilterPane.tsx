@@ -371,6 +371,7 @@ const LocationFilterSection = ({filter, onChange}) => {
           Distance (mi)
         </label>
         <Slider
+          aria-label="Select distance in miles"
           id="location.distance"
           maxValue={bound[1]}
           minValue={bound[0]}
@@ -451,6 +452,7 @@ export const TerpsFilterSection = ({terps, onChange}) => {
     Object.entries(terps),
     ([terpName, _]) => Treemap.terpenesByName[terpName].index,
   )
+
   const terpFilterNodes = entries.map(([terpName, range]) => (
     <TerpFilterItem
       bound={[0, 1]}
@@ -481,17 +483,47 @@ export const TerpsFilterSection = ({terps, onChange}) => {
   )
 }
 
-const FilterRightPane = ({filter, onChange, onRemoveTerp}) => (
-  <div className="py-3 px-2">
-    <ErrorBoundary>
-      <TerpsFilterSection
-        terps={filter.terps}
-        onChange={terps => onChange({terps})}
-        onRemove={onRemoveTerp}
-      />
-    </ErrorBoundary>
-  </div>
-)
+const getMostPotentFilter = terps => {
+  const entries = Object.entries(terps)
+  if (entries.length !== 0) {
+    const [terpName, range] = ArrayUtil.sortBy(entries, ([_, range]) => -range[0])[0]
+    if (range[0] > 0) {
+      return terpName
+    }
+  }
+  return undefined
+}
+
+const FilterRightPane = ({filter, onChange, onRemoveTerp}) => {
+  const onTerpsChange = terps => {
+    const mostPotent = getMostPotentFilter(terps)
+    let sortBy = undefined
+    if (mostPotent) {
+      sortBy = `terps.${mostPotent}`
+    } else if (filter.sortBy.startsWith('terps.')) {
+      sortBy = 'name'
+    }
+    if (sortBy) {
+      onChange({terps, sortBy})
+    } else {
+      onChange({terps})
+    }
+    
+  }
+
+  return (
+    <div className="py-3 px-2">
+      <ErrorBoundary>
+        <TerpsFilterSection
+          terps={filter.terps}
+          onChange={onTerpsChange}
+          onRemove={onRemoveTerp}
+        />
+      </ErrorBoundary>
+    </div>
+
+  )
+}
 
 const FilterPane = ({filter, onChange, onRemoveTerp}) => (
   <form className="FilterPane grid border-t border-gray-300">

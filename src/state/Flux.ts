@@ -70,6 +70,7 @@ export class FluxFieldStore<
 > extends FluxStore<Value> {
   constructor(public value: Value) {
     super()
+    this.value = {}
   }
 
   get(): Value {

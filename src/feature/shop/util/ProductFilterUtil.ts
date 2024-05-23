@@ -1,3 +1,4 @@
+import ArrayUtil from '@/util/ArrayUtil'
 import FlagObjectUtil from '@util/FlagObjectUtil'
 import {memoize} from '@util/FnUtil'
 import MathUtil from '@util/MathUtil'
@@ -252,15 +253,24 @@ export const ProductFilterUtil = {
   },
 
   sortToPrisma(sortBy) {
-    return sortBy === 'distance'
-      ? [{name: 'asc'}] // {distance: 'asc'}
-      //: sortBy === 'price'
-        //? [{price: 'asc'}, {name: 'asc'}]
-        //: sortBy === 'pricePerGram'
-          //? [{pricePerGram: 'asc'}, {name: 'asc'}]
-          : sortBy === 'name'
-            ? {name: 'asc'}
-            : {name: 'asc'}
+    if (sortBy === 'distance') {
+      return {name: 'asc'}
+    } else if (sortBy === 'name') {
+      return {name: 'asc'}
+    // } else if (sortBy === 'price') {
+    //   return [{price: 'asc'}, {name: 'asc'}]
+    // } else if (sortBy === 'pricePerGram') {
+    //   return [{pricePerGram: 'asc'}, {name: 'asc'}]
+    } else if (sortBy.startsWith('terps.')) {
+      return {
+        normalizedTerps: {
+          path: [sortBy.split('.')[1]],
+          sort: 'desc',
+        },
+      }
+    } else {
+      return {name: 'asc'}
+    }
   },
 
   rangeToPrisma(range) {
@@ -314,5 +324,24 @@ export const ProductFilterUtil = {
         equals: true,
       },
     }))
+  },
+
+  applyTerpeneSort(products, orderBy) {
+    let firstSort = orderBy?.normalizedTerps
+    firstSort = firstSort instanceof Array ? firstSort[0] : firstSort
+    const terpName = firstSort?.path?.[0]
+    if (!terpName) {
+      return products
+    }
+
+    const metric = product => {
+      const terpValue = product.normalizedTerps[terpName]
+      if (terpValue == null) {
+        return Infinity
+      }
+      return firstSort.direction === 'asc' ? terpValue : -terpValue
+    }
+
+    return ArrayUtil.sortBy(products, metric)
   },
 }

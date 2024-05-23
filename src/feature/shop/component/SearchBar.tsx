@@ -35,6 +35,7 @@ import {
   useListNavigation,
 } from '@floating-ui/react'
 import {useState, useCallback, useRef, forwardRef} from 'react'
+import {Treemap} from '@/Treemap'
 
 const sortItemProps = [
   {
@@ -55,14 +56,24 @@ const sortItemProps = [
 ]
 
 const SortDropdown = ({sortBy, onChange}) => {
-  const selectedProps = sortItemProps.find(x => x.key === sortBy)
+  let selectedProps = sortItemProps.find(x => x.key === sortBy)
+  const itemProps = sortItemProps
+  if (!selectedProps && sortBy.startsWith('terps.')) {
+    const terpName = sortBy.split('.')[1]
+    selectedProps = {
+      Icon: () => undefined,
+      key: sortBy,
+      label: Treemap.terpenesByName[terpName].name,
+    }
+    itemProps.push(selectedProps)
+  }
 
   return (
     <Dropdown classNames={{content: 'min-w-30'}}>
       <DropdownTrigger>
         <Button
           className="SortDropdown"
-          startContent={<selectedProps.Icon />}
+          startContent={selectedProps.Icon && <selectedProps.Icon />}
           endContent={<HiOutlineChevronDown />}
         >
           Sort: {selectedProps.label}
@@ -73,8 +84,8 @@ const SortDropdown = ({sortBy, onChange}) => {
         aria-label="Product list sort by"
         onAction={key => onChange(key)}
       >
-        {sortItemProps.map(props => (
-          <DropdownItem key={props.key} startContent={<props.Icon />}>
+        {itemProps.map(props => (
+          <DropdownItem key={props.key} startContent={props.Icon && <props.Icon />}>
             {props.label}
           </DropdownItem>
         ))}
