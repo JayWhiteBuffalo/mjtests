@@ -1,8 +1,8 @@
 import ProductDto from '@data/ProductDto'
-import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@/feature/admin/util/Main.jsx'
+import {getRoute as getParentRoute} from '../page'
+import {makeMain} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
-import {ProductPane} from '@feature/admin/product/Pane.jsx'
+import {ProductPane} from '@feature/admin/product/Pane'
 
 export const getRoute = async ({productId, ...params}) => {
   const product = await ProductDto.get(productId)

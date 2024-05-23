@@ -1,5 +1,5 @@
-import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@/feature/admin/util/Main.jsx'
+import {getRoute as getParentRoute} from '../page'
+import {makeMain} from '@/feature/admin/util/Main'
 import {siteName} from '@components/Site'
 import {AlertBox} from '@components/Form'
 

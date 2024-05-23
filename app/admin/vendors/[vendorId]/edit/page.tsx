@@ -1,6 +1,6 @@
 import VendorDto from '@data/VendorDto'
 import {Form} from '@feature/admin/vendor/Form'
-import {getRoute as getParentRoute} from '../page.tsx'
+import {getRoute as getParentRoute} from '../page'
 import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
 import {save, getFormProps} from '@feature/admin/vendor/FormAction'

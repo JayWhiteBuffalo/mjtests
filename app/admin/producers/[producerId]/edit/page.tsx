@@ -1,6 +1,6 @@
 import ProducerDto from '@data/ProducerDto'
 import {Form} from '@feature/admin/producer/Form'
-import {getRoute as getParentRoute} from '../page.tsx'
+import {getRoute as getParentRoute} from '../page'
 import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
 import {save, getFormProps} from '@feature/admin/producer/FormAction'

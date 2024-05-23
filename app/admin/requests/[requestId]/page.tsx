@@ -3,7 +3,7 @@ import {approve, reject} from '@feature/admin/request/FormAction'
 import {RequestPane} from '@feature/admin/request/Pane'
 import {makeMain} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
-import {getRoute as getParentRoute} from '../page.tsx'
+import {getRoute as getParentRoute} from '../page'
 
 export const getRoute = async ({requestId, ...params}) => {
   const request = await BusinessRequestDto.get(requestId)
