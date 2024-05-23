@@ -1,3 +1,3 @@
-import {AuthCodeError} from '@components/auth/AuthCodeError'
+import {AuthCodeError} from '@/feature/auth/component/AuthCodeError'
 
 export default AuthCodeError

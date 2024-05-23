@@ -1,8 +1,8 @@
 import ProductDto from '@data/ProductDto'
-import {getRootPageRouteItem} from '@app/admin/RootPage'
+import {getRootPageRouteItem} from '@/feature/admin/util/RootPage.js'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@app/admin/Main'
-import {ProductTable} from './Table'
+import {makeMain} from '@/feature/admin/util/Main.jsx'
+import {ProductTable} from '@feature/admin/product/Table.jsx'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),

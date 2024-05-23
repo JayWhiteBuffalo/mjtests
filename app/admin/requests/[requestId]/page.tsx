@@ -1,7 +1,7 @@
 import BusinessRequestDto from '@data/BusinessRequestDto'
-import {approve, reject} from '../FormAction'
-import {RequestPane} from '../Pane'
-import {makeMain} from '@app/admin/Main'
+import {approve, reject} from '@feature/admin/request/FormAction'
+import {RequestPane} from '@feature/admin/request/Pane'
+import {makeMain} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
 import {getRoute as getParentRoute} from '../page.tsx'
 

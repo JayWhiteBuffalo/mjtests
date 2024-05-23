@@ -1,7 +1,7 @@
 import ProducerDto from '@data/ProducerDto'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@app/admin/Main'
-import {ProducerPane} from '../Pane'
+import {makeMain} from '@/feature/admin/util/Main.jsx'
+import {ProducerPane} from '@feature/admin/producer/Pane.jsx'
 
 export const getRoute = async ({producerId, ...params}) => {
   const producer = await ProducerDto.get(producerId)

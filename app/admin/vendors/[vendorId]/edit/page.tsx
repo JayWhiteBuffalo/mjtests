@@ -1,9 +1,9 @@
 import VendorDto from '@data/VendorDto'
-import {Form} from '../../Form'
+import {Form} from '@feature/admin/vendor/Form'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain, UnauthorizedPage} from '@app/admin/Main'
+import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
-import {save, getFormProps} from '../../FormAction'
+import {save, getFormProps} from '@feature/admin/vendor/FormAction'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),

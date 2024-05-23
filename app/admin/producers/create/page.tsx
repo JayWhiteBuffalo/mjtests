@@ -1,9 +1,9 @@
 import ProducerDto from '@data/ProducerDto'
-import {Form} from '../Form'
+import {Form} from '@feature/admin/producer/Form'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain, UnauthorizedPage} from '@app/admin/Main'
+import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {ProducerUtil} from '@util/ProducerUtil'
-import {save, getFormProps} from '../FormAction'
+import {save, getFormProps} from '@feature/admin/producer/FormAction'
 
 export const getRoute = async params => {
   return [

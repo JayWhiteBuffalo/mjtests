@@ -1,8 +1,8 @@
 import './Admin.css'
 import type {Metadata} from 'next'
 import UserDto from '@data/UserDto'
-import {AdminNavbar} from './components/Navbar'
-import {AdminSidebar} from './components/Sidebar'
+import {AdminNavbar} from '@feature/admin/component/Navbar'
+import {AdminSidebar} from '@feature/admin/component/Sidebar'
 import {Providers} from './Providers'
 import {siteName} from '@components/Site'
 

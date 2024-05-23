@@ -1,4 +1,4 @@
-import {getRootPageRouteItem} from '@app/admin/RootPage'
+import {getRootPageRouteItem} from '@/feature/admin/util/RootPage.js'
 import {getRoute as getParentRoute} from '../page.tsx'
 import {redirect} from 'next/navigation'
 

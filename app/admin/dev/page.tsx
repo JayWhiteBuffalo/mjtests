@@ -1,8 +1,8 @@
-import {getRootPageRouteItem} from '@app/admin/RootPage'
+import {getRootPageRouteItem} from '@/feature/admin/util/RootPage.js'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@app/admin/Main'
-import {populate, truncateUser, truncateData, assignAdmin} from './FormAction'
-import {TestingToolsSection} from './Pane'
+import {makeMain} from '@/feature/admin/util/Main.jsx'
+import {populate, truncateUser, truncateData, assignAdmin} from '@feature/admin/dev/FormAction.js'
+import {TestingToolsSection} from '@feature/admin/dev/Pane.jsx'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),

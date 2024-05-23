@@ -41,6 +41,7 @@
       "@app/*": ["./app/*"],
       "@components/*": ["./src/components/*"],
       "@data/*": ["./src/data/*"],
+      "@feature/*": ["./src/feature/*"],
       "@util/*": ["./src/util/*"]
     }
   },

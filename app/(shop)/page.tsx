@@ -1,5 +1,5 @@
 import ProductDto from '@data/ProductDto'
-import {AppContainer} from './components/App'
+import {AppContainer} from '@feature/shop/component/App'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
 
 export const generateStaticParams = () => ({searchParams: {}})

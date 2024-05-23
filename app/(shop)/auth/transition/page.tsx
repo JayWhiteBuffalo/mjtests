@@ -1,4 +1,4 @@
-import {Transition} from '@components/auth/Transition'
+import {Transition} from '@/feature/auth/component/Transition'
 import {headers} from 'next/headers'
 
 export default async ({searchParams}) => {

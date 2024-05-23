@@ -1,7 +1,7 @@
-import {apply} from '@app/admin/requests/FormAction'
-import {Form} from '@app/admin/requests/ProducerForm'
+import {apply} from '@/feature/admin/request/FormAction.js'
+import {Form} from '@/feature/admin/request/ProducerForm.jsx'
 import {getRoute as getParentRoute} from '../page.tsx'
-import {makeMain} from '@app/admin/Main'
+import {makeMain} from '@/feature/admin/util/Main.jsx'
 import {GiBarn} from 'react-icons/gi'
 
 export const getRoute = async params => [
