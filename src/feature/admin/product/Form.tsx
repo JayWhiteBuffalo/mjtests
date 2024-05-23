@@ -18,9 +18,9 @@ import {
   useForm,
   FieldLayout,
   FormErrors,
-} from '@components/Form'
-import {DropdownAdapter} from '@/components/DropdownAdapter'
-import {AutocompleteAdapter} from '@/components/AutocompleteAdapter'
+} from '@/feature/shared/component/Form'
+import {DropdownAdapter} from '@/feature/shared/component/DropdownAdapter'
+import {AutocompleteAdapter} from '@/feature/shared/component/AutocompleteAdapter'
 import {PriceListInput} from '@/feature/admin/product/PriceListInput'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')

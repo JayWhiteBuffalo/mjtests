@@ -1,7 +1,7 @@
 'use client'
-import {TMTable, ActionHeaderCell, makeColumns} from '@components/Table'
+import {TMTable, ActionHeaderCell, makeColumns} from '@/feature/shared/component/Table'
 import {Button} from '@nextui-org/react'
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import Link from 'next/link'
 
 const NameCell = ({item: vendor}) => (

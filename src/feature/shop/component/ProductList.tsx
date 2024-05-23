@@ -2,12 +2,12 @@ import './ProductList.css'
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
-import {BlueButton} from '@components/Link'
-import {ErrorBoundary} from '@components/Error'
+import {BlueButton} from '@/feature/shared/component/Link'
+import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {FilteredProductStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
 import {Fragment, useState, useRef} from 'react'
-import {Image} from '@components/Image'
+import {Image} from '@/feature/shared/component/Image'
 import {
   Popover,
   PopoverTrigger,
@@ -16,7 +16,7 @@ import {
   Chip,
 } from '@nextui-org/react'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
-import {TerpeneSelectorItem} from '@components/TerpeneSelector'
+import {TerpeneSelectorItem} from '@/feature/shared/component/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {
   useFloating,

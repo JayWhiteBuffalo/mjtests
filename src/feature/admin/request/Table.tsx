@@ -1,6 +1,6 @@
 'use client'
-import {BlueLink} from '@components/Link'
-import {TMTable, makeColumns} from '@components/Table'
+import {BlueLink} from '@/feature/shared/component/Link'
+import {TMTable, makeColumns} from '@/feature/shared/component/Table'
 
 const reprRequestType = type => {
   if (type === 'vendor') {

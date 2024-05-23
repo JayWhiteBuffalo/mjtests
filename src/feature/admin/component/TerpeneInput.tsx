@@ -1,7 +1,7 @@
 import MathUtil from '@util/MathUtil'
-import {FormattedInput} from '@components/FormattedInput'
+import {FormattedInput} from '@/feature/shared/component/FormattedInput'
 import {forwardRef, Fragment} from 'react'
-import {FieldError} from '@components/Form'
+import {FieldError} from '@/feature/shared/component/Form'
 import {Treemap} from '@/Treemap'
 import {unNan, mapDefined} from '@util/ValidationUtil'
 

@@ -1,11 +1,11 @@
 'use client'
 import NextLink from 'next/link'
-import {AlertBox} from '@/components/Form'
+import {AlertBox} from '@/feature/shared/component/Form'
 import {useZodForm} from '@/util/ZodForm'
 import {AuthSection, AuthTitle} from './AuthSection'
 import {HiOutlineMail} from 'react-icons/hi'
 import {Input, Link, Button} from '@nextui-org/react'
-import {FormErrors} from '@/components/Form'
+import {FormErrors} from '@/feature/shared/component/Form'
 import {resetPassword as resetPasswordAction} from '@/feature/auth/serverAction/ServerAction'
 import {
   resetPasswordSchema,

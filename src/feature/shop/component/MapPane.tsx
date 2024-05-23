@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import {ErrorBoundary} from '@components/Error'
+import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {LayoutStore} from '@feature/shop/state/UIStore'
 import {Spinner} from '@nextui-org/react'
 import {useFluxStore} from '@/state/Flux'

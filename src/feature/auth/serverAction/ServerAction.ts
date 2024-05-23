@@ -3,7 +3,7 @@ import {revalidatePath} from 'next/cache'
 import {redirect} from 'next/navigation'
 import {headers} from 'next/headers'
 import {createServerActionClient} from '@api/SupabaseServer'
-import {defaultReturnTo} from '@/components/Site'
+import {defaultReturnTo} from '@/feature/shared/component/Site'
 import {
   signInSchema,
   signUpApiSchema,

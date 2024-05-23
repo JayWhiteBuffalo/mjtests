@@ -1,4 +1,4 @@
-import {AlertBox} from '@/components/Form'
+import {AlertBox} from '@/feature/shared/component/Form'
 
 export type StatusKey = 'checkEmail' | 'success'
 export type StatusAlertBoxProps = {

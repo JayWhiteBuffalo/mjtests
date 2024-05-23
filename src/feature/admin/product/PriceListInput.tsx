@@ -1,6 +1,6 @@
 import MathUtil from '@util/MathUtil'
-import {FormattedInput} from '@components/FormattedInput'
-import {RemoveButton, RecursiveErrors} from '@components/Form'
+import {FormattedInput} from '@/feature/shared/component/FormattedInput'
+import {RemoveButton, RecursiveErrors} from '@/feature/shared/component/Form'
 import {mapDefined, parseAndUnnan} from '@util/ValidationUtil'
 import {Select, SelectItem} from '@nextui-org/react'
 import {useState} from 'react'

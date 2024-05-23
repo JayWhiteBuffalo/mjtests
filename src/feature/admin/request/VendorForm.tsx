@@ -1,10 +1,10 @@
 'use client'
 import {Button, Input, Textarea} from '@nextui-org/react'
-import {FormattedInput} from '@components/FormattedInput'
+import {FormattedInput} from '@/feature/shared/component/FormattedInput'
 import {formSchema} from './Schema'
 import {orEmpty} from '@util/ValidationUtil'
 import {FormProvider, useController} from 'react-hook-form'
-import {useForm, FieldLayout, FormErrors} from '@components/Form'
+import {useForm, FieldLayout, FormErrors} from '@/feature/shared/component/Form'
 import {VendorUtil} from '@util/VendorUtil'
 import {zodResolver} from '@hookform/resolvers/zod'
 

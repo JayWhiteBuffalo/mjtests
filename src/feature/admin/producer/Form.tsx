@@ -2,11 +2,11 @@
 import {AdminOnlyText} from '@/feature/admin/component/AdminForm'
 import {Button, Input, Textarea} from '@nextui-org/react'
 import {Controller, FormProvider, useController} from 'react-hook-form'
-import {FormattedInput} from '@components/FormattedInput'
+import {FormattedInput} from '@/feature/shared/component/FormattedInput'
 import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@/feature/admin/component/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
-import {useForm, nullResolver, FormErrors, FieldLayout} from '@components/Form'
+import {useForm, nullResolver, FormErrors, FieldLayout} from '@/feature/shared/component/Form'
 import {VendorUtil} from '@util/VendorUtil'
 
 export const Form = ({producer, isAdmin, imageRefs, action}) => {

@@ -1,4 +1,4 @@
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 
 export const AdminOnlyText = ({isAdmin, ...rest}) =>
   isAdmin ? (

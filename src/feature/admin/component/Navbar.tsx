@@ -11,7 +11,7 @@ import {
   DropdownSection,
 } from '@nextui-org/react'
 import {HiMiniArrowRightOnRectangle} from 'react-icons/hi2'
-import {Logo, siteName} from '@components/Site'
+import {Logo, siteName} from '@/feature/shared/component/Site'
 import {signOut} from '@/feature/auth/serverAction/ServerAction'
 
 export const AvatarDropdown = ({user}) => (

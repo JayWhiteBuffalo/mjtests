@@ -1,9 +1,9 @@
 'use client'
 import clsx from 'clsx'
 import {AuditingSection} from '@/feature/admin/component/AuditingSection'
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import {Button} from '@nextui-org/react'
-import {None, InfoSection} from '@components/InfoSection'
+import {None, InfoSection} from '@/feature/shared/component/InfoSection'
 import {AdminPane} from '@/feature/admin/component/Pane'
 
 export const VendorSection = ({vendor}) => (

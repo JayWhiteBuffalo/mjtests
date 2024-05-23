@@ -1,4 +1,4 @@
-import {Unknown, InfoSection} from '@components/InfoSection'
+import {Unknown, InfoSection} from '@/feature/shared/component/InfoSection'
 import {UserLinkContainer} from './User'
 
 export const AuditingFields = ({record, isAdmin}) => (

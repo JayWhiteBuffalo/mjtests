@@ -1,4 +1,4 @@
-import {FormErrors} from '@/components/Form'
+import {FormErrors} from '@/feature/shared/component/Form'
 import {useZodForm} from '@/util/ZodForm'
 import {signInSchema, type SignInData} from '@/feature/auth/Schema'
 import {PasswordInput} from './Input'

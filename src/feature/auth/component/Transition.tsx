@@ -1,6 +1,6 @@
 'use client'
 import NextLink from 'next/link'
-import {defaultReturnTo} from '@/components/Site'
+import {defaultReturnTo} from '@/feature/shared/component/Site'
 import {HiOutlineCheckCircle} from 'react-icons/hi'
 import {Link} from '@nextui-org/react'
 import {useEffect} from 'react'

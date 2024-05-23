@@ -1,7 +1,7 @@
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
-import {siteName} from '@components/Site'
-import {AlertBox} from '@components/Form'
+import {siteName} from '@/feature/shared/component/Site'
+import {AlertBox} from '@/feature/shared/component/Form'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),

@@ -1,6 +1,6 @@
 'use client'
 import ObjectUtil from '@util/ObjectUtil'
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import {
   Checkbox,
   Table,

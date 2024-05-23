@@ -1,6 +1,6 @@
 'use client'
 import {Button} from '@nextui-org/react'
-import {InfoSection} from '@components/InfoSection'
+import {InfoSection} from '@/feature/shared/component/InfoSection'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 

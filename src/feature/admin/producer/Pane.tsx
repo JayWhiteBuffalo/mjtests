@@ -1,10 +1,10 @@
 'use client'
 import Link from 'next/link'
 import {AuditingSection} from '@/feature/admin/component/AuditingSection'
-import {BlueExternalLink} from '@components/Link'
+import {BlueExternalLink} from '@/feature/shared/component/Link'
 import {Button} from '@nextui-org/react'
-import {Image} from '@components/Image'
-import {None, Unknown, InfoSection} from '@components/InfoSection'
+import {Image} from '@/feature/shared/component/Image'
+import {None, Unknown, InfoSection} from '@/feature/shared/component/InfoSection'
 import {PhoneLink} from '@/feature/shop/component/VendorPopup'
 import {AdminPane} from '@/feature/admin/component/Pane'
 

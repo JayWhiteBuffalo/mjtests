@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server'
 import {type EmailOtpType} from '@supabase/supabase-js'
 import {createRouteHandlerClient} from '@api/supabaseServer'
-import {defaultReturnTo} from '@/components/Site'
+import {defaultReturnTo} from '@/feature/shared/component/Site'
 import {throwOnError} from '@util/SupabaseUtil'
 
 // Endpoint for PKCE workflows, implemented around supabase.auth.verifyOtp

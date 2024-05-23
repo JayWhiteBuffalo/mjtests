@@ -1,5 +1,5 @@
 import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
-import {Logo, companyName, siteName} from '@components/Site'
+import {Logo, companyName, siteName} from '@/feature/shared/component/Site'
 import Link from 'next/link'
 
 export const FooterLinkGroup = ({title, children}) => (

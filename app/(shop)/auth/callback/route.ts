@@ -1,7 +1,7 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {createRouteHandlerClient} from '@api/supabaseServer'
-import {defaultReturnTo} from '@/components/Site'
+import {defaultReturnTo} from '@/feature/shared/component/Site'
 import {throwOnError} from '@util/SupabaseUtil'
 import type {AuthError, AuthTokenResponse} from '@supabase/supabase-js'
 

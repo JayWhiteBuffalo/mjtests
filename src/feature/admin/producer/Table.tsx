@@ -1,13 +1,13 @@
 'use client'
 import Link from 'next/link'
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import {Button} from '@nextui-org/react'
 import {
   TMTable,
   ActionHeaderCell,
   makeColumns,
   LocationCell,
-} from '@components/Table'
+} from '@/feature/shared/component/Table'
 
 const NameCell = ({item: producer}) => (
   <BlueLink href={`/admin/producers/${producer.id}`} className="py-4">

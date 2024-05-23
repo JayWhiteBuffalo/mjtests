@@ -3,22 +3,22 @@ import ArrayUtil from '@util/ArrayUtil'
 import MathUtil from '@util/MathUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {CgClose} from 'react-icons/cg'
-import {CheckboxGroup, ButtonCbGroup} from '@components/CheckboxGroup'
+import {CheckboxGroup, ButtonCbGroup} from '@/feature/shared/component/CheckboxGroup'
 import {
   CultivarTypeaheadStore,
   VendorTypeaheadStore,
   BrandTypeaheadStore,
 } from '@feature/shop/state/DataStore'
-import {ErrorBoundary} from '@components/Error'
+import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {FilterStore} from '@feature/shop/state/UIStore'
 import {HiOutlineShoppingBag} from 'react-icons/hi2'
-import {IntervalTextbox} from '@components/IntervalControl'
+import {IntervalTextbox} from '@/feature/shared/component/IntervalControl'
 import {LuClock2} from 'react-icons/lu'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
-import {RemoveButton} from '@components/Form'
+import {RemoveButton} from '@/feature/shared/component/Form'
 import {Slider, Button} from '@nextui-org/react'
-import {SmallMultiDropdown, LargeMultiDropdown} from '@components/MultiDropdown'
-import {TerpeneSelector} from '@components/TerpeneSelector'
+import {SmallMultiDropdown, LargeMultiDropdown} from '@/feature/shared/component/MultiDropdown'
+import {TerpeneSelector} from '@/feature/shared/component/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {useFluxStore, dispatch} from '@/state/Flux'
 

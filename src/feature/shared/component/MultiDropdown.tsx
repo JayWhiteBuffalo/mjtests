@@ -4,8 +4,8 @@ import clsx from 'clsx'
 import FlagObjectUtil from '@util/FlagObjectUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {Button, Checkbox, Input} from '@nextui-org/react'
-import {DropdownMenuButton} from '@components/Dropdown'
-import {ErrorBoundary} from '@components/Error'
+import {DropdownMenuButton} from '@/feature/shared/component/Dropdown'
+import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {HiOutlineChevronDown} from 'react-icons/hi'
 import {
   useFloating,

@@ -1,4 +1,4 @@
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import {UserStore} from '@/feature/admin/state/DataStore'
 import {useFluxStore} from '@/state/Flux'
 

@@ -1,4 +1,4 @@
-import {FieldErrorMessage, FormErrors} from '@/components/Form'
+import {FieldErrorMessage, FormErrors} from '@/feature/shared/component/Form'
 import {useZodForm} from '@/util/ZodForm'
 import {signUpFormSchema, type SignUpApiData} from '@/feature/auth/Schema'
 import {PasswordInput} from './Input'

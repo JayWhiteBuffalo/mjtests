@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import DateUtil from '@util/DateUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {Checkbox, Input} from '@nextui-org/react'
-import {FieldError, RecursiveErrors} from '@components/Form'
+import {FieldError, RecursiveErrors} from '@/feature/shared/component/Form'
 import {
   Fragment,
   forwardRef,

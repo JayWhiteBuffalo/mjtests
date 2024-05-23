@@ -1,6 +1,6 @@
 import {HiHome} from 'react-icons/hi'
 import {makeMain} from '@/feature/admin/util/Main'
-import {siteName} from '@components/Site'
+import {siteName} from '@/feature/shared/component/Site'
 
 export const getRoute = async () => [
   {

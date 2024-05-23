@@ -1,5 +1,5 @@
 import DateUtil from '@util/DateUtil'
-import {BlueExternalLink} from '@components/Link'
+import {BlueExternalLink} from '@/feature/shared/component/Link'
 import {Fragment} from 'react'
 import {MdPhone} from 'react-icons/md'
 import {Rating} from '@mantine/core'

@@ -1,8 +1,8 @@
 'use client'
 import Link from 'next/link'
-import {BlueLink} from '@components/Link'
+import {BlueLink} from '@/feature/shared/component/Link'
 import {Button} from '@nextui-org/react'
-import {TMTable, ActionHeaderCell, makeColumns} from '@components/Table'
+import {TMTable, ActionHeaderCell, makeColumns} from '@/feature/shared/component/Table'
 
 const NameCell = ({item: product}) => (
   <BlueLink href={`/admin/products/${product.id}`}>{product.name}</BlueLink>

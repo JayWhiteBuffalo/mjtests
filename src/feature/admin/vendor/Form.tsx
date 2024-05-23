@@ -3,7 +3,7 @@ import {AdminOnlyText} from '@/feature/admin/component/AdminForm'
 import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
 import {Button, Input, Textarea, RadioGroup, Radio} from '@nextui-org/react'
 import {Controller, FormProvider, useController} from 'react-hook-form'
-import {FormattedInput} from '@components/FormattedInput'
+import {FormattedInput} from '@/feature/shared/component/FormattedInput'
 import {HiMail, HiPhone} from 'react-icons/hi'
 import {ImageInput} from '@/feature/admin/component/ImageInput'
 import {orEmpty} from '@util/ValidationUtil'
@@ -16,7 +16,7 @@ import {
   FieldError,
   FormErrors,
   Watch,
-} from '@components/Form'
+} from '@/feature/shared/component/Form'
 import {VendorScheduleInput} from '@/feature/admin/component/VendorScheduleInput'
 import {VendorUtil} from '@util/VendorUtil'
 

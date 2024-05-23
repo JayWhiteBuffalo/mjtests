@@ -1,7 +1,7 @@
 import './SearchBar.css'
 import {BsGrid, BsGrid3X3} from 'react-icons/bs'
 import {CgSearch} from 'react-icons/cg'
-import {ErrorBoundary} from '@components/Error'
+import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {FiDollarSign} from 'react-icons/fi'
 import {FilterStore, LayoutStore, MapStore} from '@feature/shop/state/UIStore'
 import {useFluxStore, dispatch} from '@/state/Flux'

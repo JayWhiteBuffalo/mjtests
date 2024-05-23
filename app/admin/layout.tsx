@@ -4,7 +4,7 @@ import UserDto from '@data/UserDto'
 import {AdminNavbar} from '@feature/admin/component/Navbar'
 import {AdminSidebar} from '@feature/admin/component/Sidebar'
 import {Providers} from './Providers'
-import {siteName} from '@components/Site'
+import {siteName} from '@/feature/shared/component/Site'
 
 export const metadata: Metadata = {
   title: `${siteName} Management Console`,

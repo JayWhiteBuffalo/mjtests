@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 import {cloudinaryCloudName} from '@api/cloudinary'
-import {FixedHeightImage} from '@components/Image'
+import {FixedHeightImage} from '@/feature/shared/component/Image'
 import {Dropzone, IMAGE_MIME_TYPE} from '@mantine/dropzone'
-import {RecursiveErrors} from '@components/Form'
+import {RecursiveErrors} from '@/feature/shared/component/Form'
 import {TbUpload, TbPhoto, TbX, TbTrash} from 'react-icons/tb'
 import {useCallback, useState} from 'react'
 
