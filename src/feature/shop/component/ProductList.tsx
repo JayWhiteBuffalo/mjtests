@@ -2,12 +2,12 @@ import './ProductList.css'
 import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
-import {BlueButton} from '@/feature/shared/component/Link'
-import {ErrorBoundary} from '@/feature/shared/component/Error'
+import {BlueButton} from '@feature/shared/component/Link'
+import {ErrorBoundary} from '@feature/shared/component/Error'
 import {FilteredProductStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
-import {Fragment, useState, useRef} from 'react'
-import {Image} from '@/feature/shared/component/Image'
+import {useState, useRef} from 'react'
+import {Image} from '@feature/shared/component/Image'
 import {
   Popover,
   PopoverTrigger,
@@ -16,7 +16,7 @@ import {
   Chip,
 } from '@nextui-org/react'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
-import {TerpeneSelectorItem} from '@/feature/shared/component/TerpeneSelector'
+import {TerpeneSelectorItem} from '@feature/shared/component/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {
   useFloating,
@@ -149,8 +149,26 @@ export const ProductAttributeList = ({product}) => (
     {product.potency.thc != null ? (
       <>
         <dt>Total THC</dt>
-        <dd className="ProductPotency">
+        <dd>
           {MathUtil.roundTo(product.potency.thc * 100, 2)}%
+        </dd>
+      </>
+    ) : undefined}
+
+    {product.potency.thca != null ? (
+      <>
+        <dt>THCa</dt>
+        <dd>
+          {MathUtil.roundTo(product.potency.thca * 100, 2)}%
+        </dd>
+      </>
+    ) : undefined}
+
+    {product.potency.delta8 != null ? (
+      <>
+        <dt>Delta-8</dt>
+        <dd>
+          {MathUtil.roundTo(product.potency.delta8 * 100, 2)}%
         </dd>
       </>
     ) : undefined}
@@ -158,7 +176,7 @@ export const ProductAttributeList = ({product}) => (
     {product.potency.cbd > 0 ? (
       <>
         <dt>Total CBD</dt>
-        <dd className="ProductPotency">
+        <dd>
           {MathUtil.roundTo(product.potency.cbd * 100, 2)}%
         </dd>
       </>
@@ -219,9 +237,9 @@ const TerpItem = ({enabled = false, terpName, value}) => {
 }
 
 export const PriceList = ({priceList}) => (
-  <ul>
+  <ul className="flex flex-row flex-wrap justify-center gap-4">
     {priceList.map(({price, weight, weightUnit}) => (
-      <li key={weight}>
+      <li key={weight} className="w-[40%] text-center">
         {weight} {weightUnit} = ${price}
       </li>
     ))}

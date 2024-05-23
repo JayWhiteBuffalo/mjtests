@@ -94,6 +94,7 @@ const ProductDto = {
   },
 
   async findMany(options) {
+    console.log(options)
     options ??= {}
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()

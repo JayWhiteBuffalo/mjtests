@@ -34,10 +34,10 @@ export const PotencyTableInput = ({potency, errors, onChange}) => {
         </div>
       </div>
 
-      {makePotencyRow('thc', 'THC %')}
-      {makePotencyRow('thca', 'THCA %')}
-      {makePotencyRow('delta8', 'Delta-8 %')}
-      {makePotencyRow('cbd', 'CBD %')}
+      {makePotencyRow('thc', 'THC (%)')}
+      {makePotencyRow('thca', 'THCA (%)')}
+      {makePotencyRow('delta8', 'Delta-8 (%)')}
+      {makePotencyRow('cbd', 'CBD (%)')}
 
       <FieldError error={errors} />
     </div>

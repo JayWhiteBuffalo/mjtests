@@ -236,8 +236,8 @@ export const ProductFilterUtil = {
       cultivar: ProductFilterUtil.flagsToPrisma(filter.cultivars),
       //location
       isDraft: false,
-      price: ProductFilterUtil.rangeToPrisma(filter.price),
-      pricePerGram: ProductFilterUtil.rangeToPrisma(filter.pricePerGram),
+      //price: ProductFilterUtil.rangeToPrisma(filter.price),
+      //pricePerGram: ProductFilterUtil.rangeToPrisma(filter.pricePerGram),
       productType: ProductFilterUtil.flagsToPrisma(filter.productTypes),
       subspecies: ProductFilterUtil.flagsToPrisma(filter.subspecies),
       vendor: {
@@ -245,7 +245,7 @@ export const ProductFilterUtil = {
           name: ProductFilterUtil.flagsToPrisma(filter.vendors),
         },
       },
-      weight: ProductFilterUtil.rangeToPrisma(filter.weight),
+      //weight: ProductFilterUtil.rangeToPrisma(filter.weight),
     }
 
     return {where, orderBy: ProductFilterUtil.sortToPrisma(filter.sortBy)}
@@ -254,10 +254,10 @@ export const ProductFilterUtil = {
   sortToPrisma(sortBy) {
     return sortBy === 'distance'
       ? [{name: 'asc'}] // {distance: 'asc'}
-      : sortBy === 'price'
-        ? [{price: 'asc'}, {name: 'asc'}]
-        : sortBy === 'pricePerGram'
-          ? [{pricePerGram: 'asc'}, {name: 'asc'}]
+      //: sortBy === 'price'
+        //? [{price: 'asc'}, {name: 'asc'}]
+        //: sortBy === 'pricePerGram'
+          //? [{pricePerGram: 'asc'}, {name: 'asc'}]
           : sortBy === 'name'
             ? {name: 'asc'}
             : {name: 'asc'}
