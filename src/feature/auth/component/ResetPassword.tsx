@@ -1,38 +1,51 @@
 'use client'
 import NextLink from 'next/link'
-import {AlertBox} from '@components/Form'
+import {AlertBox} from '@/components/Form'
+import {useZodForm} from '@/util/ZodForm'
 import {AuthSection, AuthTitle} from './AuthSection'
 import {HiOutlineMail} from 'react-icons/hi'
 import {Input, Link, Button} from '@nextui-org/react'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {FormErrors, useForm} from '@components/Form'
+import {FormErrors} from '@/components/Form'
 import {resetPassword as resetPasswordAction} from '@/feature/auth/serverAction/ServerAction'
-import {resetPasswordSchema} from '@/feature/auth/Schema'
+import {
+  resetPasswordSchema,
+  type ResetPasswordData,
+} from '@/feature/auth/Schema'
 import {useCallback} from 'react'
 
-const StatusAlertBox = ({status}) =>
+export type StatusKey = 'checkEmail'
+
+export type StatusAlertBoxProps = {
+  status?: StatusKey
+}
+
+const StatusAlertBox = ({status}: StatusAlertBoxProps) =>
   status === 'checkEmail' ? (
     <AlertBox color="warning">
       <p>Check your email for the password reset link</p>
     </AlertBox>
   ) : undefined
 
-export const ResetPasswordForm = ({returnTo}) => {
+type ResetPasswordFormProps = {
+  returnTo?: string
+}
+
+export const ResetPasswordForm = ({returnTo}: ResetPasswordFormProps) => {
   const {
-    handleSubmit,
+    handleAction,
     register,
     formState: {errors, isSubmitting, isSubmitSuccessful},
-  } = useForm({
-    resolver: zodResolver(resetPasswordSchema),
+  } = useZodForm({
+    schema: resetPasswordSchema,
   })
 
   const resetPassword = useCallback(
-    formData => resetPasswordAction(formData, returnTo),
+    (apiData: ResetPasswordData) => resetPasswordAction(apiData, returnTo),
     [returnTo],
   )
 
   return (
-    <form className="flex flex-col gap-3" action={handleSubmit(resetPassword)}>
+    <form className="flex flex-col gap-3" action={handleAction(resetPassword)}>
       <Input
         {...register('email')}
         isRequired
@@ -58,7 +71,11 @@ export const ResetPasswordForm = ({returnTo}) => {
   )
 }
 
-export const ResetPassword = ({returnTo}) => (
+type ResetPasswordProps = {
+  returnTo?: string
+}
+
+export const ResetPassword = ({returnTo}: ResetPasswordProps) => (
   <AuthSection>
     <header>
       <AuthTitle>Reset Password</AuthTitle>
@@ -68,10 +85,7 @@ export const ResetPassword = ({returnTo}) => (
     <p className="text-center">
       <Link
         as={NextLink}
-        href={{
-          pathname: '/auth',
-          query: returnTo ? {returnTo} : {},
-        }}
+        href={`/auth${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
         size="sm"
       >
         Go back to sign in

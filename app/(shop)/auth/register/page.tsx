@@ -1,5 +1,10 @@
 import {EmailAuth} from '@/feature/auth/component/EmailAuth'
 
-export default async ({searchParams}) => (
-  <EmailAuth returnTo={searchParams.returnTo} view="signUp" />
-)
+const Page = async ({
+  searchParams,
+}: {
+  searchParams: {
+    returnTo?: string
+  }
+}) => <EmailAuth returnTo={searchParams.returnTo} view="signUp" />
+export default Page

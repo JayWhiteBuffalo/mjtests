@@ -104,6 +104,27 @@ export const FieldError = ({error, path, className, ...rest}) =>
     </p>
   ) : undefined
 
+export type FieldErrorMessageProps = {
+  id?: string
+  error?: FieldError
+  path?: string[]
+  className?: string
+}
+
+export const FieldErrorMessage = ({
+  id,
+  error,
+  path,
+  className,
+}: FieldErrorMessageProps) =>
+  error?.message != null ? (
+    <p id={id} className={clsx('text-danger text-sm', className)}>
+      {path?.length ? `${path.join('.')}: ` : undefined}
+      {error.message}
+    </p>
+  ) : undefined
+
+
 export const RecursiveErrors = ({errors, showPath}) => (
   <>
     {[...ObjectUtil.dfs(errors)].map(([error, path]) => (

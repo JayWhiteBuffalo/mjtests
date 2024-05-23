@@ -1,14 +1,25 @@
-import {Transition} from '@/feature/auth/component/Transition'
+import {
+  Transition,
+  toTransitionMethod,
+} from '@/feature/auth/component/Transition'
 import {headers} from 'next/headers'
 
-export default async ({searchParams}) => {
+const Page = async ({
+  searchParams,
+}: {
+  searchParams: {
+    method?: string
+    returnTo?: string
+  }
+}) => {
   const referrer = headers().get('Referer')
 
   return (
     <Transition
       autoReturn={referrer != null}
-      method={searchParams.method}
+      method={toTransitionMethod(searchParams.method)}
       returnTo={searchParams.returnTo}
     />
   )
 }
+export default Page

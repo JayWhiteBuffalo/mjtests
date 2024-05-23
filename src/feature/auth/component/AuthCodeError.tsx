@@ -1,5 +1,5 @@
 import NextLink from 'next/link'
-import {defaultReturnTo} from '@components/Site'
+import {defaultReturnTo} from '@/components/Site'
 import {Link} from '@nextui-org/react'
 import {RiErrorWarningLine} from 'react-icons/ri'
 

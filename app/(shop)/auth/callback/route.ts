@@ -1,8 +1,9 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {createRouteHandlerClient} from '@api/supabaseServer'
-import {defaultReturnTo} from '@components/Site'
+import {defaultReturnTo} from '@/components/Site'
 import {throwOnError} from '@util/SupabaseUtil'
+import type {AuthError, AuthTokenResponse} from '@supabase/supabase-js'
 
 // Endpoint for non-PKCE workflows
 export const GET = async (request: NextRequest) => {
@@ -15,7 +16,9 @@ export const GET = async (request: NextRequest) => {
   if (code) {
     const supabase = createRouteHandlerClient()
     try {
-      await supabase.auth.exchangeCodeForSession(code).then(throwOnError)
+      await supabase.auth
+        .exchangeCodeForSession(code)
+        .then(throwOnError<AuthTokenResponse['data'], AuthError>)
 
       if (next) {
         return NextResponse.redirect(

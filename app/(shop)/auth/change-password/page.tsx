@@ -1,5 +1,6 @@
 import {ResetPassword} from '@/feature/auth/component/ResetPassword'
 
-export default async ({searchParams}) => (
+const Page = async ({searchParams}: {searchParams: {returnTo?: string}}) => (
   <ResetPassword returnTo={searchParams.returnTo} />
 )
+export default Page

@@ -4,30 +4,37 @@ import {Button} from '@nextui-org/react'
 import {HiKey} from 'react-icons/hi'
 import {PasswordInput} from './Input'
 import {useCallback} from 'react'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {FormErrors, useForm} from '@components/Form'
-import {updatePasswordSchema} from '@/feature/auth/Schema'
+import {FormErrors} from '@/components/Form'
+import {useZodForm} from '@/util/ZodForm'
+import {
+  updatePasswordFormSchema,
+  type UpdatePasswordApiData,
+} from '@/feature/auth/Schema'
 import {updatePassword as updatePasswordAction} from '@/feature/auth/serverAction/ServerAction'
 
-export const UpdatePasswordForm = ({returnTo}) => {
+export type UpdatePasswordFormProps = {
+  returnTo?: string
+}
+
+export const UpdatePasswordForm = ({returnTo}: UpdatePasswordFormProps) => {
   const {
-    handleSubmit,
+    handleAction,
     register,
     formState: {errors, isSubmitting},
-  } = useForm({
-    resolver: zodResolver(updatePasswordSchema),
+  } = useZodForm({
+    schema: updatePasswordFormSchema,
   })
 
   const updatePassword = useCallback(
-    formData => updatePasswordAction(formData, returnTo),
+    (apiData: UpdatePasswordApiData) => updatePasswordAction(apiData, returnTo),
     [returnTo],
   )
 
   return (
-    <form className="flex flex-col gap-3" action={handleSubmit(updatePassword)}>
+    <form className="flex flex-col gap-3" action={handleAction(updatePassword)}>
       <PasswordInput
         {...register('password')}
-        errorMessage={errors.password?.message}
+        errorMessage={errors.password?.message as string | undefined}
         isInvalid={errors.password != null}
         isRequired
         label="New Password"
@@ -36,11 +43,11 @@ export const UpdatePasswordForm = ({returnTo}) => {
 
       <PasswordInput
         {...register('confirmPassword')}
+        errorMessage={errors.confirmPassword?.message as string | undefined}
         isInvalid={errors.confirmPassword != null}
         isRequired
         label="Confirm Password"
         placeholder="Confirm your password"
-        errorMessage={errors.confirmPassword?.message}
       />
 
       <Button
@@ -58,7 +65,11 @@ export const UpdatePasswordForm = ({returnTo}) => {
   )
 }
 
-export const UpdatePassword = () => (
+export type UpdatePasswordProps = {
+  returnTo?: string
+}
+
+export const UpdatePassword = ({returnTo}: UpdatePasswordProps) => (
   <AuthSection>
     <header>
       <AuthTitle>Update Password</AuthTitle>

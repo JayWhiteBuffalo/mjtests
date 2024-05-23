@@ -1,5 +1,10 @@
 import {UpdatePassword} from '@/feature/auth/component/UpdatePassword'
 
-export default async ({searchParams}) => (
-  <UpdatePassword returnTo={searchParams.returnTo} />
-)
+const Page = async ({
+  searchParams,
+}: {
+  searchParams: {
+    returnTo?: string
+  }
+}) => <UpdatePassword returnTo={searchParams.returnTo} />
+export default Page

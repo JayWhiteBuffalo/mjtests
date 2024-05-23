@@ -2,26 +2,43 @@
 import {revalidatePath} from 'next/cache'
 import {redirect} from 'next/navigation'
 import {headers} from 'next/headers'
-import {createServerActionClient} from '@api/supabaseServer'
-import {defaultReturnTo} from '@components/Site'
+import {createServerActionClient} from '@api/SupabaseServer'
+import {defaultReturnTo} from '@/components/Site'
 import {
   signInSchema,
-  signUpSchema,
+  signUpApiSchema,
   resetPasswordSchema,
   signInWithOAuthSchema,
-  updatePasswordSchema,
+  type UpdatePasswordApiData,
+  updatePasswordApiSchema,
+  type SignInData,
+  type SignUpApiData,
+  type ResetPasswordData,
 } from '../Schema'
 import {throwOnError} from '@util/SupabaseUtil'
+import {
+  AuthError,
+  type AuthResponse,
+  type AuthTokenResponsePassword,
+  type OAuthResponse,
+  type Provider,
+} from '@supabase/supabase-js'
+import type {ZodResponse} from '@/util/ZodForm'
 
-export const signIn = async (formData, returnTo = defaultReturnTo) => {
+export const signIn = async (
+  apiData: SignInData,
+  returnTo = defaultReturnTo,
+) => {
   const supabase = createServerActionClient()
-  const result = signInSchema.safeParse(formData)
+  const result = signInSchema.safeParse(apiData)
   if (!result.success) {
     return {issues: result.error.issues}
   }
 
   try {
-    await supabase.auth.signInWithPassword(result.data).then(throwOnError)
+    await supabase.auth
+      .signInWithPassword(result.data)
+      .then(throwOnError<AuthTokenResponsePassword['data'], AuthError>)
   } catch (error) {
     return {error: error.message}
   }
@@ -30,11 +47,15 @@ export const signIn = async (formData, returnTo = defaultReturnTo) => {
   redirect(returnTo)
 }
 
-const makeReturnToUrl = returnTo => `http://${headers().get('Host')}${returnTo}`
+const makeReturnToUrl = (returnTo: string) =>
+  `http://${headers().get('Host')}${returnTo}`
 
-export const signUp = async (formData, returnTo = defaultReturnTo) => {
+export const signUp = async (
+  apiData: SignUpApiData,
+  returnTo: string = defaultReturnTo,
+): Promise<ZodResponse<AuthResponse['data']>> => {
   const supabase = createServerActionClient()
-  const result = signUpSchema.safeParse(formData)
+  const result = signUpApiSchema.safeParse(apiData)
   if (!result.success) {
     return {issues: result.error.issues}
   }
@@ -62,9 +83,12 @@ export const signOut = async () => {
   redirect('/auth')
 }
 
-export const resetPassword = async (formData, returnTo = defaultReturnTo) => {
+export const resetPassword = async (
+  apiData: ResetPasswordData,
+  returnTo: string = defaultReturnTo,
+) => {
   const supabase = createServerActionClient()
-  const result = resetPasswordSchema.safeParse(formData)
+  const result = resetPasswordSchema.safeParse(apiData)
   if (!result.success) {
     return {issues: result.error.issues}
   }
@@ -76,13 +100,16 @@ export const resetPassword = async (formData, returnTo = defaultReturnTo) => {
       })
       .then(throwOnError)
   } catch (error) {
-    return {error: error.message}
+    return {error: error.message as string}
   }
 }
 
-export const updatePassword = async (formData, returnTo = defaultReturnTo) => {
+export const updatePassword = async (
+  apiData: UpdatePasswordApiData,
+  returnTo: string = defaultReturnTo,
+): Promise<ZodResponse<undefined>> => {
   const supabase = createServerActionClient()
-  const result = updatePasswordSchema.safeParse(formData)
+  const result = updatePasswordApiSchema.safeParse(apiData)
   if (!result.success) {
     return {issues: result.error.issues}
   }
@@ -95,10 +122,13 @@ export const updatePassword = async (formData, returnTo = defaultReturnTo) => {
   redirect(`/auth/transition?method=recovery&returnTo=${returnTo}`)
 }
 
-const makePkceRedirect = returnTo =>
+const makePkceRedirect = (returnTo: string) =>
   `http://${headers().get('Host')}/auth/callback?next=${encodeURIComponent(returnTo)}`
 
-export const signInWithOAuth = async (provider, returnTo = defaultReturnTo) => {
+export const signInWithOAuth = async (
+  provider: Provider,
+  returnTo = defaultReturnTo,
+) => {
   const supabase = createServerActionClient()
   provider = signInWithOAuthSchema.parse(provider)
 
@@ -109,7 +139,7 @@ export const signInWithOAuth = async (provider, returnTo = defaultReturnTo) => {
         redirectTo: makePkceRedirect(returnTo),
       },
     })
-    .then(throwOnError)
+    .then(throwOnError<OAuthResponse['data'], AuthError>)
 
   if (url) {
     redirect(url)

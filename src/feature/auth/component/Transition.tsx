@@ -1,27 +1,42 @@
 'use client'
 import NextLink from 'next/link'
-import {defaultReturnTo} from '@components/Site'
+import {defaultReturnTo} from '@/components/Site'
 import {HiOutlineCheckCircle} from 'react-icons/hi'
 import {Link} from '@nextui-org/react'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 
-const messages: Record<string, string> = {
-  recovery: 'Your password has been updated.',
-  default: 'Processing…',
-  /*
-  password: 'Logging in…',
-  otp: 'Verifying OTP…',
-  exchange: 'Exchanging session…',
+export type TransitionMethod =
+  | 'recovery'
+  | 'default'
+  | 'password'
+  | 'otp'
+  | 'exchange'
+  | 'code'
+
+export const toTransitionMethod = (method?: string): TransitionMethod =>
+  method && method in messages ? (method as TransitionMethod) : 'default'
+
+const messages: Record<TransitionMethod, string> = {
   code: 'Verifying code…',
-  */
+  default: 'Processing…',
+  exchange: 'Exchanging session…',
+  otp: 'Verifying OTP…',
+  password: 'Logging in…',
+  recovery: 'Your password has been updated.',
+}
+
+type TransitionProps = {
+  method?: TransitionMethod
+  returnTo?: string
+  autoReturn: boolean
 }
 
 export const Transition = ({
   method,
   returnTo = defaultReturnTo,
   autoReturn = true,
-}) => {
+}: TransitionProps) => {
   const router = useRouter()
 
   useEffect(() => {

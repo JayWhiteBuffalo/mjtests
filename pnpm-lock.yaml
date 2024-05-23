@@ -38,9 +38,6 @@ importers:
       '@supabase/ssr':
         specifier: ^0.3.0
         version: 0.3.0(@supabase/supabase-js@2.43.3)
-      '@supabase/supabase-js':
-        specifier: 2.43.3
-        version: 2.43.3
       assert:
         specifier: ^2.1.0
         version: 2.1.0
@@ -105,6 +102,9 @@ importers:
       '@supabase/postgrest-js':
         specifier: ^1.15.3
         version: 1.15.3
+      '@supabase/supabase-js':
+        specifier: 2.43.3
+        version: 2.43.3
       '@types/leaflet':
         specifier: ^1.9.12
         version: 1.9.12
