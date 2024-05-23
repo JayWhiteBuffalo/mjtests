@@ -55,7 +55,7 @@ export default {
     // the International Union of Geodesy and Geophysics,
     // see https://rosettacode.org/wiki/Haversine_formula
     const R = 6371000
-    var rad = Math.PI / 180,
+    const rad = Math.PI / 180,
       lat1 = latlng1[0] * rad,
       lat2 = latlng2[0] * rad,
       sinDLat = Math.sin((latlng2[0] - latlng1[0]) * rad / 2),

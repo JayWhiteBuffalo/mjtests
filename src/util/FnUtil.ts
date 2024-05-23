@@ -14,8 +14,7 @@ const FnUtil = {
 
   // Memoized variant of the Y combinator
   memoizeY(f) {
-    let yf
-    yf = FnUtil.memoize(x => f(x, yf))
+    const yf = FnUtil.memoize(x => f(x, yf))
     return yf
   },
 }
