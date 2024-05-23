@@ -1,4 +1,3 @@
-import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
 import {cloudinaryCloudName} from '@api/cloudinary'
 import {FixedHeightImage} from '@components/Image'
@@ -106,7 +105,7 @@ export const ImageInput = ({
         body: JSON.stringify({imageRefs: newImageRefs}),
       })
     },
-    [onChange, mainImageRefId, imageRefs, imageRefFields],
+    [onChange, imageRefs, imageRefFields],
   )
 
   const onDelete = useCallback(

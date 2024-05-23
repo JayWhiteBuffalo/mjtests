@@ -1,55 +1,9 @@
-import ArrayUtil from '@util/ArrayUtil'
 import MathUtil from '@util/MathUtil'
-import ObjectUtil from '@util/ObjectUtil'
 import {FormattedInput} from '@components/FormattedInput'
 import {forwardRef, Fragment} from 'react'
-import {RemoveButton, FieldError} from '@components/Form'
-import {TerpeneSelector} from '@components/TerpeneSelector'
+import {FieldError} from '@components/Form'
 import {Treemap} from '@/Treemap'
 import {unNan, mapDefined} from '@util/ValidationUtil'
-
-/*
-export const TerpeneInputStyle1 = ({terps, errors, onChange}) => {
-  const entries = ArrayUtil.sortBy(Object.entries(terps), ([terpName, _]) => Treemap.terpenesByName[terpName].index)
-
-  return (
-    <div
-      className="grid items-center"
-      style={{gridTemplateColumns: '240px 120px max-content'}}
-    >
-      <div className="contents font-bold">
-        <p>Terpene</p>
-        <div>
-          <p>Concentration</p>
-          <span className="text-xs font-normal">(% by weight)</span>
-        </div>
-        <p />
-      </div>
-
-      {entries.map(([terpName, value]) =>
-        <Fragment key={terpName}>
-          <div className="contents">
-            <label htmlFor={`terps.${terpName}`}>{terpName}</label>
-            <PotencyInput
-              className="mr-4"
-              id={`terps.${terpName}`}
-              onChange={value => onChange({...terps, [terpName]: value})}
-              value={value}
-            />
-            <RemoveButton onClick={() => onChange(ObjectUtil.delete(terps, terpName))} />
-          </div>
-          <FieldError className="col-end-[-1]" error={errors?.[terpName]} />
-        </Fragment>
-      )}
-
-      <TerpeneSelector
-        onSelect={terpName => onChange({[terpName]: undefined, ...terps})}
-      />
-      <FieldError error={errors} />
-    </div>
-  )
-}
-*/
 
 export const PotencyTableInput = ({potency, errors, onChange}) => {
   const makePotencyRow = (name, label) => (
