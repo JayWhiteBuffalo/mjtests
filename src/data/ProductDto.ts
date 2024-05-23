@@ -48,7 +48,7 @@ const ProductDto = {
   async _getRaw(productId) {
     return await prisma.product.findUnique({
       where: {id: productId},
-      include: {}
+      include: {},
     })
   },
 
@@ -70,11 +70,16 @@ const ProductDto = {
     }
 
     if (filter.location.distance != null) {
-      products = products.filter(product => ProductFilterUtil.testLocationFilter(filter.location, product))
+      products = products.filter(product =>
+        ProductFilterUtil.testLocationFilter(filter.location, product),
+      )
     }
 
     if (filter.sortBy === 'distance') {
-      ArrayUtil.sortInPlaceBy(products, x => [x.vendor.distance ?? Infinity, x.name])
+      ArrayUtil.sortInPlaceBy(products, x => [
+        x.vendor.distance ?? Infinity,
+        x.name,
+      ])
     }
 
     return products
@@ -82,7 +87,7 @@ const ProductDto = {
 
   async get(productId) {
     const user = await UserDto.getCurrent()
-    if (!await ProductDto.canSee(user, productId)) {
+    if (!(await ProductDto.canSee(user, productId))) {
       return null
     }
     return await ProductDto._getRaw(productId)
@@ -93,14 +98,25 @@ const ProductDto = {
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawProducts = await prisma.product.findMany(options)
-    return await ArrayUtil.asyncFilter(rawProducts, raw => ProductDto.canSee(user, raw.id))
+    return await ArrayUtil.asyncFilter(rawProducts, raw =>
+      ProductDto.canSee(user, raw.id),
+    )
   },
 
   async createOrUpdate(productId, product) {
     const user = await UserDto.getCurrent()
-    assert(productId ? await ProductDto.canEdit(user, productId) : await ProductDto.canCreate(user))
-    assert(!product.vendorId || await ProductDto.canEdit(user, product.vendorId))
-    assert(!product.producerId || await ProducerDto.canEdit(user, product.producerId))
+    assert(
+      productId
+        ? await ProductDto.canEdit(user, productId)
+        : await ProductDto.canCreate(user),
+    )
+    assert(
+      !product.vendorId || (await ProductDto.canEdit(user, product.vendorId)),
+    )
+    assert(
+      !product.producerId ||
+        (await ProducerDto.canEdit(user, product.producerId)),
+    )
     ProductUtil.addIndexes(product)
 
     if (productId) {
@@ -113,17 +129,18 @@ const ProductDto = {
         },
       })
       return productId
-
     } else {
       const id = nanoid()
       await prisma.product.createMany({
-        data: [{
-          ...product,
-          id,
-          createdById: user.id,
-          updatedById: user.id,
-          slug: id,
-        }],
+        data: [
+          {
+            ...product,
+            id,
+            createdById: user.id,
+            updatedById: user.id,
+            slug: id,
+          },
+        ],
       })
       return id
     }

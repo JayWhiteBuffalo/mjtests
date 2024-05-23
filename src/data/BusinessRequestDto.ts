@@ -45,19 +45,21 @@ const BusinessRequestDto = {
 
   async _getRaw(requestId) {
     return await prisma.businessRequest.findUnique({
-      where: {id: requestId}
+      where: {id: requestId},
     })
   },
 
   async findMany(options) {
     const user = await UserDto.getCurrent()
     const rawRequests = await prisma.businessRequest.findMany(options)
-    return await ArrayUtil.asyncFilter(rawRequests, raw => BusinessRequestDto.canSee(user, raw.id))
+    return await ArrayUtil.asyncFilter(rawRequests, raw =>
+      BusinessRequestDto.canSee(user, raw.id),
+    )
   },
 
   async get(requestId) {
     const user = await UserDto.getCurrent()
-    if (!await BusinessRequestDto.canSee(user, requestId)) {
+    if (!(await BusinessRequestDto.canSee(user, requestId))) {
       return null
     }
     return await BusinessRequestDto._getRaw(requestId)
@@ -68,12 +70,14 @@ const BusinessRequestDto = {
     assert(await BusinessRequestDto.canCreate(user))
     const id = nanoid()
     await prisma.businessRequest.createMany({
-      data: [{
-        ...request,
-        id,
-        createdById: user.id,
-        updatedById: user.id,
-      }],
+      data: [
+        {
+          ...request,
+          id,
+          createdById: user.id,
+          updatedById: user.id,
+        },
+      ],
     })
     return id
   },

@@ -56,32 +56,41 @@ export const dbSchema = z.object({
   weight: z.number().min(0).safe().nullable(),
 })
 
-export const preprocessFormData = ({isDraft}) => formData => {
-  const product = {
-    ...formData,
-    batch: unempty(formData.batch) ?? null,
-    brand: unempty(formData.brand) ?? null,
-    concentrateType: formData.concentrateType ?? null,
-    cultivar: unempty(formData.cultivar) ?? null,
-    flags: {},
-    isDraft,
-    mainImageRefId: formData.mainImageRefId ?? null,
-    name: unempty(formData.name) ?? null,
-    potency: ObjectUtil.mapValue(formData.potency, unNan),
-    price: unNan(formData.price) ?? null,
-    producerId: formData.producerId ?? null,
-    productType: formData.productType ?? null,
-    slug: unempty(formData.slug) ?? null,
-    subspecies: formData.subspecies ?? null,
-    terps: ObjectUtil.mapValue(formData.terps, unNan),
-    vendorId: formData.vendorId ?? null,
-    weight: unNan(formData.weight) ?? null,
+export const preprocessFormData =
+  ({isDraft}) =>
+  formData => {
+    const product = {
+      ...formData,
+      batch: unempty(formData.batch) ?? null,
+      brand: unempty(formData.brand) ?? null,
+      concentrateType: formData.concentrateType ?? null,
+      cultivar: unempty(formData.cultivar) ?? null,
+      flags: {},
+      isDraft,
+      mainImageRefId: formData.mainImageRefId ?? null,
+      name: unempty(formData.name) ?? null,
+      potency: ObjectUtil.mapValue(formData.potency, unNan),
+      price: unNan(formData.price) ?? null,
+      producerId: formData.producerId ?? null,
+      productType: formData.productType ?? null,
+      slug: unempty(formData.slug) ?? null,
+      subspecies: formData.subspecies ?? null,
+      terps: ObjectUtil.mapValue(formData.terps, unNan),
+      vendorId: formData.vendorId ?? null,
+      weight: unNan(formData.weight) ?? null,
+    }
+    product.pricePerGram =
+      product.price !== null && product.weight !== null
+        ? product.price / product.weight
+        : null
+    return product
   }
-  product.pricePerGram = product.price !== null && product.weight !== null
-    ? product.price / product.weight
-    : null
-  return product
-}
 
-export const publishFormSchema = z.preprocess(preprocessFormData({isDraft: false}), publishDbSchema)
-export const draftFormSchema = z.preprocess(preprocessFormData({isDraft: true}), dbSchema)
+export const publishFormSchema = z.preprocess(
+  preprocessFormData({isDraft: false}),
+  publishDbSchema,
+)
+export const draftFormSchema = z.preprocess(
+  preprocessFormData({isDraft: true}),
+  dbSchema,
+)

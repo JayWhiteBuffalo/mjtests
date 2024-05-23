@@ -7,11 +7,15 @@ import {z} from 'zod'
 const daySchedule = z.union([
   z.literal('unknown'),
   z.literal('closed'),
-  z.number().min(0).max(48 * 3600)
-    .array().length(2)
-      .refine(([a, b]) => b - a <= 24 * 3600)
-      .refine(([a, b]) => a < b)
-      .refine(([a, _]) => a < 24 * 3600),
+  z
+    .number()
+    .min(0)
+    .max(48 * 3600)
+    .array()
+    .length(2)
+    .refine(([a, b]) => b - a <= 24 * 3600)
+    .refine(([a, b]) => a < b)
+    .refine(([a, _]) => a < 24 * 3600),
 ])
 
 const schedule = z.object({
@@ -22,13 +26,14 @@ const schedule = z.object({
   ),
 })
 
-export const licenseNumber = z.string().regex(VendorUtil.ommaNumberPattern, 'Invalid format')
+export const licenseNumber = z
+  .string()
+  .regex(VendorUtil.ommaNumberPattern, 'Invalid format')
 export const licenseState = z.literal('Oklahoma')
-export const license = 
-  z.object({
-    number: licenseNumber.optional(),
-    state: licenseState.optional(),
-  })
+export const license = z.object({
+  number: licenseNumber.optional(),
+  state: licenseState.optional(),
+})
 
 export const dbSchema = z.object({
   contact: z.object({
@@ -45,9 +50,7 @@ export const dbSchema = z.object({
     address: z.string().min(10).max(300),
   }),
   mainImageRefId: z.string().nullable(),
-  signupStatus: z.object({
-
-  }),
+  signupStatus: z.object({}),
   name: z.string().min(1).max(100),
   operatingStatus: z.enum(['open', 'temporarilyClosed', 'permanentlyClosed']),
   schedule,

@@ -8,7 +8,7 @@ import {useRouter} from 'next/navigation'
 
 const messages: Record<string, string> = {
   recovery: 'Your password has been updated.',
-  default: 'Processing…'
+  default: 'Processing…',
   /*
   password: 'Logging in…',
   otp: 'Verifying OTP…',
@@ -17,7 +17,11 @@ const messages: Record<string, string> = {
   */
 }
 
-export const Transition = ({method, returnTo = defaultReturnTo, autoReturn = true}) => {
+export const Transition = ({
+  method,
+  returnTo = defaultReturnTo,
+  autoReturn = true,
+}) => {
   const router = useRouter()
 
   useEffect(() => {
@@ -31,28 +35,19 @@ export const Transition = ({method, returnTo = defaultReturnTo, autoReturn = tru
     <div className="flex items-center flex-col text-white w-72 gap-4">
       <HiOutlineCheckCircle className="w-24 h-24 text-success" />
 
-      <p>
-        {messages[method ?? 'default']}
-      </p>
+      <p>{messages[method ?? 'default']}</p>
 
-      {
-        autoReturn 
-          ? <p>Redirecting…</p>
-          : undefined
-      }
+      {autoReturn ? <p>Redirecting…</p> : undefined}
 
       <Link as={NextLink} href={returnTo}>
         Continue
       </Link>
 
-      {
-        returnTo !== defaultReturnTo
-          ? <Link as={NextLink} href={defaultReturnTo}>
-              Return Home
-            </Link>
-          : undefined
-      }
+      {returnTo !== defaultReturnTo ? (
+        <Link as={NextLink} href={defaultReturnTo}>
+          Return Home
+        </Link>
+      ) : undefined}
     </div>
   )
 }
-

@@ -6,10 +6,13 @@ import {ProductPane} from '../Pane.tsx'
 
 export const getRoute = async ({productId, ...params}) => {
   const product = await ProductDto.get(productId)
-  return [...(await getParentRoute(params)), {
-    name: product?.name,
-    segment: productId,
-  }]
+  return [
+    ...(await getParentRoute(params)),
+    {
+      name: product?.name,
+      segment: productId,
+    },
+  ]
 }
 
 const Page = async ({user, productId}) => {

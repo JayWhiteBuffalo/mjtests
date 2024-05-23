@@ -1,4 +1,3 @@
-
 export default {
   orNan: (x: number | null | undefined): number => x ?? NaN,
 
@@ -22,12 +21,14 @@ export default {
   },
 
   inRange(range, x) {
-    return (range[0] === undefined || range[0] <= x)
-      && (range[1] === undefined || x <= range[1])
+    return (
+      (range[0] === undefined || range[0] <= x) &&
+      (range[1] === undefined || x <= range[1])
+    )
   },
 
   mapRange(range, f) {
-    return range.map(x => x !== undefined ? f(x) : x)
+    return range.map(x => (x !== undefined ? f(x) : x))
   },
 
   dot(xs, ys) {
@@ -39,7 +40,7 @@ export default {
   },
 
   // A simple linear congruential generator with 16-bit state and 8-bit output.
-  lcg8: function*(seed) {
+  lcg8: function* (seed) {
     const iter = state => (25385 * state + 1) % 0x10000
     let state = iter(seed != null ? seed % 0x10000 : 0)
     while (true) {
@@ -58,10 +59,11 @@ export default {
     const rad = Math.PI / 180,
       lat1 = latlng1[0] * rad,
       lat2 = latlng2[0] * rad,
-      sinDLat = Math.sin((latlng2[0] - latlng1[0]) * rad / 2),
-      sinDLon = Math.sin((latlng2[1] - latlng1[1]) * rad / 2),
-      a = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon,
-      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+      sinDLat = Math.sin(((latlng2[0] - latlng1[0]) * rad) / 2),
+      sinDLon = Math.sin(((latlng2[1] - latlng1[1]) * rad) / 2),
+      a =
+        sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon,
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
   },
 }

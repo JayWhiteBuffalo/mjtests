@@ -52,7 +52,7 @@ export const TerpeneInputStyle1 = ({terps, errors, onChange}) => {
 */
 
 export const PotencyTableInput = ({potency, errors, onChange}) => {
-  const makePotencyRow = name =>
+  const makePotencyRow = name => (
     <>
       <div className="contents">
         <label htmlFor={`potency.${name}`}>{name}</label>
@@ -65,6 +65,7 @@ export const PotencyTableInput = ({potency, errors, onChange}) => {
       </div>
       <FieldError className="col-end-[-1]" error={errors?.[name]} />
     </>
+  )
 
   return (
     <div
@@ -104,7 +105,7 @@ export const TerpeneInput = ({terps, errors, onChange}) => {
           <span className="text-xs font-normal">(% by weight)</span>
         </div>
       </div>
-      {terpProps.map(({name}) =>
+      {terpProps.map(({name}) => (
         <Fragment key={name}>
           <div className="contents">
             <label htmlFor={`terps.${name}`}>{name}</label>
@@ -117,7 +118,7 @@ export const TerpeneInput = ({terps, errors, onChange}) => {
           </div>
           <FieldError className="col-end-[-1]" error={errors?.[name]} />
         </Fragment>
-      )}
+      ))}
 
       <FieldError error={errors} />
     </div>
@@ -137,9 +138,10 @@ const formatPercent = x => {
   }
 }
 
-const parsePercent = x => mapDefined(unNan(x), x => MathUtil.roundTo(x / 100, 6))
+const parsePercent = x =>
+  mapDefined(unNan(x), x => MathUtil.roundTo(x / 100, 6))
 
-export const PotencyInput = forwardRef(({...rest}, ref) =>
+export const PotencyInput = forwardRef(({...rest}, ref) => (
   <FormattedInput
     format={formatPercent}
     parse={parsePercent}
@@ -148,5 +150,5 @@ export const PotencyInput = forwardRef(({...rest}, ref) =>
     step={1e-4}
     {...rest}
   />
-)
+))
 PotencyInput.displayName = 'PotencyInput'

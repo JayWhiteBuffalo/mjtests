@@ -17,14 +17,8 @@ export const Layout = async ({children}) => {
   return (
     <Providers>
       <div className="AdminGrid grid min-h-screen">
-        <AdminNavbar
-          user={user}
-          style={{gridArea: 'navbar'}}
-        />
-        <AdminSidebar
-          user={user}
-          style={{gridArea: 'sidebar'}}
-        />
+        <AdminNavbar user={user} style={{gridArea: 'navbar'}} />
+        <AdminSidebar user={user} style={{gridArea: 'sidebar'}} />
         {children}
       </div>
     </Providers>

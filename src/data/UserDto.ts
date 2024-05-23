@@ -1,6 +1,6 @@
 import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
-import supabase from "@api/supabaseServer"
+import supabase from '@api/supabaseServer'
 import {prisma} from '@/db'
 
 const UserDto = {
@@ -18,7 +18,8 @@ const UserDto = {
     const otherUser = await UserDto._getRaw(userId)
     const otherVendorIds = new Set(otherUser.vendors.map(edge => edge.vendorId))
     if (
-      user.vendors.filter(edge => edge.role === 'admin')
+      user.vendors
+        .filter(edge => edge.role === 'admin')
         .some(edge => otherVendorIds.has(edge.vendorId))
     ) {
       return true
@@ -67,7 +68,7 @@ const UserDto = {
 
   async get(userId) {
     const currentUser = await UserDto.getCurrent()
-    if (!await UserDto.canSee(currentUser, userId)) {
+    if (!(await UserDto.canSee(currentUser, userId))) {
       return null
     }
     return await UserDto._getRaw(userId)
@@ -85,7 +86,9 @@ const UserDto = {
     options.orderBy ??= {name: 'asc'}
     const currentUser = await UserDto.getCurrent()
     const rawUsers = await prisma.user.findMany(options)
-    return await ArrayUtil.asyncFilter(rawUsers, raw => UserDto.canSee(currentUser, raw.id))
+    return await ArrayUtil.asyncFilter(rawUsers, raw =>
+      UserDto.canSee(currentUser, raw.id),
+    )
   },
 
   async update(userId, user) {

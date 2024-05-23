@@ -20,31 +20,40 @@ const DevActionButton = ({action, children, ...rest}) => {
         }
         router.refresh()
       }}
-      {...rest}>
+      {...rest}
+    >
       {children}
     </Button>
   )
 }
 
-export const TestingToolsSection = ({populate, truncateUser, truncateData, assignAdmin}) =>
+export const TestingToolsSection = ({
+  populate,
+  truncateUser,
+  truncateData,
+  assignAdmin,
+}) => (
   <InfoSection>
     <header>
       <h2>Testing tools</h2>
     </header>
-    <div className="grid gap-x-2 gap-y-4 items-center" style={{
-      gridTemplateColumns: '300px auto',
-    }}>
+    <div
+      className="grid gap-x-2 gap-y-4 items-center"
+      style={{
+        gridTemplateColumns: '300px auto',
+      }}
+    >
       <div>
         <DevActionButton action={populate}>
           Populate database with test data
         </DevActionButton>
       </div>
-      <p>Fills the database with test data from <code>src/test/testData.js</code></p>
+      <p>
+        Fills the database with test data from <code>src/test/testData.js</code>
+      </p>
 
       <div>
-        <DevActionButton action={assignAdmin}>
-          Make me admin
-        </DevActionButton>
+        <DevActionButton action={assignAdmin}>Make me admin</DevActionButton>
       </div>
       <p>Assigns the admin role to the currently logged in user</p>
 
@@ -63,4 +72,4 @@ export const TestingToolsSection = ({populate, truncateUser, truncateData, assig
       <p>Wipes the user, account, and session tables</p>
     </div>
   </InfoSection>
-
+)

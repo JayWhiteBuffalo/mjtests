@@ -19,11 +19,14 @@ const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
   const [lastOpen, setLastOpen] = useState(open)
 
-  const onTransitionEnd = useCallback(event => {
-    if (event.propertyName === 'transform') {
-      setLastOpen(open)
-    }
-  }, [open])
+  const onTransitionEnd = useCallback(
+    event => {
+      if (event.propertyName === 'transform') {
+        setLastOpen(open)
+      }
+    },
+    [open],
+  )
 
   return (
     <dialog
@@ -31,35 +34,40 @@ const AnimatedPane = ({open, className, children}) => {
       onTransitionEnd={onTransitionEnd}
       style={{zIndex: open !== lastOpen ? -1 : undefined}}
       open={open}
-      className={clsx('AnimatedPane w-auto', className)}>
-      {(open || open !== lastOpen) ? children : undefined}
+      className={clsx('AnimatedPane w-auto', className)}
+    >
+      {open || open !== lastOpen ? children : undefined}
     </dialog>
   )
 }
 
-const FilterPaneWrapper = ({layout}) =>
+const FilterPaneWrapper = ({layout}) => (
   <AnimatedPane
     className={clsx(
       'FilterPaneWrapper flex-1',
       'flex flex-col relative transition-all items-center',
     )}
-    open={layout.showFilterPane}>
+    open={layout.showFilterPane}
+  >
     <FilterPaneContainer />
   </AnimatedPane>
+)
 
-const App = ({layout}) =>
+const App = ({layout}) => (
   <main
     className={clsx(
       'App',
       'flex flex-col items-stretch',
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
-    )}>
+    )}
+  >
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
     <FilterPaneWrapper layout={layout} />
     <ProductListPaneContainer />
     <ShopFooter />
   </main>
+)
 
 export const AppContainer = ({initial}) => {
   const pathname = usePathname()
@@ -68,7 +76,10 @@ export const AppContainer = ({initial}) => {
 
   useEffect(() => {
     dispatch({type: 'route.initialize', pathname, query: initial.query})
-    FilteredProductStore.set({filter: initial.filter, products: Present.resolve(initial.products)})
+    FilteredProductStore.set({
+      filter: initial.filter,
+      products: Present.resolve(initial.products),
+    })
   }, [initial, pathname])
 
   const onPopState = useCallback(event => {

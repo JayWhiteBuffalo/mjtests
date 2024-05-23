@@ -4,15 +4,17 @@ import {unempty} from '@util/ValidationUtil'
 import {z} from 'zod'
 
 export const apiSchema = z.object({
-  producer: z.object({
-    address: z.string().min(10).max(300).optional(),
-    email: z.string().email().max(255).optional(),
-    licenseNumber,
-    licenseState,
-    name: z.string().min(1, {message: 'Please enter a name'}).max(100),
-    tel: z.string().optional(),
-    url: z.string().url().max(255).optional(),
-  }).nullable(),
+  producer: z
+    .object({
+      address: z.string().min(10).max(300).optional(),
+      email: z.string().email().max(255).optional(),
+      licenseNumber,
+      licenseState,
+      name: z.string().min(1, {message: 'Please enter a name'}).max(100),
+      tel: z.string().optional(),
+      url: z.string().url().max(255).optional(),
+    })
+    .nullable(),
   referrer: z.string().max(300).optional(),
   status: z.enum(['pending', 'accepted', 'rejected']),
   type: z.enum(['vendor', 'producer']),
@@ -20,15 +22,17 @@ export const apiSchema = z.object({
     name: z.string().min(1, {message: 'Please enter your name'}).max(100),
     email: z.string().email({message: 'Please enter your email'}),
   }),
-  vendor: z.object({
-    address: z.string().min(10).max(300),
-    email: z.string().email().max(255).optional(),
-    licenseNumber,
-    licenseState,
-    name: z.string().min(1, {message: 'Please enter a name'}).max(100),
-    tel: z.string().optional(),
-    url: z.string().url().max(255).optional(),
-  }).nullable(),
+  vendor: z
+    .object({
+      address: z.string().min(10).max(300),
+      email: z.string().email().max(255).optional(),
+      licenseNumber,
+      licenseState,
+      name: z.string().min(1, {message: 'Please enter a name'}).max(100),
+      tel: z.string().optional(),
+      url: z.string().url().max(255).optional(),
+    })
+    .nullable(),
 })
 
 const preprocessProducer = formProducer => ({

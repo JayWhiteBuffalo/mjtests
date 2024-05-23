@@ -10,7 +10,18 @@ import {useFluxStore, dispatch} from '@/state/Flux'
 import {MapStore, LayoutStore} from '../state/UIStore'
 import {RiExpandUpDownLine, RiContractUpDownLine} from 'react-icons/ri'
 import {TbPin, TbPinned} from 'react-icons/tb'
-import {useFloating, useHover, useFocus, useDismiss, useInteractions, safePolygon, flip, offset, shift, FloatingPortal} from '@floating-ui/react'
+import {
+  useFloating,
+  useHover,
+  useFocus,
+  useDismiss,
+  useInteractions,
+  safePolygon,
+  flip,
+  offset,
+  shift,
+  FloatingPortal,
+} from '@floating-ui/react'
 import {useState, useRef, useEffect, useCallback, forwardRef} from 'react'
 import {VendorPopupContentContainer} from './VendorPopup'
 import {useLastPresent} from '@util/useLastPresent'
@@ -58,9 +69,9 @@ const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
     const notify = () => {
       const mapCenter = map.getCenter()
       const same =
-        Math.abs(mapCenter.lat - center[0]) < 1e-3
-          && Math.abs(mapCenter.lng - center[1]) < 1e-3
-          && map.getZoom() === zoom
+        Math.abs(mapCenter.lat - center[0]) < 1e-3 &&
+        Math.abs(mapCenter.lng - center[1]) < 1e-3 &&
+        map.getZoom() === zoom
       if (!same) {
         onChange({
           center: [mapCenter.lat, mapCenter.lng],
@@ -76,22 +87,24 @@ const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
   }, [map, onChange, center, zoom])
 
   useEffect(() => {
-    if (map && !(
-      ObjectUtil.equals(map.getCenter(), L.latLng(center))
-        && map.getZoom() === zoom
-    )) {
+    if (
+      map &&
+      !(
+        ObjectUtil.equals(map.getCenter(), L.latLng(center)) &&
+        map.getZoom() === zoom
+      )
+    ) {
       map.setView(center, zoom)
     }
   }, [map, center, zoom])
 
-  useEffect(() => {map && map.invalidateSize(false)}, [map, expandMapPane])
+  useEffect(() => {
+    map && map.invalidateSize(false)
+  }, [map, expandMapPane])
 
   return (
     <>
-      <div
-        className="w-full h-full z-0"
-        ref={containerRef}
-      />
+      <div className="w-full h-full z-0" ref={containerRef} />
       {map ? <MapOverlay vendors={vendors} map={map} /> : undefined}
     </>
   )
@@ -99,11 +112,15 @@ const Map = ({center, zoom, vendors, onChange, expandMapPane}) => {
 
 export const MapContainer = () => {
   const map = useFluxStore(MapStore)
-  const vendors = useLastPresent(useFluxStore(FilteredVendorStore))
-    .then(vendors => vendors.filter(vendor => vendor.latLng))
+  const vendors = useLastPresent(useFluxStore(FilteredVendorStore)).then(
+    vendors => vendors.filter(vendor => vendor.latLng),
+  )
   const layout = useFluxStore(LayoutStore)
 
-  const onChange = useCallback(map => dispatch({type: 'map.panAndZoom', map}), [])
+  const onChange = useCallback(
+    map => dispatch({type: 'map.panAndZoom', map}),
+    [],
+  )
 
   return (
     <Map
@@ -116,33 +133,35 @@ export const MapContainer = () => {
   )
 }
 
-const ReactMarkerIcon = forwardRef(({type, options, style, alt, className, ...rest}, ref) => {
-  const anchor = options[`${type}Anchor`] || options.iconAnchor
-  const size = options[`${type}Size`] || options.iconSize
-  return (
-    <Image
-      alt={alt}
-      ref={ref}
-      className={clsx(
-        'absolute pointer-events-auto leaflet-zoom-hide',
-        className,
-      )}
-      src={options[`${type}RetinaUrl`] || options[`${type}Url`]}
-      style={{
-        ...style,
-        marginLeft: `${-anchor[0]}px`,
-        marginTop: `${-anchor[1]}px`,
-        width: `${size[0]}px`,
-        height: `${size[1]}px`,
-        zIndex: type === 'icon' ? 20 : 10,
-      }}
-      {...rest}
-    />
-  )
-})
+const ReactMarkerIcon = forwardRef(
+  ({type, options, style, alt, className, ...rest}, ref) => {
+    const anchor = options[`${type}Anchor`] || options.iconAnchor
+    const size = options[`${type}Size`] || options.iconSize
+    return (
+      <Image
+        alt={alt}
+        ref={ref}
+        className={clsx(
+          'absolute pointer-events-auto leaflet-zoom-hide',
+          className,
+        )}
+        src={options[`${type}RetinaUrl`] || options[`${type}Url`]}
+        style={{
+          ...style,
+          marginLeft: `${-anchor[0]}px`,
+          marginTop: `${-anchor[1]}px`,
+          width: `${size[0]}px`,
+          height: `${size[1]}px`,
+          zIndex: type === 'icon' ? 20 : 10,
+        }}
+        {...rest}
+      />
+    )
+  },
+)
 ReactMarkerIcon.displayName = 'ReactMarkerIcon'
 
-const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) =>
+const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) => (
   <>
     <ReactMarkerIcon
       ref={ref}
@@ -154,32 +173,22 @@ const ReactMarker = forwardRef(({iconOptions, alt, style, ...rest}, ref) =>
       options={iconOptions}
       {...rest}
     />
-    <ReactMarkerIcon
-      type="shadow"
-      alt=""
-      style={style}
-      options={iconOptions}
-    />
+    <ReactMarkerIcon type="shadow" alt="" style={style} options={iconOptions} />
   </>
-)
+))
 ReactMarker.displayName = 'ReactMarker'
 
 const VendorMarker = ({vendor, map}) => {
   const [pos, setPos] = useState(map.latLngToLayerPoint(vendor.latLng).round())
 
   useEffect(() => {
-    const update = () =>
-      setPos(map.latLngToLayerPoint(vendor.latLng).round())
+    const update = () => setPos(map.latLngToLayerPoint(vendor.latLng).round())
     map.on('zoomend viewreset', update)
     return () => map.off('zoomend viewreset', update)
   }, [map, vendor.latLng])
 
   const [showPopup, setShowPopup] = useState(false)
-  const middleware = [
-    offset(4),
-    flip(),
-    shift({padding: 8}),
-  ]
+  const middleware = [offset(4), flip(), shift({padding: 8})]
   const {refs, floatingStyles, context} = useFloating({
     open: showPopup,
     onOpenChange: setShowPopup,
@@ -203,18 +212,18 @@ const VendorMarker = ({vendor, map}) => {
           transform: `translate(${pos.x}px, ${pos.y}px)`,
         }}
       />
-      {showPopup
-        ? <FloatingPortal>
-            <div
-              {...getFloatingProps()}
-              ref={refs.setFloating}
-              className="bg-white rounded-xl min-w-0 px-3 py-2 z-[2000] w-[300px] shadow"
-              style={floatingStyles}>
-                <VendorPopupContentContainer vendorId={vendor.id} />
-            </div>
-          </FloatingPortal>
-        : undefined
-      }
+      {showPopup ? (
+        <FloatingPortal>
+          <div
+            {...getFloatingProps()}
+            ref={refs.setFloating}
+            className="bg-white rounded-xl min-w-0 px-3 py-2 z-[2000] w-[300px] shadow"
+            style={floatingStyles}
+          >
+            <VendorPopupContentContainer vendorId={vendor.id} />
+          </div>
+        </FloatingPortal>
+      ) : undefined}
     </>
   )
 }
@@ -245,15 +254,12 @@ const MapOverlay = ({vendors, map}) => {
       className={clsx(
         'absolute inset-0 overflow-hidden pointer-events-none',
         anim ? 'leaflet-zoom-anim' : undefined,
-      )}>
+      )}
+    >
       <div className="MapOverlayLayer absolute t-0" ref={layerRef}>
-        {vendors.map(vendor =>
-          <VendorMarker
-            map={map}
-            vendor={vendor}
-            key={vendor.key}
-          />
-        )}
+        {vendors.map(vendor => (
+          <VendorMarker map={map} vendor={vendor} key={vendor.key} />
+        ))}
       </div>
     </div>
   )
@@ -272,7 +278,7 @@ const ControlWrapper = L.Control.extend({
   },
 })
 
-const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) =>
+const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) => (
   <div className="leaflet-bar leafle-control">
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a
@@ -284,12 +290,13 @@ const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) =>
         event.stopPropagation()
         event.preventDefault()
         onChange && onChange({expandMapPane: !expandMapPane})
-      }}>
-    {
-      expandMapPane
-        ? <RiContractUpDownLine size="28px" />
-        : <RiExpandUpDownLine size="28px" />
-    }
+      }}
+    >
+      {expandMapPane ? (
+        <RiContractUpDownLine size="28px" />
+      ) : (
+        <RiExpandUpDownLine size="28px" />
+      )}
     </a>
     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
     <a
@@ -301,14 +308,12 @@ const LayoutButtons = ({expandMapPane, pinMapPane, onChange}) =>
         event.stopPropagation()
         event.preventDefault()
         onChange && onChange({pinMapPane: !pinMapPane})
-      }}>
-    {
-      pinMapPane
-        ? <TbPinned size="28px" />
-        : <TbPin size="28px" />
-    }
+      }}
+    >
+      {pinMapPane ? <TbPinned size="28px" /> : <TbPin size="28px" />}
     </a>
   </div>
+)
 
 export const LayoutButtonsContainer = () => {
   const layout = useFluxStore(LayoutStore)

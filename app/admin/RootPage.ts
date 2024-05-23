@@ -160,5 +160,4 @@ const pagesCanUse = {
   },
 }
 
-export const canUseRootPage = (user, pageName) =>
-  pagesCanUse[pageName](user)
+export const canUseRootPage = (user, pageName) => pagesCanUse[pageName](user)

@@ -9,13 +9,16 @@ const httpBasicAuth = (request: NextRequest) => {
     return true
   }
 
-  const [staticUser, staticPass] = (HTTP_BASIC_AUTH || ':').split(':');
-  const authHeader = request.headers.get('authorization') || request.headers.get('Authorization')
+  const [staticUser, staticPass] = (HTTP_BASIC_AUTH || ':').split(':')
+  const authHeader =
+    request.headers.get('authorization') || request.headers.get('Authorization')
   if (!authHeader) {
     return false
   }
 
-  const [user, pass] = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':')
+  const [user, pass] = Buffer.from(authHeader.split(' ')[1], 'base64')
+    .toString()
+    .split(':')
   return user == staticUser && pass == staticPass
 }
 
@@ -57,7 +60,5 @@ export const middleware = async request => {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

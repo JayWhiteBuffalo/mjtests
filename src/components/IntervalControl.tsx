@@ -4,11 +4,11 @@ import {Input} from '@nextui-org/react'
 import {useState, useEffect, useCallback} from 'react'
 
 type IntervalTextboxProps = {
-  id: string,
-  bound: [number, number],
-  value: [number, number],
-  step?: number,
-  onChange: (interval: [number, number]) => void,
+  id: string
+  bound: [number, number]
+  value: [number, number]
+  step?: number
+  onChange: (interval: [number, number]) => void
 }
 
 const enDash = '–'
@@ -48,46 +48,58 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
     }
   }, [value, focus, text])
 
-  const validate = useCallback(xString => {
-    if (xString === '') {
-      return undefined
-    }
+  const validate = useCallback(
+    xString => {
+      if (xString === '') {
+        return undefined
+      }
 
-    const x = +xString
-    if (bound[0] <= x && x <= bound[1]) {
-      return x
-    } else if (x < bound[0]) {
-      return bound[0]
-    } else if (bound[1] < x) {
-      return bound[1]
-    } else {
-      return undefined
-    }
-  }, [bound])
+      const x = +xString
+      if (bound[0] <= x && x <= bound[1]) {
+        return x
+      } else if (x < bound[0]) {
+        return bound[0]
+      } else if (bound[1] < x) {
+        return bound[1]
+      } else {
+        return undefined
+      }
+    },
+    [bound],
+  )
 
-  const onBlur = useCallback(event => {
-    setFocus(false)
-    const x = validate(event.target.value)
-    if (x !== value) {
-      onChange(x)
-    }
-  }, [value, validate, onChange])
-
-  const onKeyDown = useCallback(event => {
-    if (event.key === 'Enter') {
+  const onBlur = useCallback(
+    event => {
+      setFocus(false)
       const x = validate(event.target.value)
-      setText(orEmpty(x))
-      onChange(x)
-    }
-  }, [validate, onChange])
+      if (x !== value) {
+        onChange(x)
+      }
+    },
+    [value, validate, onChange],
+  )
 
-  const onValueChange = useCallback(value => {
-    setText(value)
-    const x = +value
-    if (bound[0] <= x && x <= bound[1]) {
-      onChange(x)
-    }
-  }, [bound, onChange])
+  const onKeyDown = useCallback(
+    event => {
+      if (event.key === 'Enter') {
+        const x = validate(event.target.value)
+        setText(orEmpty(x))
+        onChange(x)
+      }
+    },
+    [validate, onChange],
+  )
+
+  const onValueChange = useCallback(
+    value => {
+      setText(value)
+      const x = +value
+      if (bound[0] <= x && x <= bound[1]) {
+        onChange(x)
+      }
+    },
+    [bound, onChange],
+  )
 
   return (
     <Input
@@ -109,7 +121,14 @@ const IntervalTextboxItem = ({bound, value, onChange, ...rest}) => {
   )
 }
 
-export const IntervalTextbox = ({id, className, bound, value, step, onChange}: IntervalTextboxProps) =>
+export const IntervalTextbox = ({
+  id,
+  className,
+  bound,
+  value,
+  step,
+  onChange,
+}: IntervalTextboxProps) => (
   <div className={clsx('flex gap-1', className)}>
     <IntervalTextboxItem
       id={id + '.min'}
@@ -128,4 +147,4 @@ export const IntervalTextbox = ({id, className, bound, value, step, onChange}: I
       onChange={x => onChange([value[0], x])}
     />
   </div>
-
+)

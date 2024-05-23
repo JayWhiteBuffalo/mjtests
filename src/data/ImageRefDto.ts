@@ -14,10 +14,16 @@ const ImageRefDto = {
     if (imageRef.uploadedById === user.id) {
       return true
     }
-    if (imageRef.vendorId && await VendorDto.canSee(user, imageRef.vendorId)) {
+    if (
+      imageRef.vendorId &&
+      (await VendorDto.canSee(user, imageRef.vendorId))
+    ) {
       return true
     }
-    if (imageRef.productId && await ProductDto.canSee(user, imageRef.productId)) {
+    if (
+      imageRef.productId &&
+      (await ProductDto.canSee(user, imageRef.productId))
+    ) {
       return true
     }
     return false
@@ -28,10 +34,16 @@ const ImageRefDto = {
       return true
     }
     const imageRef = await ImageRefDto._getRaw(publicId)
-    if (imageRef.vendorId && await VendorDto.canEdit(user, imageRef.vendorId)) {
+    if (
+      imageRef.vendorId &&
+      (await VendorDto.canEdit(user, imageRef.vendorId))
+    ) {
       return true
     }
-    if (imageRef.productId && await ProductDto.canEdit(user, imageRef.productId)) {
+    if (
+      imageRef.productId &&
+      (await ProductDto.canEdit(user, imageRef.productId))
+    ) {
       return true
     }
     return false
@@ -61,7 +73,7 @@ const ImageRefDto = {
 
   async get(publicId) {
     const user = await UserDto.getCurrent()
-    if (!await ImageRefDto.canSee(user, publicId)) {
+    if (!(await ImageRefDto.canSee(user, publicId))) {
       return null
     }
     return await ImageRefDto._getRaw(publicId)
@@ -72,22 +84,34 @@ const ImageRefDto = {
     options.orderBy ??= {lastModified: 'dasc'}
     const user = await UserDto.getCurrent()
     const rawImageRefs = await prisma.imageRef.findMany(options)
-    return await ArrayUtil.asyncFilter(rawImageRefs, raw => ImageRefDto.canSee(user, raw.id))
+    return await ArrayUtil.asyncFilter(rawImageRefs, raw =>
+      ImageRefDto.canSee(user, raw.id),
+    )
   },
 
   async create(imageRef) {
     const user = await UserDto.getCurrent()
     assert(await ImageRefDto.canCreate(user))
-    assert(!imageRef.vendorId || await VendorDto.canEdit(user, imageRef.vendorId))
-    assert(!imageRef.productId || await ProductDto.canEdit(user, imageRef.productId))
+    assert(
+      !imageRef.vendorId || (await VendorDto.canEdit(user, imageRef.vendorId)),
+    )
+    assert(
+      !imageRef.productId ||
+        (await ProductDto.canEdit(user, imageRef.productId)),
+    )
     return await prisma.imageRef.create({data: imageRef})
   },
 
   async update(publicId, imageRef) {
     const user = await UserDto.getCurrent()
     assert(await ImageRefDto.canEdit(user, publicId))
-    assert(!imageRef.vendorId || await VendorDto.canEdit(user, imageRef.vendorId))
-    assert(!imageRef.productId || await ProductDto.canEdit(user, imageRef.productId))
+    assert(
+      !imageRef.vendorId || (await VendorDto.canEdit(user, imageRef.vendorId)),
+    )
+    assert(
+      !imageRef.productId ||
+        (await ProductDto.canEdit(user, imageRef.productId)),
+    )
     assert(imageRef.uploadedById === user.id)
     return await prisma.imageRef.update({
       where: {publicId},

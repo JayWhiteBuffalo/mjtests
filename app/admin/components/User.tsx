@@ -7,9 +7,5 @@ export const UserLinkContainer = ({userId}) => {
   const text = UserStore.getPresentById(userId)
     .then(user => `<${user.email}>`)
     .orElse(() => `<user:${userId}>`)
-  return (
-    <BlueLink href={`/admin/users/${userId}`}>
-      {text}
-    </BlueLink>
-  )
+  return <BlueLink href={`/admin/users/${userId}`}>{text}</BlueLink>
 }

@@ -1,36 +1,43 @@
 'use client'
 import ObjectUtil from '@util/ObjectUtil'
 import {BlueLink} from '@components/Link'
-import {Checkbox, Table, TableHeader, TableBody, TableCell, TableRow, TableColumn} from '@nextui-org/react'
+import {
+  Checkbox,
+  Table,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableColumn,
+} from '@nextui-org/react'
 
-export const DefaultCell = ({value}) =>
-  value
+export const DefaultCell = ({value}) => value
 
-export const DefaultHeaderCell = ({label}) =>
-  label
+export const DefaultHeaderCell = ({label}) => label
 
-export const CheckboxCell = () =>
+export const CheckboxCell = () => (
   <div className="px-2">
     <Checkbox />
   </div>
+)
 
-export const CheckboxHeaderCell = () =>
+export const CheckboxHeaderCell = () => (
   <div className="px-2">
     <Checkbox />
   </div>
+)
 
-export const ActionCell = () =>
+export const ActionCell = () => (
   <BlueLink href="#" className="font-medium">
     Edit
   </BlueLink>
+)
 
-export const ActionHeaderCell = () =>
-  <span className="sr-only">Actions</span>
+export const ActionHeaderCell = () => <span className="sr-only">Actions</span>
 
-export const LocationCell = ({value: location}) =>
-  <div className="whitespace-pre-line">
-    {location.address}
-  </div>
+export const LocationCell = ({value: location}) => (
+  <div className="whitespace-pre-line">{location.address}</div>
+)
 
 export const TMTable = ({items, columns, getItemKey, ...rest}) => {
   getItemKey ??= item => item.id ?? item.key
@@ -40,16 +47,19 @@ export const TMTable = ({items, columns, getItemKey, ...rest}) => {
     <div className="overflow-x-auto">
       <Table {...rest}>
         <TableHeader columns={columns}>
-          {column =>
+          {column => (
             <TableColumn>
               <column.HeaderCell key={column.key} label={column.label} />
             </TableColumn>
-          }
+          )}
         </TableHeader>
 
         <TableBody className="divide-y" items={items}>
-          {item =>
-            <TableRow key={getItemKey(item)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+          {item => (
+            <TableRow
+              key={getItemKey(item)}
+              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
               {columnKey => {
                 const column = columnsByKey[columnKey]
                 return (
@@ -64,7 +74,7 @@ export const TMTable = ({items, columns, getItemKey, ...rest}) => {
                 )
               }}
             </TableRow>
-          }
+          )}
         </TableBody>
       </Table>
     </div>

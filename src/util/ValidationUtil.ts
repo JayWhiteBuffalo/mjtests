@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-export const orEmpty = x => x != null ? String(x) : ''
+export const orEmpty = x => (x != null ? String(x) : '')
 
 export const unempty = x => {
   x = x?.trim()
@@ -16,6 +16,6 @@ export const unNan = x => {
   return !Number.isNaN(x) ? x : undefined
 }
 
-export const orNull = x => x != null ? x : null
+export const orNull = x => (x != null ? x : null)
 
-export const mapDefined = (x, f) => x != null ? f(x) : x
+export const mapDefined = (x, f) => (x != null ? f(x) : x)

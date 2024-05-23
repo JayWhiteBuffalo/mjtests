@@ -15,7 +15,6 @@ const Page = async ({user}) => {
     products = await ProductDto.findMany({
       include: {vendor: true},
     })
-
   } else if (user.roles.includes('vendor')) {
     const vendorIds = user.vendors.map(edge => edge.vendorId)
     products = await ProductDto.findMany({
@@ -25,7 +24,6 @@ const Page = async ({user}) => {
       include: {vendor: true},
       orderBy: {name: 'asc'},
     })
-
   } else if (user.roles.includes('producer')) {
     const producerIds = user.producers.map(edge => edge.producerId)
     products = await ProductDto.findMany({
@@ -35,7 +33,6 @@ const Page = async ({user}) => {
       include: {vendor: true},
       orderBy: {name: 'asc'},
     })
-
   } else {
     products = []
   }

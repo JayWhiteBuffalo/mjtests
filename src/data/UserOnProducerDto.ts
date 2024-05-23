@@ -12,7 +12,11 @@ const UserOnProducerDto = {
       return true
     }
 
-    if (user.producers.some(edge => edge.producerId === producerId && edge.role === 'admin')) {
+    if (
+      user.producers.some(
+        edge => edge.producerId === producerId && edge.role === 'admin',
+      )
+    ) {
       return true
     }
 
@@ -27,7 +31,11 @@ const UserOnProducerDto = {
       return true
     }
 
-    if (user.producers.some(edge => edge.producerId === producerId && edge.role === 'admin')) {
+    if (
+      user.producers.some(
+        edge => edge.producerId === producerId && edge.role === 'admin',
+      )
+    ) {
       return true
     }
 
@@ -44,7 +52,9 @@ const UserOnProducerDto = {
 
     // No invitation required for now
     if (
-      user.producers.some(edge => edge.producerId === producerId && edge.role === 'admin')
+      user.producers.some(
+        edge => edge.producerId === producerId && edge.role === 'admin',
+      )
     ) {
       return true
     }
@@ -53,19 +63,21 @@ const UserOnProducerDto = {
 
   async _getRaw(userId, producerId) {
     return await prisma.userOnProducer.findUnique({
-      where: {userId, producerId}
+      where: {userId, producerId},
     })
   },
 
   async findMany(options) {
     const user = await UserDto.getCurrent()
     const rawUserOnProducers = await prisma.userOnProducer.findMany(options)
-    return await ArrayUtil.asyncFilter(rawUserOnProducers, edge => UserOnProducerDto.canSee(user, edge.userId, edge.producerId))
+    return await ArrayUtil.asyncFilter(rawUserOnProducers, edge =>
+      UserOnProducerDto.canSee(user, edge.userId, edge.producerId),
+    )
   },
 
   async get(userId, producerId) {
     const user = await UserDto.getCurrent()
-    if (!await UserOnProducerDto.canSee(user, userId, producerId)) {
+    if (!(await UserOnProducerDto.canSee(user, userId, producerId))) {
       return null
     }
     return await UserOnProducerDto._getRaw(userId, producerId)
@@ -74,7 +86,7 @@ const UserOnProducerDto = {
   async create(edge) {
     const user = await UserDto.getCurrent()
     assert(await UserOnProducerDto.canCreate(user))
-    return void await prisma.userOnProducer.createMany({data: [edge]})
+    return void (await prisma.userOnProducer.createMany({data: [edge]}))
   },
 
   async update(edge) {

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { type EmailOtpType } from '@supabase/supabase-js'
+import {NextRequest, NextResponse} from 'next/server'
+import {type EmailOtpType} from '@supabase/supabase-js'
 import {createRouteHandlerClient} from '@api/supabaseServer'
 import {defaultReturnTo} from '@components/Site'
 import {throwOnError} from '@util/SupabaseUtil'
@@ -18,11 +18,12 @@ export const GET = async (request: NextRequest) => {
     const supabase = createRouteHandlerClient()
 
     try {
-      await supabase.auth.verifyOtp({type, token_hash})
-        .then(throwOnError)
+      await supabase.auth.verifyOtp({type, token_hash}).then(throwOnError)
 
       if (next) {
-        return NextResponse.redirect(`http://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`)
+        return NextResponse.redirect(
+          `http://${host}${next}${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`,
+        )
       } else {
         return NextResponse.redirect(returnTo ?? defaultReturnTo)
       }

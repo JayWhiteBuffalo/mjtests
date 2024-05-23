@@ -1,4 +1,3 @@
-
 export const ProducerUtil = {
   empty: () => ({
     contact: {},
@@ -7,4 +6,3 @@ export const ProducerUtil = {
     signupStatus: {},
   }),
 }
-

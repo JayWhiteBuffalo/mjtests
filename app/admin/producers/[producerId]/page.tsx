@@ -5,10 +5,13 @@ import {ProducerPane} from '../Pane'
 
 export const getRoute = async ({producerId, ...params}) => {
   const producer = await ProducerDto.get(producerId)
-  return [...(await getParentRoute(params)), {
-    name: producer?.name,
-    segment: producerId,
-  }]
+  return [
+    ...(await getParentRoute(params)),
+    {
+      name: producer?.name,
+      segment: producerId,
+    },
+  ]
 }
 
 const Page = async ({user, producerId}) => {

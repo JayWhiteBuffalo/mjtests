@@ -6,122 +6,164 @@ import ObjectUtil from '@util/ObjectUtil'
 import {Button, Checkbox, Input} from '@nextui-org/react'
 import {DropdownMenuButton} from '@components/Dropdown'
 import {ErrorBoundary} from '@components/Error'
-import {HiOutlineChevronDown} from "react-icons/hi"
-import {useFloating, useClick, useDismiss, useRole, useInteractions, useListNavigation, useTypeahead, flip, offset, shift, size, FloatingPortal, FloatingFocusManager} from '@floating-ui/react'
+import {HiOutlineChevronDown} from 'react-icons/hi'
+import {
+  useFloating,
+  useClick,
+  useDismiss,
+  useRole,
+  useInteractions,
+  useListNavigation,
+  useTypeahead,
+  flip,
+  offset,
+  shift,
+  size,
+  FloatingPortal,
+  FloatingFocusManager,
+} from '@floating-ui/react'
 import {useFluxStore} from '@/state/Flux'
 import {useState, useRef, useCallback, forwardRef} from 'react'
 
 type MultiDropdownItem = {
-  key: string,
-  name: string,
+  key: string
+  name: string
 }
 
-const MultiDropdownTrigger = forwardRef(({placeholder, values, className, ...rest}, ref) => {
-  const selectedCount = ObjectUtil.size(values)
-  const text = selectedCount === 0 && placeholder && <span className="text-gray-500">{placeholder}</span>
-    || `${selectedCount} selected`
+const MultiDropdownTrigger = forwardRef(
+  ({placeholder, values, className, ...rest}, ref) => {
+    const selectedCount = ObjectUtil.size(values)
+    const text =
+      (selectedCount === 0 && placeholder && (
+        <span className="text-gray-500">{placeholder}</span>
+      )) ||
+      `${selectedCount} selected`
 
-  return (
-    <Button
-      className={clsx(
-        'text-ellipsis overflow-hidden whitespace-nowrap italic justify-between',
-        className,
-      )}
-      endContent={<HiOutlineChevronDown className="h-4 w-4" />}
-      ref={ref}
-      variant="bordered"
-      {...rest}>
-      {text}
-    </Button>
-  )
-})
+    return (
+      <Button
+        className={clsx(
+          'text-ellipsis overflow-hidden whitespace-nowrap italic justify-between',
+          className,
+        )}
+        endContent={<HiOutlineChevronDown className="h-4 w-4" />}
+        ref={ref}
+        variant="bordered"
+        {...rest}
+      >
+        {text}
+      </Button>
+    )
+  },
+)
 MultiDropdownTrigger.displayName = 'MultiDropdownTrigger'
 
-const Items = forwardRef(({className, items, values, getItemProps, listRef, activeIndex, onChange, ...rest}, ref) =>
-  <ul
-    className={clsx(
-      'MultiDropdownItems',
-      'flex flex-col flex-wrap flex-auto shrink-0 h-[400px] -mx-3 overflow-auto px-1',
-      'min-w-[208px]',
+const Items = forwardRef(
+  (
+    {
       className,
-    )}
-    ref={ref}
-    {...rest}>
-    {items.map((item, index) =>
-      <li key={item.key}>
-        <button
-          {...getItemProps({
-            onClick: () => onChange(FlagObjectUtil.toggle(values, item.key)),
-          })}
-          aria-selected={values[item.key] || false}
-          className={clsx(
-            'cursor-pointer hyphens-auto px-2 py-1 text-left w-[200px]',
-            'hover:bg-gray-100'
-          )}
-          ref={node => listRef.current[index] = node}
-          role="option"
-          tabIndex={activeIndex === index ? 0 : -1}
-          type="button">
-          <Checkbox
-            isSelected={values[item.key] || false}
-            className="cursor-unset align-text-bottom"
-            role="presentation"
-            tabIndex={-1}
-          />
-          {item.name}
-        </button>
-      </li>
-    )}
-  </ul>
+      items,
+      values,
+      getItemProps,
+      listRef,
+      activeIndex,
+      onChange,
+      ...rest
+    },
+    ref,
+  ) => (
+    <ul
+      className={clsx(
+        'MultiDropdownItems',
+        'flex flex-col flex-wrap flex-auto shrink-0 h-[400px] -mx-3 overflow-auto px-1',
+        'min-w-[208px]',
+        className,
+      )}
+      ref={ref}
+      {...rest}
+    >
+      {items.map((item, index) => (
+        <li key={item.key}>
+          <button
+            {...getItemProps({
+              onClick: () => onChange(FlagObjectUtil.toggle(values, item.key)),
+            })}
+            aria-selected={values[item.key] || false}
+            className={clsx(
+              'cursor-pointer hyphens-auto px-2 py-1 text-left w-[200px]',
+              'hover:bg-gray-100',
+            )}
+            ref={node => (listRef.current[index] = node)}
+            role="option"
+            tabIndex={activeIndex === index ? 0 : -1}
+            type="button"
+          >
+            <Checkbox
+              isSelected={values[item.key] || false}
+              className="cursor-unset align-text-bottom"
+              role="presentation"
+              tabIndex={-1}
+            />
+            {item.name}
+          </button>
+        </li>
+      ))}
+    </ul>
+  ),
 )
 Items.displayName = 'Items'
 
-const commonMiddleware = () =>
-  [
-    offset(8),
-    flip(),
-    shift({padding: 8}),
-    size({
-      padding: 8,
-      apply({availableHeight, elements}) {
-        const isMobile = window.matchMedia('(width < 600px) or (height < 600px)').matches
-        elements.floating.style.maxHeight = isMobile ? '80vh' : `${availableHeight}px`
-      },
-    }),
-  ]
+const commonMiddleware = () => [
+  offset(8),
+  flip(),
+  shift({padding: 8}),
+  size({
+    padding: 8,
+    apply({availableHeight, elements}) {
+      const isMobile = window.matchMedia(
+        '(width < 600px) or (height < 600px)',
+      ).matches
+      elements.floating.style.maxHeight = isMobile
+        ? '80vh'
+        : `${availableHeight}px`
+    },
+  }),
+]
 
-const SmallMultiDropdownTopMenu = ({values, items, onChange, onClose}) =>
+const SmallMultiDropdownTopMenu = ({values, items, onChange, onClose}) => (
   <div className="flex justify-between items-end">
-    {items.length &&
+    {items.length && (
       <div>
         <DropdownMenuButton
           disabled={items.every(item => values[item.key])}
-          onClick={() => onChange(FlagObjectUtil.fromIterable(items, x => x.key))}>
+          onClick={() =>
+            onChange(FlagObjectUtil.fromIterable(items, x => x.key))
+          }
+        >
           Select All
         </DropdownMenuButton>
         <DropdownMenuButton
           disabled={ObjectUtil.isEmpty(values)}
-          onClick={() => onChange({})}>
+          onClick={() => onChange({})}
+        >
           Clear Selection
         </DropdownMenuButton>
       </div>
-    }
-    <DropdownMenuButton
-      className="MultiDropdownCloseButton"
-      onClick={onClose}>
+    )}
+    <DropdownMenuButton className="MultiDropdownCloseButton" onClick={onClose}>
       Done
     </DropdownMenuButton>
   </div>
+)
 
 type SmallMultiDropdownProps = {
-  className: string,
-  id: string,
-  Item: any,
-  items: Array<MultiDropdownItem>,
-  label?: string,
-  onChange: (values: object) => void,
-  placeholder?: string,
-  values: object,
+  className: string
+  id: string
+  Item: any
+  items: Array<MultiDropdownItem>
+  label?: string
+  onChange: (values: object) => void
+  placeholder?: string
+  values: object
 }
 
 export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
@@ -131,8 +173,12 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
     onOpenChange: setExpanded,
     middleware: commonMiddleware(),
   })
-  const firstSelectedIndex = props.items.findIndex(item => props.values[item.key])
-  const [activeIndex, setActiveIndex] = useState(firstSelectedIndex !== -1 ? firstSelectedIndex : 0)
+  const firstSelectedIndex = props.items.findIndex(
+    item => props.values[item.key],
+  )
+  const [activeIndex, setActiveIndex] = useState(
+    firstSelectedIndex !== -1 ? firstSelectedIndex : 0,
+  )
   const listRef = useRef([])
   const listContentRef = useRef(props.items.map(x => x.name))
   const {getReferenceProps, getFloatingProps, getItemProps} = useInteractions([
@@ -155,7 +201,9 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
   const onClose = useCallback(() => setExpanded(false), [])
 
   const Floating = () => {
-    const isMobile = window.matchMedia('(width < 600px) or (height < 600px)').matches
+    const isMobile = window.matchMedia(
+      '(width < 600px) or (height < 600px)',
+    ).matches
     const mobileFloatingStyles = {
       inset: 'auto 0 0',
       position: 'fixed',
@@ -172,13 +220,15 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
               'max-h-[80vh]',
             )}
             ref={refs.setFloating}
-            style={isMobile ? mobileFloatingStyles : floatingStyles}>
+            style={isMobile ? mobileFloatingStyles : floatingStyles}
+          >
             <ErrorBoundary>
               <div
                 className={clsx(
                   'MultiDropdownPane MultiDropdownItemsPane',
                   'flex flex-1 flex-col p-3',
-                )}>
+                )}
+              >
                 <SmallMultiDropdownTopMenu
                   items={props.items}
                   onChange={props.onChange}
@@ -216,7 +266,7 @@ export const SmallMultiDropdown = (props: SmallMultiDropdownProps) => {
   )
 }
 
-const Search = ({id, keyword, onChange}) =>
+const Search = ({id, keyword, onChange}) => (
   <Input
     className="max-w-[600px] mb-1"
     id={id}
@@ -226,11 +276,18 @@ const Search = ({id, keyword, onChange}) =>
     type="search"
     value={keyword}
   />
+)
 
-const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClose}: MultiDropdownProps) => {
+const MultiDropdownSelectedPane = ({
+  id,
+  values,
+  TypeaheadStore,
+  onChange,
+  onClose,
+}: MultiDropdownProps) => {
   const selectedItems = ArrayUtil.sortBy(
     TypeaheadStore.getByKeys(Object.keys(values)),
-    x => x.name
+    x => x.name,
   )
 
   const [focused, setFocused] = useState(false)
@@ -256,19 +313,22 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
       className={clsx(
         'MultiDropdownPane MultiDropdownSelectedPane',
         'flex flex-1 flex-col p-3',
-      )}>
+      )}
+    >
       <div className="flex justify-between items-end">
         <div>
           <span className="text-sm mr-4">Selected</span>
           <DropdownMenuButton
             disabled={ObjectUtil.isEmpty(values)}
-            onClick={() => onChange({})}>
+            onClick={() => onChange({})}
+          >
             Clear Selection
           </DropdownMenuButton>
         </div>
         <DropdownMenuButton
           className="MultiDropdownCloseButton"
-          onClick={onClose}>
+          onClick={onClose}
+        >
           Done
         </DropdownMenuButton>
       </div>
@@ -292,7 +352,12 @@ const MultiDropdownSelectedPane = ({id, values, TypeaheadStore, onChange, onClos
   )
 }
 
-const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDropdownProps) => {
+const MultiDropdownSearchPane = ({
+  id,
+  values,
+  TypeaheadStore,
+  onChange,
+}: MultiDropdownProps) => {
   const [keyword, setKeyword] = useState('')
   const [focused, setFocused] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
@@ -318,7 +383,8 @@ const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDr
       className={clsx(
         'MultiDropdownPane MultiDropdownSearchPane',
         'flex flex-1 flex-col p-3 border-gray-300 border-l',
-      )}>
+      )}
+    >
       <Search onChange={setKeyword} keyword={keyword} id={`${id}.keyword`} />
       <Items
         {...getFloatingProps({
@@ -340,14 +406,14 @@ const MultiDropdownSearchPane = ({id, values, TypeaheadStore, onChange}: MultiDr
 }
 
 type LargeMultiDropdownProps = {
-  className: string,
-  id: string,
-  Item: any,
-  label?: string,
-  onChange: (values: object) => void,
-  placeholder?: string,
-  TypeaheadStore: any,
-  values: object,
+  className: string
+  id: string
+  Item: any
+  label?: string
+  onChange: (values: object) => void
+  placeholder?: string
+  TypeaheadStore: any
+  values: object
 }
 
 export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
@@ -366,7 +432,9 @@ export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
   const onClose = useCallback(() => setExpanded(false), [])
 
   const Floating = () => {
-    const isMobile = window.matchMedia('(width < 600px) or (height < 600px)').matches
+    const isMobile = window.matchMedia(
+      '(width < 600px) or (height < 600px)',
+    ).matches
     const mobileFloatingStyles = {
       inset: 'auto 0 0',
       position: 'fixed',
@@ -381,7 +449,8 @@ export const LargeMultiDropdown = (props: LargeMultiDropdownProps) => {
               `MultiDropdownPopover shadow`,
               'bg-white border border-gray-300 flex flex-row z-20',
             )}
-            style={isMobile ? mobileFloatingStyles : floatingStyles}>
+            style={isMobile ? mobileFloatingStyles : floatingStyles}
+          >
             <ErrorBoundary>
               <MultiDropdownSelectedPane {...props} onClose={onClose} />
             </ErrorBoundary>

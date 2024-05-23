@@ -65,7 +65,6 @@ export const approve = async requestId => {
       archived: true,
     })
     redirect(`/admin/vendors/${vendorId}`)
-
   } else if (request.type === 'producer') {
     const producer = {
       contact: {

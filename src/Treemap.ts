@@ -207,7 +207,12 @@ const terpenes = [
   {
     name: 'linalool',
     color: '#B200ED',
-    properties: ['anti-anxiety', 'anti-epileptic', 'anti-psychotic', 'pain killing'],
+    properties: [
+      'anti-anxiety',
+      'anti-epileptic',
+      'anti-psychotic',
+      'pain killing',
+    ],
     scents: 'floral',
   },
   {
@@ -222,7 +227,7 @@ const terpenes = [
     color: '#FCEBA4',
     properties: ['anti-depressant', 'anti-inflammatory', 'anti-microbial'],
     scents: 'pine',
-    includes: ['α-pinene', 'β-pinene']
+    includes: ['α-pinene', 'β-pinene'],
   },
   {
     name: 'phytol',
@@ -233,14 +238,24 @@ const terpenes = [
   {
     name: 'terpinene',
     color: '#6F2DA8',
-    properties: ['anti-bacterial', 'anti-fungal', 'anti-insomnia', 'antiseptic'],
+    properties: [
+      'anti-bacterial',
+      'anti-fungal',
+      'anti-insomnia',
+      'antiseptic',
+    ],
     scents: 'smokey, woody',
     aliases: ['δ-terpinene', 'terpinolene'],
   },
   {
     name: 'nerolidol',
     color: '#7FCB78',
-    properties: ['anti-cancer', 'anti-microbial', 'anti-oxidant', 'anti-parasatic'],
+    properties: [
+      'anti-cancer',
+      'anti-microbial',
+      'anti-oxidant',
+      'anti-parasatic',
+    ],
     scents: 'citrus, rose',
     aliases: ['trans-nerolidol'],
   },
@@ -268,7 +283,7 @@ const terpenes = [
     color: '#3DED97',
     properties: ['anti-inflammatory', 'decongestant', 'causes coughing'],
     scents: 'wood, sweet, citurs, floral, mint',
-    includes: ['cis-ocimene', 'trans-ocimene']
+    includes: ['cis-ocimene', 'trans-ocimene'],
   },
   {
     name: 'α-terpinene',

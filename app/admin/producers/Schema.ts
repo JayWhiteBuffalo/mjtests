@@ -15,9 +15,7 @@ export const dbSchema = z.object({
     address: z.string().min(10).max(300),
   }),
   mainImageRefId: z.string().nullable(),
-  signupStatus: z.object({
-
-  }),
+  signupStatus: z.object({}),
   name: z.string().min(1).max(100),
 })
 

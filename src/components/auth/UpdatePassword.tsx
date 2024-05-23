@@ -1,11 +1,11 @@
-"use client";
-import { AuthSection, AuthTitle } from "./AuthSection";
-import { Button } from "@nextui-org/react";
-import { HiKey } from "react-icons/hi";
-import { PasswordInput } from "./Input";
-import { useCallback } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {FormErrors, useForm} from "@components/Form";
+'use client'
+import {AuthSection, AuthTitle} from './AuthSection'
+import {Button} from '@nextui-org/react'
+import {HiKey} from 'react-icons/hi'
+import {PasswordInput} from './Input'
+import {useCallback} from 'react'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {FormErrors, useForm} from '@components/Form'
 import {updatePasswordSchema} from '@app/(shop)/auth/Schema'
 import {updatePassword as updatePasswordAction} from '@app/(shop)/auth/ServerAction'
 
@@ -13,20 +13,20 @@ export const UpdatePasswordForm = ({returnTo}) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm({
     resolver: zodResolver(updatePasswordSchema),
-  });
+  })
 
   const updatePassword = useCallback(
     formData => updatePasswordAction(formData, returnTo),
-    [returnTo]
+    [returnTo],
   )
 
   return (
     <form className="flex flex-col gap-3" action={handleSubmit(updatePassword)}>
       <PasswordInput
-        {...register("password")}
+        {...register('password')}
         errorMessage={errors.password?.message}
         isInvalid={errors.password != null}
         isRequired
@@ -35,7 +35,7 @@ export const UpdatePasswordForm = ({returnTo}) => {
       />
 
       <PasswordInput
-        {...register("confirmPassword")}
+        {...register('confirmPassword')}
         isInvalid={errors.confirmPassword != null}
         isRequired
         label="Confirm Password"
@@ -55,8 +55,8 @@ export const UpdatePasswordForm = ({returnTo}) => {
 
       <FormErrors errors={errors} />
     </form>
-  );
-};
+  )
+}
 
 export const UpdatePassword = () => (
   <AuthSection>
@@ -65,4 +65,4 @@ export const UpdatePassword = () => (
     </header>
     <UpdatePasswordForm returnTo={returnTo} />
   </AuthSection>
-);
+)

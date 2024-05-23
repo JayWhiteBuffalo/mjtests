@@ -17,9 +17,7 @@ export const makeMain = ({getRoute, Page}) => {
     }
 
     return (
-      <main
-        className="mb-[30vh]"
-        style={{gridArea: 'main'}}>
+      <main className="mb-[30vh]" style={{gridArea: 'main'}}>
         <Breadcrumb items={route} />
         <Page {...params} user={user} />
       </main>
@@ -29,5 +27,6 @@ export const makeMain = ({getRoute, Page}) => {
   return Main
 }
 
-export const UnauthorizedPage = () =>
+export const UnauthorizedPage = () => (
   <div className="text-gray-800">This feature is currently unavailable.</div>
+)

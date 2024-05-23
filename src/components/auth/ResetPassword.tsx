@@ -1,40 +1,40 @@
-"use client";
-import NextLink from "next/link"
-import { AlertBox } from "@components/Form";
-import { AuthSection, AuthTitle } from "./AuthSection";
-import { HiOutlineMail } from "react-icons/hi";
-import { Input, Link, Button } from "@nextui-org/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {FormErrors, useForm} from "@components/Form";
+'use client'
+import NextLink from 'next/link'
+import {AlertBox} from '@components/Form'
+import {AuthSection, AuthTitle} from './AuthSection'
+import {HiOutlineMail} from 'react-icons/hi'
+import {Input, Link, Button} from '@nextui-org/react'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {FormErrors, useForm} from '@components/Form'
 import {resetPassword as resetPasswordAction} from '@app/(shop)/auth/ServerAction'
 import {resetPasswordSchema} from '@app/(shop)/auth/Schema'
-import {useCallback} from "react";
+import {useCallback} from 'react'
 
-const StatusAlertBox = ({ status }) =>
-  status === "checkEmail" ? (
+const StatusAlertBox = ({status}) =>
+  status === 'checkEmail' ? (
     <AlertBox color="warning">
       <p>Check your email for the password reset link</p>
     </AlertBox>
-  ) : undefined;
+  ) : undefined
 
 export const ResetPasswordForm = ({returnTo}) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: {errors, isSubmitting, isSubmitSuccessful},
   } = useForm({
     resolver: zodResolver(resetPasswordSchema),
-  });
+  })
 
   const resetPassword = useCallback(
     formData => resetPasswordAction(formData, returnTo),
-    [returnTo]
+    [returnTo],
   )
 
   return (
     <form className="flex flex-col gap-3" action={handleSubmit(resetPassword)}>
       <Input
-        {...register("email")}
+        {...register('email')}
         isRequired
         label="Email Address"
         placeholder="Enter your email"
@@ -55,10 +55,10 @@ export const ResetPasswordForm = ({returnTo}) => {
       <FormErrors errors={errors} />
       {isSubmitSuccessful ? <StatusAlertBox status="checkEmail" /> : undefined}
     </form>
-  );
-};
+  )
+}
 
-export const ResetPassword = ({returnTo}) =>
+export const ResetPassword = ({returnTo}) => (
   <AuthSection>
     <header>
       <AuthTitle>Reset Password</AuthTitle>
@@ -66,10 +66,10 @@ export const ResetPassword = ({returnTo}) =>
     <ResetPasswordForm returnTo={returnTo} />
 
     <p className="text-center">
-      <Link 
+      <Link
         as={NextLink}
         href={{
-          pathname: "/auth",
+          pathname: '/auth',
           query: returnTo ? {returnTo} : {},
         }}
         size="sm"
@@ -78,3 +78,4 @@ export const ResetPassword = ({returnTo}) =>
       </Link>
     </p>
   </AuthSection>
+)

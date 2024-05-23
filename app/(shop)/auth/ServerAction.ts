@@ -4,7 +4,13 @@ import {redirect} from 'next/navigation'
 import {headers} from 'next/headers'
 import {createServerActionClient} from '@api/supabaseServer'
 import {defaultReturnTo} from '@components/Site'
-import {signInSchema, signUpSchema, resetPasswordSchema, signInWithOAuthSchema, updatePasswordSchema} from './Schema'
+import {
+  signInSchema,
+  signUpSchema,
+  resetPasswordSchema,
+  signInWithOAuthSchema,
+  updatePasswordSchema,
+} from './Schema'
 import {throwOnError} from '@util/SupabaseUtil'
 
 export const signIn = async (formData, returnTo = defaultReturnTo) => {
@@ -15,8 +21,7 @@ export const signIn = async (formData, returnTo = defaultReturnTo) => {
   }
 
   try {
-    await supabase.auth.signInWithPassword(result.data)
-      .then(throwOnError)
+    await supabase.auth.signInWithPassword(result.data).then(throwOnError)
   } catch (error) {
     return {error: error.message}
   }
@@ -25,8 +30,7 @@ export const signIn = async (formData, returnTo = defaultReturnTo) => {
   redirect(returnTo)
 }
 
-const makeReturnToUrl = returnTo =>
-  `http://${headers().get('Host')}${returnTo}`
+const makeReturnToUrl = returnTo => `http://${headers().get('Host')}${returnTo}`
 
 export const signUp = async (formData, returnTo = defaultReturnTo) => {
   const supabase = createServerActionClient()
@@ -36,10 +40,11 @@ export const signUp = async (formData, returnTo = defaultReturnTo) => {
   }
 
   try {
-    return await supabase.auth.signUp({
-      ...result.data,
-      options: {emailRedirectTo: makeReturnToUrl(returnTo)},
-    })
+    return await supabase.auth
+      .signUp({
+        ...result.data,
+        options: {emailRedirectTo: makeReturnToUrl(returnTo)},
+      })
       .then(throwOnError)
   } catch (error) {
     return {error: error.message}
@@ -50,8 +55,7 @@ export const signOut = async () => {
   const supabase = createServerActionClient()
 
   try {
-    await supabase.auth.signOut()
-      .then(throwOnError)
+    await supabase.auth.signOut().then(throwOnError)
   } catch (error) {
     return {error: error.message}
   }
@@ -66,10 +70,10 @@ export const resetPassword = async (formData, returnTo = defaultReturnTo) => {
   }
 
   try {
-    await supabase.auth.resetPasswordForEmail(
-      result.data.email,
-      {redirectTo: makeReturnToUrl(returnTo)}
-    )
+    await supabase.auth
+      .resetPasswordForEmail(result.data.email, {
+        redirectTo: makeReturnToUrl(returnTo),
+      })
       .then(throwOnError)
   } catch (error) {
     return {error: error.message}
@@ -98,12 +102,13 @@ export const signInWithOAuth = async (provider, returnTo = defaultReturnTo) => {
   const supabase = createServerActionClient()
   provider = signInWithOAuthSchema.parse(provider)
 
-  const {url} = await supabase.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: makePkceRedirect(returnTo),
-    },
-  })
+  const {url} = await supabase.auth
+    .signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: makePkceRedirect(returnTo),
+      },
+    })
     .then(throwOnError)
 
   if (url) {

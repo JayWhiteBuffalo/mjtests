@@ -10,7 +10,7 @@ import {SerialFetcher} from '@/state/SerialFetcher'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {UrlUtil} from '@util/UrlUtil'
 
-export const FilteredProductStore = new class extends FluxFieldStore {
+export const FilteredProductStore = new (class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {}
@@ -28,23 +28,32 @@ export const FilteredProductStore = new class extends FluxFieldStore {
       this.value = {filter, products: Present.pend}
 
       if (typeof window !== 'undefined') {
-        this.fetcher.fetch(filter)
+        this.fetcher
+          .fetch(filter)
           .then(jsonOnOk)
           .then(products =>
-            this.set({filter, products: Present.resolve(products)})
+            this.set({filter, products: Present.resolve(products)}),
           )
       }
     }
 
     return this.value.products
   }
-}()
+})()
 
-export const FilteredVendorStore = new ComputedStore([FilteredProductStore], productsPresent =>
-  productsPresent.then(products => {
-    const byName = ObjectUtil.map(products, (_, product) => [product.vendor.name, product.vendor])
-    return ArrayUtil.sortBy(Object.values(byName), vendor => [vendor.distance ?? Infinity, vendor.name])
-  })
+export const FilteredVendorStore = new ComputedStore(
+  [FilteredProductStore],
+  productsPresent =>
+    productsPresent.then(products => {
+      const byName = ObjectUtil.map(products, (_, product) => [
+        product.vendor.name,
+        product.vendor,
+      ])
+      return ArrayUtil.sortBy(Object.values(byName), vendor => [
+        vendor.distance ?? Infinity,
+        vendor.name,
+      ])
+    }),
 )
 
 export const VendorStore = new RecordStore('vendor')

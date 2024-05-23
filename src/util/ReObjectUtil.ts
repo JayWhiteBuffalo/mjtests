@@ -14,7 +14,7 @@ const ReObjectUtil = {
       }
     }
     return xs
-  }
+  },
 }
 
 export default ReObjectUtil

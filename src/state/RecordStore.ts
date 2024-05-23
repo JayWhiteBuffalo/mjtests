@@ -16,9 +16,8 @@ export class RecordStore<
 
   get = () => this.promisesById
 
-  fetch(id: Id): Promise<Row| undefined> {
-    return fetch(`/api/${this.fieldName}/${id}/`)
-      .then(jsonOnOk)
+  fetch(id: Id): Promise<Row | undefined> {
+    return fetch(`/api/${this.fieldName}/${id}/`).then(jsonOnOk)
   }
 
   getById = (id: Id) => this.getPresentById(id).get()
@@ -34,9 +33,8 @@ export class RecordStore<
     if (!this.presentsById[id]) {
       Present.xferFromPromise(
         this.getPromiseById(id),
-        present => this.presentsById[id] = present
-      )
-        .finally(() => this.notify())
+        present => (this.presentsById[id] = present),
+      ).finally(() => this.notify())
     }
     return this.presentsById[id]
   }

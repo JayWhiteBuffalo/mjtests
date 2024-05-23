@@ -15,7 +15,6 @@ const Page = async ({user}) => {
   let users
   if (user.roles.includes('admin')) {
     users = await UserDto.findMany()
-
   } else if (user.roles.includes('vendor')) {
     const edges = await UserOnVendorDto.findMany({
       select: {vendorId: true},
@@ -33,7 +32,6 @@ const Page = async ({user}) => {
         },
       },
     })
-
   } else if (user.roles.includes('producer')) {
     const edges = await UserOnProducerDto.findMany({
       select: {producerId: true},

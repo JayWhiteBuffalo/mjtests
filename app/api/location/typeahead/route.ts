@@ -26,7 +26,7 @@ const runSearch = (cityData, keyword) => {
     if (loc === 0) {
       relevance += 3
     }
-    relevance += 2 * normKeyword.length / x.normName.length
+    relevance += (2 * normKeyword.length) / x.normName.length
     relevance += Math.log10(+x.tags.population || 0)
     return relevance
   }

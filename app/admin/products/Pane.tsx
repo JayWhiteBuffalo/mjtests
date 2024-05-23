@@ -12,16 +12,14 @@ import {useFluxStore} from '@/state/Flux'
 import {VendorStore} from '@app/admin/state/DataStore'
 import {AdminPane} from '@app/admin/components/Pane'
 
-export const ProductPane = ({product, canEdit}) =>
+export const ProductPane = ({product, canEdit}) => (
   <AdminPane>
     <div className="flex justify-end gap-2">
-      {
-        canEdit
-          ? <Link href={`/admin/products/${product.id}/edit`}>
-              <Button>Edit</Button>
-            </Link>
-          : undefined
-      }
+      {canEdit ? (
+        <Link href={`/admin/products/${product.id}/edit`}>
+          <Button>Edit</Button>
+        </Link>
+      ) : undefined}
     </div>
 
     <InfoSection>
@@ -30,69 +28,77 @@ export const ProductPane = ({product, canEdit}) =>
       </header>
       <dl>
         <dt>Product ID</dt>
-        <dd><code>{product.id}</code></dd>
+        <dd>
+          <code>{product.id}</code>
+        </dd>
 
         <dt>Name</dt>
         <dd>{product.name}</dd>
 
         <dt>Product type</dt>
-        <dd>{
-          product.productType
-            ? Treemap.productTypesByKey[product.productType].name
-            : <Unknown />
-        }</dd>
+        <dd>
+          {product.productType ? (
+            Treemap.productTypesByKey[product.productType].name
+          ) : (
+            <Unknown />
+          )}
+        </dd>
 
-        {
-          product.productType === 'concentrate'
-            ? <>
-              <dt>Concentrate type</dt>
-              <dd>{
-                product.concentrateType
-                  ? Treemap.concentrateTypesByKey[product.concentrateType].name
-                  : <Unknown />
-              }</dd>
-            </>
-            : undefined
-        }
+        {product.productType === 'concentrate' ? (
+          <>
+            <dt>Concentrate type</dt>
+            <dd>
+              {product.concentrateType ? (
+                Treemap.concentrateTypesByKey[product.concentrateType].name
+              ) : (
+                <Unknown />
+              )}
+            </dd>
+          </>
+        ) : undefined}
 
         <dt>Brand</dt>
         <dd>{product.brand ?? <None />}</dd>
 
         <dt>Vendor</dt>
         <dd>
-          {
-            product.vendor
-              ? <BlueLink href={`/admin/vendors/${product.vendorId}`}>{product.vendor.name}</BlueLink>
-              : <None />
-          }
+          {product.vendor ? (
+            <BlueLink href={`/admin/vendors/${product.vendorId}`}>
+              {product.vendor.name}
+            </BlueLink>
+          ) : (
+            <None />
+          )}
         </dd>
 
         <dt>Producer</dt>
         <dd>
-          {
-            product.producer
-              ? <BlueLink href={`/admin/producers/${product.producerId}`}>{product.producer.name}</BlueLink>
-              : <Unknown />
-          }
+          {product.producer ? (
+            <BlueLink href={`/admin/producers/${product.producerId}`}>
+              {product.producer.name}
+            </BlueLink>
+          ) : (
+            <Unknown />
+          )}
         </dd>
 
         <dt>Flags</dt>
-        <dd><code>{JSON.stringify(product.flags)}</code></dd>
+        <dd>
+          <code>{JSON.stringify(product.flags)}</code>
+        </dd>
 
         <dt>Rating</dt>
-        <dd><code>{JSON.stringify(product.rating)}</code></dd>
+        <dd>
+          <code>{JSON.stringify(product.rating)}</code>
+        </dd>
 
         <dt className="hidden">Slug</dt>
-        <dd className="hidden"><code>{product.slug}</code></dd>
+        <dd className="hidden">
+          <code>{product.slug}</code>
+        </dd>
 
         <dt>Published</dt>
-        <dd>
-          {
-            product.isDraft
-              ? 'No (Draft)'
-              : 'Yes'
-          }
-        </dd>
+        <dd>{product.isDraft ? 'No (Draft)' : 'Yes'}</dd>
 
         <dt>Last updated</dt>
         <dd>{product.updatedAt.toString()}</dd>
@@ -105,34 +111,38 @@ export const ProductPane = ({product, canEdit}) =>
       </header>
       <dl>
         <dt>Batch number</dt>
-        <dd>{product.batch} ?? <None /></dd>
+        <dd>
+          {product.batch} ?? <None />
+        </dd>
 
         <dt>Subspecies</dt>
-        <dd>{
-          product.subspecies
-            ? Treemap.subspeciesByKey[product.subspecies].name
-            : <Unknown />
-        }</dd>
+        <dd>
+          {product.subspecies ? (
+            Treemap.subspeciesByKey[product.subspecies].name
+          ) : (
+            <Unknown />
+          )}
+        </dd>
 
         <dt>Cultivar</dt>
         <dd>{product.cultivar ?? <Unknown />}</dd>
 
         <dt>Total THC</dt>
         <dd>
-          {
-            product.potency.thc != null
-              ? MathUtil.roundTo(product.potency.thc * 100, 2) + '%'
-              : <Unknown />
-          }
+          {product.potency.thc != null ? (
+            MathUtil.roundTo(product.potency.thc * 100, 2) + '%'
+          ) : (
+            <Unknown />
+          )}
         </dd>
 
         <dt>Total CBD</dt>
         <dd>
-          {
-            product.potency.cbd != null
-              ? MathUtil.roundTo(product.potency.cbd * 100, 2) + '%'
-              : <Unknown />
-          }
+          {product.potency.cbd != null ? (
+            MathUtil.roundTo(product.potency.cbd * 100, 2) + '%'
+          ) : (
+            <Unknown />
+          )}
         </dd>
       </dl>
     </InfoSection>
@@ -143,31 +153,15 @@ export const ProductPane = ({product, canEdit}) =>
       </header>
       <dl>
         <dt>Price</dt>
-        <dd>
-          {
-            product.price != null
-              ? `$${product.price}`
-              : <Unknown />
-          }
-        </dd>
+        <dd>{product.price != null ? `$${product.price}` : <Unknown />}</dd>
 
         <dt>Price per gram</dt>
         <dd>
-          {
-            product.price != null
-              ? `$${product.pricePerGram}g`
-              : <Unknown />
-          }
+          {product.price != null ? `$${product.pricePerGram}g` : <Unknown />}
         </dd>
 
         <dt>Weight</dt>
-        <dd>
-          {
-            product.weight != null
-              ? `${product.weight}g`
-              : <Unknown />
-          }
-        </dd>
+        <dd>{product.weight != null ? `${product.weight}g` : <Unknown />}</dd>
       </dl>
     </InfoSection>
 
@@ -180,6 +174,7 @@ export const ProductPane = ({product, canEdit}) =>
       <PreviewContainer product={product} />
     </InfoSection>
   </AdminPane>
+)
 
 export const PreviewContainer = ({product}) => {
   useFluxStore(VendorStore)
@@ -188,22 +183,15 @@ export const PreviewContainer = ({product}) => {
     : Present.resolve(null)
 
   return vendorPresent
-    .then(vendor =>
+    .then(vendor => (
       <div className="flex gap-4 flex-wrap">
         <ul className="w-[360px] bg-white">
-          <Product
-            product={{...product, vendor}}
-            mode="full"
-          />
+          <Product product={{...product, vendor}} mode="full" />
         </ul>
         <ul className="w-[280px] bg-white">
-          <Product
-            product={{...product, vendor}}
-            mode="compact"
-          />
+          <Product product={{...product, vendor}} mode="compact" />
         </ul>
       </div>
-    )
+    ))
     .orPending(() => <Spinner />)
 }
-

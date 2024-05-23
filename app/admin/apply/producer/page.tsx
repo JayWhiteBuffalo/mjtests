@@ -12,7 +12,8 @@ export const getRoute = async params => [
   },
 ]
 
-const Page = async ({user}) =>
+const Page = async ({user}) => (
   <Form user={user} action={apply} isAdmin={user.roles.includes('admin')} />
+)
 
 export default makeMain({Page, getRoute})

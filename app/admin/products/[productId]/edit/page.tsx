@@ -5,18 +5,20 @@ import {getRoute as getParentRoute} from '../page.tsx'
 import {makeMain, UnauthorizedPage} from '@app/admin/Main'
 import {notFound} from 'next/navigation'
 
-export const getRoute = async params =>
-  [...(await getParentRoute(params)), {
+export const getRoute = async params => [
+  ...(await getParentRoute(params)),
+  {
     name: 'Edit',
     segment: 'edit',
-  }]
+  },
+]
 
 const Page = async ({user, productId}) => {
   const product = await ProductDto.get(productId)
   if (!product) {
     notFound()
   }
-  if (!await ProductDto.canEdit(user, productId)) {
+  if (!(await ProductDto.canEdit(user, productId))) {
     return <UnauthorizedPage />
   }
 
@@ -31,4 +33,3 @@ const Page = async ({user, productId}) => {
 }
 
 export default makeMain({Page, getRoute})
-

@@ -2,14 +2,17 @@ import {ProductFilterUtil} from '@util/ProductFilterUtil'
 import {FluxFieldStore, dispatch} from '@/state/Flux'
 import {UrlUtil} from '@util/UrlUtil'
 
-export const RouteStore = new class extends FluxFieldStore {
+export const RouteStore = new (class extends FluxFieldStore {
   replace(query) {
-    const url = UrlUtil.makeUrl(this.value.pathname, {...this.value.query, ...query})
+    const url = UrlUtil.makeUrl(this.value.pathname, {
+      ...this.value.query,
+      ...query,
+    })
     window.history.replaceState(null, '', url.toString())
   }
-}()
+})()
 
-export const FilterStore = new class extends FluxFieldStore {
+export const FilterStore = new (class extends FluxFieldStore {
   constructor() {
     super()
     this.value = ProductFilterUtil.defaultFilter()
@@ -26,9 +29,9 @@ export const FilterStore = new class extends FluxFieldStore {
   setQuery(query) {
     super.set(ProductFilterUtil.fromQuery(query))
   }
-}()
+})()
 
-export const LayoutStore = new class extends FluxFieldStore {
+export const LayoutStore = new (class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {
@@ -43,9 +46,9 @@ export const LayoutStore = new class extends FluxFieldStore {
   get() {
     return this.value
   }
-}()
+})()
 
-export const MapStore = new class extends FluxFieldStore {
+export const MapStore = new (class extends FluxFieldStore {
   constructor() {
     super()
     this.value = {
@@ -62,10 +65,14 @@ export const MapStore = new class extends FluxFieldStore {
     super.set(changes)
 
     const map = MapStore.get()
-    FilterStore.set({location: {
-      ...FilterStore.get().location,
-      center: map.filterFollowsMap ? map.center : map.city?.latLon || map.geolocationCenter,
-    }})
+    FilterStore.set({
+      location: {
+        ...FilterStore.get().location,
+        center: map.filterFollowsMap
+          ? map.center
+          : map.city?.latLon || map.geolocationCenter,
+      },
+    })
   }
 
   geolocate() {
@@ -73,7 +80,10 @@ export const MapStore = new class extends FluxFieldStore {
       this.set({geolocationInProgress: true})
       navigator.geolocation.getCurrentPosition(
         position => {
-          const geolocationCenter = [position.coords.latitude, position.coords.longitude]
+          const geolocationCenter = [
+            position.coords.latitude,
+            position.coords.longitude,
+          ]
           dispatch({
             type: 'map.set',
             map: {
@@ -94,8 +104,8 @@ export const MapStore = new class extends FluxFieldStore {
             },
           })
         },
-        {maximumAge: Infinity}
+        {maximumAge: Infinity},
       )
     }
   }
-}()
+})()

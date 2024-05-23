@@ -4,43 +4,61 @@ import DateUtil from '@util/DateUtil'
 import ObjectUtil from '@util/ObjectUtil'
 import {Checkbox, Input} from '@nextui-org/react'
 import {FieldError, RecursiveErrors} from '@components/Form'
-import {Fragment, forwardRef, useRef, useState, useCallback, useEffect} from 'react'
+import {
+  Fragment,
+  forwardRef,
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react'
 import {VendorSchedule} from '@util/VendorSchedule'
 
-const timeToText = time => time != null ? DateUtil.formatAmPm(time) : ''
+const timeToText = time => (time != null ? DateUtil.formatAmPm(time) : '')
 
-export const TimeOfDay = forwardRef(({value, onChange, className, ...rest}, ref) => {
-  const [text, setText] = useState(timeToText(value))
+export const TimeOfDay = forwardRef(
+  ({value, onChange, className, ...rest}, ref) => {
+    const [text, setText] = useState(timeToText(value))
 
-  useEffect(() => setText(timeToText(value)), [value])
+    useEffect(() => setText(timeToText(value)), [value])
 
-  const validate = useCallback(x => {
-    const time = DateUtil.parseAmPm(x.trim())
-    if (time !== value) {
-      onChange(time)
-    }
-    setText(timeToText(time))
-  }, [onChange, value])
+    const validate = useCallback(
+      x => {
+        const time = DateUtil.parseAmPm(x.trim())
+        if (time !== value) {
+          onChange(time)
+        }
+        setText(timeToText(time))
+      },
+      [onChange, value],
+    )
 
-  const onBlur = useCallback(event => validate(event.target.value), [validate])
-  const onKeyDown = useCallback(event => {
-    if (event.key === 'Enter') {
-      validate(event.target.value)
-    }
-  }, [validate])
+    const onBlur = useCallback(
+      event => validate(event.target.value),
+      [validate],
+    )
+    const onKeyDown = useCallback(
+      event => {
+        if (event.key === 'Enter') {
+          validate(event.target.value)
+        }
+      },
+      [validate],
+    )
 
-  return (
-    <Input
-      className={clsx('w-[90px]', className)}
-      onBlur={onBlur}
-      onValueChange={setText}
-      onKeyDown={onKeyDown}
-      ref={ref}
-      value={text}
-      {...rest}
-    />
-  )
-})
+    return (
+      <Input
+        className={clsx('w-[90px]', className)}
+        onBlur={onBlur}
+        onValueChange={setText}
+        onKeyDown={onKeyDown}
+        ref={ref}
+        value={text}
+        {...rest}
+      />
+    )
+  },
+)
 TimeOfDay.displayName = 'TimeOfDay'
 
 const valueToRange = value => {
@@ -66,7 +84,9 @@ const rangeToValue = range => {
 }
 
 export const DaySchedule = ({value, disabled, onChange}) => {
-  const [range, setRange] = useState(valueToRange(value) ?? [undefined, undefined])
+  const [range, setRange] = useState(
+    valueToRange(value) ?? [undefined, undefined],
+  )
 
   useEffect(() => {
     if (!ObjectUtil.equals(rangeToValue(range), value)) {
@@ -85,7 +105,8 @@ export const DaySchedule = ({value, disabled, onChange}) => {
           } else {
             onChange('closed')
           }
-        }}>
+        }}
+      >
         Open
       </Checkbox>
       <TimeOfDay
@@ -108,56 +129,57 @@ export const DaySchedule = ({value, disabled, onChange}) => {
   )
 }
 
-const Header = ({title}) =>
+const Header = ({title}) => (
   <div className="contents font-bold">
     <p className="col-span-2">{title}</p>
     <p>Opens at</p>
     <p>Closes at</p>
   </div>
+)
 
-const VendorScheduleGrid = ({children}) =>
+const VendorScheduleGrid = ({children}) => (
   <div
     className="grid gap-2 items-center my-4"
     style={{
       gridTemplateColumns: 'auto min-content max-content max-content',
-    }}>
+    }}
+  >
     {children}
   </div>
+)
 
-const WeekHours = ({week, errors, onChange}) =>
+const WeekHours = ({week, errors, onChange}) => (
   <VendorScheduleGrid>
     <Header title="Weekly Hours" />
 
-    {VendorSchedule.daysOfWeek.map((dayOfWeek, ix) =>
+    {VendorSchedule.daysOfWeek.map((dayOfWeek, ix) => (
       <Fragment key={ix}>
         <div>{dayOfWeek.name}</div>
 
         <DaySchedule
           className="mr-4"
           onChange={daySchedule =>
-            onChange(ArrayUtil.splice(week, ix, 1, daySchedule)
-          )}
+            onChange(ArrayUtil.splice(week, ix, 1, daySchedule))
+          }
           value={week[ix]}
         />
 
         <RecursiveErrors className="col-span-full" errors={errors?.[ix]} />
       </Fragment>
-    )}
+    ))}
   </VendorScheduleGrid>
+)
 
 const HolidayHours = ({special, errors, onChange}) => {
   const daySchedules = useRef(special)
 
-  useEffect(() =>
-    Object.assign(daySchedules.current, special)
-    [special]
-  )
+  useEffect(() => Object.assign(daySchedules.current, special)[special])
 
   return (
     <VendorScheduleGrid>
       <Header title="Holiday Hours" />
 
-      {VendorSchedule.getNamedDaysForYear().map(({key, day}) =>
+      {VendorSchedule.getNamedDaysForYear().map(({key, day}) => (
         <Fragment key={key}>
           <Checkbox
             checked={key in special}
@@ -167,8 +189,11 @@ const HolidayHours = ({special, errors, onChange}) => {
               } else {
                 onChange(ObjectUtil.delete(special, key))
               }
-            }}>
-            <time>{day} {VendorSchedule.namedDaysByKey[key].name}</time>
+            }}
+          >
+            <time>
+              {day} {VendorSchedule.namedDaysByKey[key].name}
+            </time>
           </Checkbox>
 
           <DaySchedule
@@ -183,14 +208,14 @@ const HolidayHours = ({special, errors, onChange}) => {
 
           <RecursiveErrors className="col-span-full" errors={errors?.[key]} />
         </Fragment>
-      )}
+      ))}
     </VendorScheduleGrid>
   )
 }
 
 //const SpecialHours = ({special, errors, onChange}) =>
 
-export const VendorScheduleInput = ({schedule, errors, onChange}) =>
+export const VendorScheduleInput = ({schedule, errors, onChange}) => (
   <>
     <WeekHours
       week={schedule.week}
@@ -207,4 +232,4 @@ export const VendorScheduleInput = ({schedule, errors, onChange}) =>
     <FieldError error={errors?.special} />
     */}
   </>
-
+)

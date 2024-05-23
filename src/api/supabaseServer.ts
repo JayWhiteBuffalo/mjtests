@@ -1,5 +1,8 @@
-import {cookies} from "next/headers"
-import {createServerClient as createServerClient_, type CookieOptions} from '@supabase/ssr'
+import {cookies} from 'next/headers'
+import {
+  createServerClient as createServerClient_,
+  type CookieOptions,
+} from '@supabase/ssr'
 import {supabaseUrl} from './Env'
 
 export const createServerClient = () => {
@@ -13,7 +16,7 @@ export const createServerClient = () => {
           return cookieStore.get(name)?.value
         },
       },
-    }
+    },
   )
 }
 
@@ -29,13 +32,13 @@ export const createRouteHandlerClient = () => {
           return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options })
+          cookieStore.set({name, value, ...options})
         },
         remove(name: string, options: CookieOptions) {
-          cookieStore.set({ name, value: '', ...options })
+          cookieStore.set({name, value: '', ...options})
         },
       },
-    }
+    },
   )
 }
 

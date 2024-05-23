@@ -5,15 +5,18 @@ import {makeMain, UnauthorizedPage} from '@app/admin/Main'
 import {ProducerUtil} from '@util/ProducerUtil'
 import {save, getFormProps} from '../FormAction'
 
-export const getRoute = async (params) => {
-  return [...(await getParentRoute(params)), {
-    name: 'Create',
-    segment: 'create',
-  }]
+export const getRoute = async params => {
+  return [
+    ...(await getParentRoute(params)),
+    {
+      name: 'Create',
+      segment: 'create',
+    },
+  ]
 }
 
 const Page = async ({user}) => {
-  if (!await ProducerDto.canCreate(user)) {
+  if (!(await ProducerDto.canCreate(user))) {
     return <UnauthorizedPage />
   }
 

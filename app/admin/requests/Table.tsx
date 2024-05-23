@@ -2,7 +2,7 @@
 import {BlueLink} from '@components/Link'
 import {TMTable, makeColumns} from '@components/Table'
 
-const reprRequestType = type => { 
+const reprRequestType = type => {
   if (type === 'vendor') {
     return 'Vendor application'
   } else if (type === 'producer') {
@@ -12,28 +12,28 @@ const reprRequestType = type => {
   }
 }
 
-const TypeCell = ({item: request}) =>
-  reprRequestType(request.type)
+const TypeCell = ({item: request}) => reprRequestType(request.type)
 
-const NameCell = ({item: request}) =>
+const NameCell = ({item: request}) => (
   <BlueLink href={`/admin/requests/${request.id}`} className="py-4">
     {request.vendor?.name ?? request.producer?.name}
   </BlueLink>
+)
 
-const LocationCell = ({item: request}) =>
+const LocationCell = ({item: request}) => (
   <div className="whitespace-pre-line">
     {request.vendor?.address ?? request.producer?.address}
   </div>
+)
 
-const LicenseCell = ({item: request}) =>
+const LicenseCell = ({item: request}) => (
   <>
-    <div>
-      {request.vendor?.licenseState ?? request.producer?.licenseState}
-    </div>
+    <div>{request.vendor?.licenseState ?? request.producer?.licenseState}</div>
     <div className="whitespace-pre-line">
       {request.vendor?.licenseNumber ?? request.producer?.licenseNumber}
     </div>
   </>
+)
 
 export const RequestTable = ({requests}) => {
   const columns = makeColumns([
@@ -43,12 +43,11 @@ export const RequestTable = ({requests}) => {
     {key: 'license', label: 'License #', Cell: LicenseCell},
   ])
 
-
   return (
     <TMTable
       aria-label="Table of business requests"
       columns={columns}
-      items={requests} 
+      items={requests}
     />
   )
 }

@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       cultivar: {
         contains: keyword,
         mode: 'insensitive',
-      }
+      },
     },
     distinct: ['cultivar'],
     orderBy: {cultivar: 'asc'},

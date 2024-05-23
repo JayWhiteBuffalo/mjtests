@@ -7,16 +7,18 @@ export const cloudinaryLoader = ({src, width, quality}) => {
   return `https://res.cloudinary.com/${cloudinaryCloudName}/image/upload/${params.join(',')}/${src}`
 }
 
-export const Image = ({publicId, src,...rest}) =>
+export const Image = ({publicId, src, ...rest}) => (
   <NextImage
     src={src ?? publicId}
     loader={publicId ? cloudinaryLoader : undefined}
     {...rest}
   />
+)
 
-export const ImageOrFallback = forwardRef(({alt, size, src, className, onLoad, ...rest}, ref) =>
-  src
-    ? <Image
+export const ImageOrFallback = forwardRef(
+  ({alt, size, src, className, onLoad, ...rest}, ref) =>
+    src ? (
+      <Image
         alt={alt}
         className={clsx('object-contain object-center bg-gray-100', className)}
         height={size[1]}
@@ -24,18 +26,23 @@ export const ImageOrFallback = forwardRef(({alt, size, src, className, onLoad, .
         radius="none"
         ref={ref}
         src={supabaseImageUrl(src, size[0])}
-        style={{ width: size[0], height: size[1] }}
+        style={{width: size[0], height: size[1]}}
         width={size[0]}
         {...rest}
       />
-    : <div
-        className={clsx('flex flex-wrap justify-center content-center', className)}
+    ) : (
+      <div
+        className={clsx(
+          'flex flex-wrap justify-center content-center',
+          className,
+        )}
         ref={ref}
-        style={{ width: size[0], height: size[1] }}
+        style={{width: size[0], height: size[1]}}
         {...rest}
       >
         <p className="text-center p-2">{alt}</p>
       </div>
+    ),
 )
 ImageOrFallback.displayName = 'ImageOrFallback'
 
@@ -45,13 +52,13 @@ export const scaleToFixedHeight = height => naturalSize => {
 }
 
 export const FixedHeightImage = forwardRef(
-  ({ size: intitialSize, height = 300, alt, onResize, ...rest }, ref) => {
+  ({size: intitialSize, height = 300, alt, onResize, ...rest}, ref) => {
     //eslint-disable-next-line react-hooks/exhaustive-deps
     const toFixedHeight = useCallback(scaleToFixedHeight(height), [height])
     const [size, setSize] = useState(toFixedHeight(intitialSize ?? [10, 16]))
 
     const onLoad = useCallback(
-      (event) => {
+      event => {
         const newSize = toFixedHeight([
           event.target.naturalWidth,
           event.target.naturalHeight,
@@ -59,8 +66,8 @@ export const FixedHeightImage = forwardRef(
         setSize(newSize)
         onResize?.(newSize)
       },
-      [onResize, toFixedHeight]
-    );
+      [onResize, toFixedHeight],
+    )
 
     return (
       <Image
@@ -73,6 +80,6 @@ export const FixedHeightImage = forwardRef(
         {...rest}
       />
     )
-  }
+  },
 )
-FixedHeightImage.displayName = "FixedHeightImage";
+FixedHeightImage.displayName = 'FixedHeightImage'

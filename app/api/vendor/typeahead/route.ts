@@ -9,7 +9,7 @@ export async function GET(request: Request) {
       name: {
         contains: keyword,
         mode: 'insensitive',
-      }
+      },
     },
     distinct: ['name'],
     orderBy: {name: 'asc'},

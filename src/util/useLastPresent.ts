@@ -5,7 +5,5 @@ export const useLastPresent = present => {
   if (present.done() && present !== last) {
     setLast(present)
   }
-  return present.done()
-    ? present
-    : last
+  return present.done() ? present : last
 }

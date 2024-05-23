@@ -48,7 +48,7 @@ const VendorDto = {
 
   async _getRaw(vendorId) {
     return await prisma.vendor.findUnique({
-      where: {id: vendorId}
+      where: {id: vendorId},
     })
   },
 
@@ -57,13 +57,15 @@ const VendorDto = {
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawVendors = await prisma.vendor.findMany(options)
-    const vendors = await ArrayUtil.asyncFilter(rawVendors, raw => VendorDto.canSee(user, raw.id))
+    const vendors = await ArrayUtil.asyncFilter(rawVendors, raw =>
+      VendorDto.canSee(user, raw.id),
+    )
     return vendors.map(VendorUtil.populate)
   },
 
   async get(vendorId) {
     const user = await UserDto.getCurrent()
-    if (!await VendorDto.canSee(user, vendorId)) {
+    if (!(await VendorDto.canSee(user, vendorId))) {
       return null
     }
     const vendor = await VendorDto._getRaw(vendorId)
@@ -88,18 +90,19 @@ const VendorDto = {
         },
       })
       return vendorId
-
     } else {
       assert(await VendorDto.canCreate(user))
       const id = nanoid()
       await prisma.vendor.createMany({
-        data: [{
-          ...vendor,
-          id,
-          createdById: user.id,
-          updatedById: user.id,
-          slug: id,
-        }],
+        data: [
+          {
+            ...vendor,
+            id,
+            createdById: user.id,
+            updatedById: user.id,
+            slug: id,
+          },
+        ],
       })
       return id
     }

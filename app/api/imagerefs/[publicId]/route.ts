@@ -7,7 +7,7 @@ export const DELETE = async (request, {params}) => {
   if (!imageRef) {
     return Response.json({}, {status: 404})
   }
-  if (!await ImageRefDto.canEdit(user, params.publicId)) {
+  if (!(await ImageRefDto.canEdit(user, params.publicId))) {
     return Response.json({}, {status: 403})
   }
   await ImageRefDto.delete(params.publicId)

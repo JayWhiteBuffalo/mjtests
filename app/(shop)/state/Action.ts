@@ -43,7 +43,7 @@ const MapActions = {
     MapStore.set({
       keyword,
       item: keyword ? map.item : undefined,
-      filterFollowsMap: keyword ? map.filterFollowsMap: true,
+      filterFollowsMap: keyword ? map.filterFollowsMap : true,
     })
   },
   selectCity: ({city}) => {

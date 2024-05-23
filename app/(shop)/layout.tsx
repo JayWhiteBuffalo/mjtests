@@ -6,9 +6,6 @@ export const metadata: Metadata = {
   description: 'The biggest weed market in Oklahoma',
 }
 
-const Layout = ({children}) =>
-  <Providers>
-    {children}
-  </Providers>
+const Layout = ({children}) => <Providers>{children}</Providers>
 
 export default Layout

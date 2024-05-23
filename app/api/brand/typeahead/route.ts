@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       brand: {
         contains: keyword,
         mode: 'insensitive',
-      }
+      },
     },
     distinct: ['brand'],
     orderBy: {brand: 'asc'},

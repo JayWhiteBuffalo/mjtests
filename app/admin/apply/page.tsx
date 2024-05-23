@@ -7,5 +7,4 @@ export const getRoute = async params => [
   getRootPageRouteItem('apply'),
 ]
 
-export default () =>
-  redirect('/business')
+export default () => redirect('/business')

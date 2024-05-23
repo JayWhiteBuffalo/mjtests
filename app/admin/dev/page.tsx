@@ -9,7 +9,7 @@ export const getRoute = async params => [
   getRootPageRouteItem('dev'),
 ]
 
-const Page = async () =>
+const Page = async () => (
   <div className="px-8">
     <TestingToolsSection
       assignAdmin={assignAdmin}
@@ -18,5 +18,6 @@ const Page = async () =>
       truncateUser={truncateUser}
     />
   </div>
+)
 
 export default makeMain({Page, getRoute})

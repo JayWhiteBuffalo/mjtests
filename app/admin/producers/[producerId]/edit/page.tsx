@@ -5,18 +5,20 @@ import {makeMain, UnauthorizedPage} from '@app/admin/Main'
 import {notFound} from 'next/navigation'
 import {save, getFormProps} from '../../FormAction'
 
-export const getRoute = async params =>
-  [...(await getParentRoute(params)), {
+export const getRoute = async params => [
+  ...(await getParentRoute(params)),
+  {
     name: 'Edit',
     segment: 'edit',
-  }]
+  },
+]
 
 const Page = async ({user, producerId}) => {
   const producer = await ProducerDto.get(producerId)
   if (!producer) {
     notFound()
   }
-  if (!await ProducerDto.canEdit(user, producerId)) {
+  if (!(await ProducerDto.canEdit(user, producerId))) {
     return <UnauthorizedPage />
   }
   return (
@@ -29,4 +31,3 @@ const Page = async ({user, producerId}) => {
 }
 
 export default makeMain({Page, getRoute})
-

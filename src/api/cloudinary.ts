@@ -4,6 +4,5 @@ export const cloudinaryCloudName = 'dsvfkffwe'
 export const cloudinaryApi = new Cloudinary({
   cloud: {
     cloudName: cloudinaryCloudName,
-  }
+  },
 })
-

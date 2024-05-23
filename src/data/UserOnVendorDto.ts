@@ -12,7 +12,11 @@ const UserOnVendorDto = {
       return true
     }
 
-    if (user.vendors.some(edge => edge.vendorId === vendorId && edge.role === 'admin')) {
+    if (
+      user.vendors.some(
+        edge => edge.vendorId === vendorId && edge.role === 'admin',
+      )
+    ) {
       return true
     }
 
@@ -27,7 +31,11 @@ const UserOnVendorDto = {
       return true
     }
 
-    if (user.vendors.some(edge => edge.vendorId === vendorId && edge.role === 'admin')) {
+    if (
+      user.vendors.some(
+        edge => edge.vendorId === vendorId && edge.role === 'admin',
+      )
+    ) {
       return true
     }
 
@@ -44,7 +52,9 @@ const UserOnVendorDto = {
 
     // No invitation required for now
     if (
-      user.vendors.some(edge => edge.vendorId === vendorId && edge.role === 'admin')
+      user.vendors.some(
+        edge => edge.vendorId === vendorId && edge.role === 'admin',
+      )
     ) {
       return true
     }
@@ -53,19 +63,21 @@ const UserOnVendorDto = {
 
   async _getRaw(userId, vendorId) {
     return await prisma.userOnVendor.findUnique({
-      where: {userId, vendorId}
+      where: {userId, vendorId},
     })
   },
 
   async findMany(options) {
     const user = await UserDto.getCurrent()
     const rawUserOnVendors = await prisma.userOnVendor.findMany(options)
-    return await ArrayUtil.asyncFilter(rawUserOnVendors, edge => UserOnVendorDto.canSee(user, edge.userId, edge.vendorId))
+    return await ArrayUtil.asyncFilter(rawUserOnVendors, edge =>
+      UserOnVendorDto.canSee(user, edge.userId, edge.vendorId),
+    )
   },
 
   async get(userId, vendorId) {
     const user = await UserDto.getCurrent()
-    if (!await UserOnVendorDto.canSee(user, userId, vendorId)) {
+    if (!(await UserOnVendorDto.canSee(user, userId, vendorId))) {
       return null
     }
     return await UserOnVendorDto._getRaw(userId, vendorId)
@@ -74,7 +86,7 @@ const UserOnVendorDto = {
   async create(edge) {
     const user = await UserDto.getCurrent()
     assert(await UserOnVendorDto.canCreate(user))
-    return void await prisma.userOnVendor.createMany({data: [edge]})
+    return void (await prisma.userOnVendor.createMany({data: [edge]}))
   },
 
   async update(edge) {

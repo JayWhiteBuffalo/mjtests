@@ -5,10 +5,13 @@ import {VendorPane} from '../Pane'
 
 export const getRoute = async ({vendorId, ...params}) => {
   const vendor = await VendorDto.get(vendorId)
-  return [...(await getParentRoute(params)), {
-    name: vendor?.name,
-    segment: vendorId,
-  }]
+  return [
+    ...(await getParentRoute(params)),
+    {
+      name: vendor?.name,
+      segment: vendorId,
+    },
+  ]
 }
 
 const Page = async ({user, vendorId}) => {

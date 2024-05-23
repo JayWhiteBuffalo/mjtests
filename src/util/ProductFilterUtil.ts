@@ -22,7 +22,7 @@ export const ProductFilterUtil = {
       terps: {},
       vendors: {},
       weight: [undefined, undefined],
-    })
+    }),
   ),
 
   isEmpty(filter_) {
@@ -31,33 +31,42 @@ export const ProductFilterUtil = {
     delete filter.location.center
 
     const defaultFilter = ProductFilterUtil.defaultFilter()
-    const diff = ObjectUtil.filter(filter, (key, value) =>
-      !ObjectUtil.equals(value, defaultFilter[key])
+    const diff = ObjectUtil.filter(
+      filter,
+      (key, value) => !ObjectUtil.equals(value, defaultFilter[key]),
     )
     return ObjectUtil.isEmpty(diff)
   },
 
   testProductFilter(filter, product) {
-    return ProductFilterUtil.testKeywordFilter(filter.keyword, product)
-      && MathUtil.inRange(filter.price, product.price)
-      && MathUtil.inRange(filter.pricePerGram, product.pricePerGram)
-      && MathUtil.inRange(filter.weight, product.weight)
-      && MathUtil.inRange(filter.potency.thc, product.potency.thc)
-      && MathUtil.inRange(filter.potency.cbd, product.potency.cbd)
-      && ProductFilterUtil.testSubspeciesFilter(filter.subspecies, product)
-      && (ObjectUtil.isEmpty(filter.productTypes) || filter.productTypes[product.productType])
-      && (product.productType !== 'concentrate' || ObjectUtil.isEmpty(filter.concentrateTypes) || filter.concentrateTypes[product.concentrateType])
-      && (ObjectUtil.isEmpty(filter.brands) || filter.brands[product.brand])
-      && (ObjectUtil.isEmpty(filter.cultivars) || filter.cultivars[product.cultivar])
-      && (ObjectUtil.isEmpty(filter.vendors) || filter.vendors[product.vendor])
-      && ProductFilterUtil.testTerpFilter(filter.terps, product.normalizedTerps)
-      && ProductFilterUtil.testLocationFilter(filter.location, product)
-      && ProductFilterUtil.testFlagsFilter(filter.flags, product)
+    return (
+      ProductFilterUtil.testKeywordFilter(filter.keyword, product) &&
+      MathUtil.inRange(filter.price, product.price) &&
+      MathUtil.inRange(filter.pricePerGram, product.pricePerGram) &&
+      MathUtil.inRange(filter.weight, product.weight) &&
+      MathUtil.inRange(filter.potency.thc, product.potency.thc) &&
+      MathUtil.inRange(filter.potency.cbd, product.potency.cbd) &&
+      ProductFilterUtil.testSubspeciesFilter(filter.subspecies, product) &&
+      (ObjectUtil.isEmpty(filter.productTypes) ||
+        filter.productTypes[product.productType]) &&
+      (product.productType !== 'concentrate' ||
+        ObjectUtil.isEmpty(filter.concentrateTypes) ||
+        filter.concentrateTypes[product.concentrateType]) &&
+      (ObjectUtil.isEmpty(filter.brands) || filter.brands[product.brand]) &&
+      (ObjectUtil.isEmpty(filter.cultivars) ||
+        filter.cultivars[product.cultivar]) &&
+      (ObjectUtil.isEmpty(filter.vendors) || filter.vendors[product.vendor]) &&
+      ProductFilterUtil.testTerpFilter(filter.terps, product.normalizedTerps) &&
+      ProductFilterUtil.testLocationFilter(filter.location, product) &&
+      ProductFilterUtil.testFlagsFilter(filter.flags, product)
+    )
   },
 
   testTerpFilter(filterTerps, productTerps) {
     for (const terpName in filterTerps) {
-      if (!MathUtil.inRange(filterTerps[terpName], productTerps[terpName] || 0)) {
+      if (
+        !MathUtil.inRange(filterTerps[terpName], productTerps[terpName] || 0)
+      ) {
         return false
       }
     }
@@ -67,22 +76,28 @@ export const ProductFilterUtil = {
   testKeywordFilter(keyword, product) {
     const normalize = StringUtil.normalizeForSearch
     const normKeyword = normalize(keyword)
-    return normalize(product.name).includes(normKeyword)
-      || normalize(product.cultivar).includes(normKeyword)
-      || normalize(product.vendor).includes(normKeyword)
-      || normalize(product.brand).includes(normKeyword)
+    return (
+      normalize(product.name).includes(normKeyword) ||
+      normalize(product.cultivar).includes(normKeyword) ||
+      normalize(product.vendor).includes(normKeyword) ||
+      normalize(product.brand).includes(normKeyword)
+    )
   },
 
   testSubspeciesFilter(subspecies, product) {
-    return ObjectUtil.isEmpty(subspecies)
-      || subspecies[product.subspecies]
-
-      || product.subspecies === 'hybrid' && (subspecies.hybridIndica || subspecies.hybridSativa)
+    return (
+      ObjectUtil.isEmpty(subspecies) ||
+      subspecies[product.subspecies] ||
+      (product.subspecies === 'hybrid' &&
+        (subspecies.hybridIndica || subspecies.hybridSativa))
+    )
   },
 
   testLocationFilter(filterLocation, product) {
-    return filterLocation.distance === undefined
-      || (product.vendor.distance ?? Infinity) <= filterLocation.distance * 1609.34
+    return (
+      filterLocation.distance === undefined ||
+      (product.vendor.distance ?? Infinity) <= filterLocation.distance * 1609.34
+    )
   },
 
   testFlagsFilter(filterFlags, product) {
@@ -92,8 +107,10 @@ export const ProductFilterUtil = {
       }
     }
 
-    return (!filterFlags.promotion || product.flags.promotion)
-      && (!filterFlags.new || product.flags.new)
+    return (
+      (!filterFlags.promotion || product.flags.promotion) &&
+      (!filterFlags.new || product.flags.new)
+    )
   },
 
   fromQuery(query) {
@@ -106,9 +123,14 @@ export const ProductFilterUtil = {
       keyword: query.keyword ?? '',
       location: {
         distance: ProductFilterUtil.numberFromUrl(+query['location.distance']),
-        center: ProductFilterUtil.pointFromUrl(query['location.center']) ?? defaultFilter.location.center,
+        center:
+          ProductFilterUtil.pointFromUrl(query['location.center']) ??
+          defaultFilter.location.center,
       },
-      potency: {thc: ProductFilterUtil.rangeFromUrl(query['potency.thc']), cbd: ProductFilterUtil.rangeFromUrl(query['potency.cbd'])},
+      potency: {
+        thc: ProductFilterUtil.rangeFromUrl(query['potency.thc']),
+        cbd: ProductFilterUtil.rangeFromUrl(query['potency.cbd']),
+      },
       price: ProductFilterUtil.rangeFromUrl(query.price),
       pricePerGram: ProductFilterUtil.rangeFromUrl(query.pricePerGram),
       productTypes: ProductFilterUtil.flagsFromUrl(query.productTypes),
@@ -136,7 +158,8 @@ export const ProductFilterUtil = {
       price: ProductFilterUtil.rangeToUrl(filter.price),
       pricePerGram: ProductFilterUtil.rangeToUrl(filter.pricePerGram),
       productTypes: ProductFilterUtil.flagsToUrl(filter.productTypes),
-      sortBy: filter.sortBy !== defaultFilter.sortBy ? filter.sortBy : undefined,
+      sortBy:
+        filter.sortBy !== defaultFilter.sortBy ? filter.sortBy : undefined,
       subspecies: ProductFilterUtil.flagsToUrl(filter.subspecies),
       vendors: ProductFilterUtil.flagsToUrl(filter.vendors),
       weight: ProductFilterUtil.rangeToUrl(filter.weight),
@@ -156,10 +179,10 @@ export const ProductFilterUtil = {
   },
 
   terpsToUrl(terps) {
-    return ObjectUtil.map(terps, (terpName, range) =>
-
-      [`terps.${terpName}`, ProductFilterUtil.rangeToUrl(range)]
-    )
+    return ObjectUtil.map(terps, (terpName, range) => [
+      `terps.${terpName}`,
+      ProductFilterUtil.rangeToUrl(range),
+    ])
   },
 
   flagsFromUrl(urlValue) {
@@ -177,13 +200,13 @@ export const ProductFilterUtil = {
 
   rangeFromUrl(urlValue) {
     return urlValue != null
-      ? urlValue.split(',').map(x => x != 'null' ? +x : undefined)
+      ? urlValue.split(',').map(x => (x != 'null' ? +x : undefined))
       : [undefined, undefined]
   },
 
   rangeToUrl(range) {
     return range.some(x => x != null)
-      ? range.map(x => x != null ? x.toString() : 'null').join(',')
+      ? range.map(x => (x != null ? x.toString() : 'null')).join(',')
       : undefined
   },
 
@@ -193,9 +216,7 @@ export const ProductFilterUtil = {
   },
 
   pointFromUrl(urlValue) {
-    return urlValue != null
-      ? urlValue.split(',').map(x => +x)
-      : undefined
+    return urlValue != null ? urlValue.split(',').map(x => +x) : undefined
   },
 
   pointToUrl(point) {
@@ -219,9 +240,11 @@ export const ProductFilterUtil = {
       pricePerGram: ProductFilterUtil.rangeToPrisma(filter.pricePerGram),
       productType: ProductFilterUtil.flagsToPrisma(filter.productTypes),
       subspecies: ProductFilterUtil.flagsToPrisma(filter.subspecies),
-      vendor: {is: {
-        name: ProductFilterUtil.flagsToPrisma(filter.vendors),
-      }},
+      vendor: {
+        is: {
+          name: ProductFilterUtil.flagsToPrisma(filter.vendors),
+        },
+      },
       weight: ProductFilterUtil.rangeToPrisma(filter.weight),
     }
 
@@ -229,11 +252,15 @@ export const ProductFilterUtil = {
   },
 
   sortToPrisma(sortBy) {
-    return sortBy === 'distance' ? [{name: 'asc'}] // {distance: 'asc'}
-      : sortBy === 'price' ? [{price: 'asc'}, {name: 'asc'}]
-      : sortBy === 'pricePerGram' ? [{pricePerGram: 'asc'}, {name: 'asc'}]
-      : sortBy === 'name' ? {name: 'asc'}
-      : {name: 'asc'}
+    return sortBy === 'distance'
+      ? [{name: 'asc'}] // {distance: 'asc'}
+      : sortBy === 'price'
+        ? [{price: 'asc'}, {name: 'asc'}]
+        : sortBy === 'pricePerGram'
+          ? [{pricePerGram: 'asc'}, {name: 'asc'}]
+          : sortBy === 'name'
+            ? {name: 'asc'}
+            : {name: 'asc'}
   },
 
   rangeToPrisma(range) {
@@ -250,28 +277,26 @@ export const ProductFilterUtil = {
   rangesToPrisma(ranges, fieldName) {
     return Object.entries(ranges)
       .filter(([_, range]) => range.some(x => x != null))
-      .map(([name, range]) =>
-        ({
-          [fieldName]: {
-            path: [name],
-            ...ProductFilterUtil.rangeToPrisma(range),
-          }
-        })
-      )
+      .map(([name, range]) => ({
+        [fieldName]: {
+          path: [name],
+          ...ProductFilterUtil.rangeToPrisma(range),
+        },
+      }))
   },
 
   keywordToPrisma(keyword) {
     return keyword
-      ? [{
-        OR: [
-          {name: {contains: keyword, mode: 'insensitive'}},
-          {brand: {contains: keyword, mode: 'insensitive'}},
-          {cultivar: {contains: keyword, mode: 'insensitive'}},
-          {vendor: {is:
-            {name: {contains: keyword, mode: 'insensitive'}},
-          }},
-        ],
-      }]
+      ? [
+          {
+            OR: [
+              {name: {contains: keyword, mode: 'insensitive'}},
+              {brand: {contains: keyword, mode: 'insensitive'}},
+              {cultivar: {contains: keyword, mode: 'insensitive'}},
+              {vendor: {is: {name: {contains: keyword, mode: 'insensitive'}}}},
+            ],
+          },
+        ]
       : []
   },
 
@@ -283,13 +308,11 @@ export const ProductFilterUtil = {
 
   multiFlagsToPrisma(flags_, fieldName) {
     const flags = ObjectUtil.delete(flags_, 'openNow')
-    return Object.entries(flags).map(([name, _]) =>
-      ({
-        [fieldName]: {
-          path: [name],
-          equals: true,
-        }
-      })
-    )
+    return Object.entries(flags).map(([name, _]) => ({
+      [fieldName]: {
+        path: [name],
+        equals: true,
+      },
+    }))
   },
 }

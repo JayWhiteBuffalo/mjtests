@@ -2,11 +2,13 @@ import {HiHome} from 'react-icons/hi'
 import {makeMain} from '@app/admin/Main'
 import {siteName} from '@components/Site'
 
-export const getRoute = async () => [{
-  Icon: HiHome,
-  name: 'Home',
-  segment: 'admin'
-}]
+export const getRoute = async () => [
+  {
+    Icon: HiHome,
+    name: 'Home',
+    segment: 'admin',
+  },
+]
 
 const Page = async () => {
   return (

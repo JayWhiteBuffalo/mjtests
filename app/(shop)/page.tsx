@@ -2,9 +2,7 @@ import ProductDto from '@data/ProductDto'
 import {AppContainer} from './components/App'
 import {ProductFilterUtil} from '@util/ProductFilterUtil'
 
-export const generateStaticParams = () => (
-  {searchParams: {}}
-)
+export const generateStaticParams = () => ({searchParams: {}})
 
 const Page = async ({searchParams: query}) => {
   const filter = ProductFilterUtil.fromQuery(query)

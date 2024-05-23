@@ -1,23 +1,27 @@
-"use client";
-import NextLink from "next/link"
-import { Icon } from "@iconify/react";
-import { AuthDivider, AuthSection, AuthTitle } from "./AuthSection";
-import { Button, Input, Checkbox, Link } from "@nextui-org/react";
+'use client'
+import NextLink from 'next/link'
+import {Icon} from '@iconify/react'
+import {AuthDivider, AuthSection, AuthTitle} from './AuthSection'
+import {Button, Input, Checkbox, Link} from '@nextui-org/react'
 import {
   FieldError,
   FormErrors,
   nullResolver,
   AlertBox,
   useForm,
-} from "@components/Form";
-import { PasswordInput } from "./Input";
-import { Controller } from "react-hook-form";
-import { useState, useCallback } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {signIn as signInAction, signUp as signUpAction, signInWithOAuth} from '@app/(shop)/auth/ServerAction'
+} from '@components/Form'
+import {PasswordInput} from './Input'
+import {Controller} from 'react-hook-form'
+import {useState, useCallback} from 'react'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {
+  signIn as signInAction,
+  signUp as signUpAction,
+  signInWithOAuth,
+} from '@app/(shop)/auth/ServerAction'
 import {signUpSchema} from '@app/(shop)/auth/Schema'
 
-export const SignInPlatformSection = ({ returnTo }) => (
+export const SignInPlatformSection = ({returnTo}) => (
   <div className="flex flex-col gap-2">
     <Button
       onPress={() => signInWithOAuth('google', returnTo)}
@@ -36,40 +40,40 @@ export const SignInPlatformSection = ({ returnTo }) => (
       Continue with Github
     </Button>
   </div>
-);
+)
 
-const StatusAlertBox = ({ status }) => {
-  if (status === "checkEmail") {
+const StatusAlertBox = ({status}) => {
+  if (status === 'checkEmail') {
     return (
       <AlertBox color="success">
         <p className="mb-1">Account creation successful!</p>
         <p>Please check your email for further instructions</p>
       </AlertBox>
-    );
-  } else if (status === "success") {
+    )
+  } else if (status === 'success') {
     return (
       <AlertBox color="success">
         <p>Account creation successful!</p>
       </AlertBox>
-    );
+    )
   }
-};
+}
 
-export const EmailAuthForm = ({ view, returnTo }) => {
+export const EmailAuthForm = ({view, returnTo}) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
     control,
   } = useForm({
-    resolver: view === "signUp" ? zodResolver(signUpSchema) : nullResolver(),
+    resolver: view === 'signUp' ? zodResolver(signUpSchema) : nullResolver(),
     //reValidateMode: 'onBlur',
-  });
-  const [status, setStatus] = useState();
+  })
+  const [status, setStatus] = useState()
 
   const signIn = useCallback(
     formData => signInAction(formData, returnTo),
-    [returnTo]
+    [returnTo],
   )
 
   const signUp = useCallback(
@@ -77,14 +81,14 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       const result = await signUpAction(formData, returnTo)
       const {user, session} = result
       if (user && !session) {
-        setStatus("checkEmail");
+        setStatus('checkEmail')
       } else if (user) {
-        setStatus("success");
+        setStatus('success')
       }
       return result
     },
-    [returnTo]
-  );
+    [returnTo],
+  )
 
   return (
     <form
@@ -92,7 +96,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       action={handleSubmit(view === 'signUp' ? signUp : signIn)}
     >
       <Input
-        {...register("email")}
+        {...register('email')}
         autoFocus
         errorMessage={errors.email?.message}
         isInvalid={errors.email != null}
@@ -104,7 +108,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       />
 
       <PasswordInput
-        {...register("password")}
+        {...register('password')}
         errorMessage={errors.password?.message}
         isInvalid={errors.password != null}
         isRequired
@@ -112,7 +116,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
         placeholder="Enter your password"
       />
 
-      {view === "signIn" ? (
+      {view === 'signIn' ? (
         <div className="flex justify-between items-center px-2">
           {/* Remember me doens't do anything right now */}
           <Checkbox className="py-4" size="sm" defaultSelected>
@@ -133,7 +137,7 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       ) : (
         <>
           <PasswordInput
-            {...register("confirmPassword")}
+            {...register('confirmPassword')}
             isInvalid={errors.confirmPassword != null}
             isRequired
             label="Confirm Password"
@@ -145,8 +149,8 @@ export const EmailAuthForm = ({ view, returnTo }) => {
             control={control}
             name="legal"
             render={({
-              field: { onChange, onBlur, value },
-              fieldState: { error },
+              field: {onChange, onBlur, value},
+              fieldState: {error},
             }) => (
               <div className="py-2 hidden">
                 {/* Temporarily hide legal checkbox */}
@@ -173,33 +177,32 @@ export const EmailAuthForm = ({ view, returnTo }) => {
       )}
 
       <Button color="primary" isLoading={isSubmitting} type="submit">
-        {view === "signIn" ? "Log In" : "Sign Up"}
+        {view === 'signIn' ? 'Log In' : 'Sign Up'}
       </Button>
 
       <FormErrors errors={errors} />
       <StatusAlertBox status={status} />
     </form>
-  );
-};
+  )
+}
 
-
-export const EmailAuth = ({view, returnTo}) =>
+export const EmailAuth = ({view, returnTo}) => (
   <AuthSection>
     <header>
-      <AuthTitle>{view === "signIn" ? "Sign In" : "Sign Up"}</AuthTitle>
+      <AuthTitle>{view === 'signIn' ? 'Sign In' : 'Sign Up'}</AuthTitle>
     </header>
 
     <EmailAuthForm view={view} returnTo={returnTo} />
     <AuthDivider />
     <SignInPlatformSection returnTo={returnTo} />
 
-    {view === "signIn" ? (
+    {view === 'signIn' ? (
       <p className="text-center text-small">
         Need to create an account?&nbsp;
         <Link
           as={NextLink}
           href={{
-            pathname: "/auth/register",
+            pathname: '/auth/register',
             query: returnTo ? {returnTo} : {},
           }}
           size="sm"
@@ -213,7 +216,7 @@ export const EmailAuth = ({view, returnTo}) =>
         <Link
           as={NextLink}
           href={{
-            pathname: "/auth",
+            pathname: '/auth',
             query: returnTo ? {returnTo} : {},
           }}
           size="sm"
@@ -223,4 +226,4 @@ export const EmailAuth = ({view, returnTo}) =>
       </p>
     )}
   </AuthSection>
-
+)

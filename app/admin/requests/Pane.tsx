@@ -6,7 +6,7 @@ import {Button} from '@nextui-org/react'
 import {None, InfoSection} from '@components/InfoSection'
 import {AdminPane} from '@app/admin/components/Pane'
 
-export const VendorSection = ({vendor}) =>
+export const VendorSection = ({vendor}) => (
   <InfoSection>
     <header>
       <h2>Vendor</h2>
@@ -25,8 +25,9 @@ export const VendorSection = ({vendor}) =>
       <dd className="whitespace-pre-line">{vendor.address ?? <None />}</dd>
     </dl>
   </InfoSection>
+)
 
-export const ProducerSection = ({producer}) =>
+export const ProducerSection = ({producer}) => (
   <InfoSection>
     <header>
       <h2>Producer</h2>
@@ -39,17 +40,16 @@ export const ProducerSection = ({producer}) =>
       <dd className="whitespace-pre-line">{producer.address ?? <None />}</dd>
     </dl>
   </InfoSection>
+)
 
-export const RequestPane = ({request, canEdit, approve, reject}) =>
+export const RequestPane = ({request, canEdit, approve, reject}) => (
   <AdminPane>
-    {
-      canEdit
-        ? <div className="flex justify-end gap-2">
-            <Button onPress={() => approve()}>Approve</Button>
-            <Button onPress={() => reject()}>Reject</Button>
-          </div>
-        : undefined
-    }
+    {canEdit ? (
+      <div className="flex justify-end gap-2">
+        <Button onPress={() => approve()}>Approve</Button>
+        <Button onPress={() => reject()}>Reject</Button>
+      </div>
+    ) : undefined}
 
     <InfoSection>
       <header>
@@ -57,13 +57,21 @@ export const RequestPane = ({request, canEdit, approve, reject}) =>
       </header>
       <dl>
         <dt>Request ID</dt>
-        <dd><code>{request.id}</code></dd>
+        <dd>
+          <code>{request.id}</code>
+        </dd>
 
         <dt>Request type</dt>
-        <dd>{request.type === 'vendor' ? 'Vendor application' : 'Producer application'}</dd>
+        <dd>
+          {request.type === 'vendor'
+            ? 'Vendor application'
+            : 'Producer application'}
+        </dd>
 
         <dt>Request status</dt>
-        <dd className={clsx(request.status !== 'pending' && 'font-bold')}>{request.status}</dd>
+        <dd className={clsx(request.status !== 'pending' && 'font-bold')}>
+          {request.status}
+        </dd>
 
         <dt>Requested by</dt>
         <dd>
@@ -75,7 +83,10 @@ export const RequestPane = ({request, canEdit, approve, reject}) =>
     </InfoSection>
 
     {request.vendor ? <VendorSection vendor={request.vendor} /> : undefined}
-    {request.producer ? <ProducerSection producer={request.producer} /> : undefined}
+    {request.producer ? (
+      <ProducerSection producer={request.producer} />
+    ) : undefined}
 
     <AuditingSection record={request} isAdmin={true} />
   </AdminPane>
+)

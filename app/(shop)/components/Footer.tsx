@@ -2,22 +2,22 @@ import {BsFacebook, BsInstagram, BsTwitter} from 'react-icons/bs'
 import {Logo, companyName, siteName} from '@components/Site'
 import Link from 'next/link'
 
-export const FooterLinkGroup = ({title, children}) =>
+export const FooterLinkGroup = ({title, children}) => (
   <div className="me-4 text-sm">
-    <div className="font-semibold uppercase text-gray-500 dark:text-white">{title}</div>
-    <ul className="mt-6 space-y-4 text-gray-500 dark:text-white">
-      {children}
-    </ul>
+    <div className="font-semibold uppercase text-gray-500 dark:text-white">
+      {title}
+    </div>
+    <ul className="mt-6 space-y-4 text-gray-500 dark:text-white">{children}</ul>
   </div>
+)
 
-export const FooterLink = ({href, children}) =>
+export const FooterLink = ({href, children}) => (
   <li>
-    <Link href={href}>
-      {children}
-    </Link>
+    <Link href={href}>{children}</Link>
   </li>
+)
 
-export const FooterNav = () =>
+export const FooterNav = () => (
   <nav className="grid w-full justify-between px-6 py-8 gap-8 sm:flex sm:justify-between md:flex md:grid-cols-1">
     <Link href="/" className="flex flex-row self-start items-center mr-4">
       <Logo width={40} height={40} className="mr-1" />
@@ -50,16 +50,21 @@ export const FooterNav = () =>
       </FooterLinkGroup>
     </div>
   </nav>
+)
 
-export const FooterCopyright = ({year = 2024}) =>
-  <span className="text-sm">© {year} {companyName}</span>
+export const FooterCopyright = ({year = 2024}) => (
+  <span className="text-sm">
+    © {year} {companyName}
+  </span>
+)
 
-export const FooterIcon = ({href, Icon}) =>
+export const FooterIcon = ({href, Icon}) => (
   <Link href={href}>
     <Icon className="w-5 h-5" />
   </Link>
+)
 
-export const FooterBar = () =>
+export const FooterBar = () => (
   <div className="w-full p-6 sm:flex sm:items-center sm:justify-between text-gray-500 dark:text-gray-400">
     <FooterCopyright />
     <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center ">
@@ -68,10 +73,12 @@ export const FooterBar = () =>
       <FooterIcon href="https://twitter.com/mjtests" Icon={BsTwitter} />
     </div>
   </div>
+)
 
-export const ShopFooter = () =>
+export const ShopFooter = () => (
   <footer className="w-full">
     <FooterNav />
     <hr />
     <FooterBar />
   </footer>
+)

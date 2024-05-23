@@ -2,35 +2,37 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import {Button} from '@nextui-org/react'
 
-export const Card = ({children}) =>
-  <section className={clsx(
-    'rounded-xl bg-slate-200 border-gray-500 border',
-    'w-72 p-6 flex flex-col items-stretch',
-  )}>
+export const Card = ({children}) => (
+  <section
+    className={clsx(
+      'rounded-xl bg-slate-200 border-gray-500 border',
+      'w-72 p-6 flex flex-col items-stretch',
+    )}
+  >
     {children}
   </section>
+)
 
-const Page = async () =>
+const Page = async () => (
   <main className="flex flex-col items-center justify-center h-screen bg-slate-100">
     <div className="my-8">
       <span className="text-xl font-bold">Sell with us!</span>
     </div>
     <div className="flex gap-12 flex-row flex-wrap">
-
       <Card>
         <header>
           <h2 className="font-bold">For Dispensaries</h2>
         </header>
         <ul className="flex-1 list-disc ml-4 my-4 space-y-2">
           <li>
-            Differentiate your products from your competitors with the test results of your products!
+            Differentiate your products from your competitors with the test
+            results of your products!
           </li>
           <li>
-            Compare your product pricing against your competitors based on the test results, not just the strain name!
+            Compare your product pricing against your competitors based on the
+            test results, not just the strain name!
           </li>
-          <li>
-            Find producers to purchase your stock from!
-          </li>
+          <li>Find producers to purchase your stock from!</li>
         </ul>
 
         <Link href="/admin/apply/vendor">
@@ -46,10 +48,13 @@ const Page = async () =>
         </header>
         <ul className="flex-1 list-disc ml-4 my-4 space-y-2">
           <li>
-            Advertise your marijuana-related produce to the dispensaries, reducing the time &amp; hassle of finding dispensaries to sell your produce to at every harvest.
+            Advertise your marijuana-related produce to the dispensaries,
+            reducing the time &amp; hassle of finding dispensaries to sell your
+            produce to at every harvest.
           </li>
           <li>
-            Compare your produces&apos; test results &amp; pricing against other producers.
+            Compare your produces&apos; test results &amp; pricing against other
+            producers.
           </li>
         </ul>
 
@@ -61,5 +66,6 @@ const Page = async () =>
       </Card>
     </div>
   </main>
+)
 
 export default Page

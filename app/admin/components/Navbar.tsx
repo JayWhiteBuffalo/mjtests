@@ -1,11 +1,20 @@
 'use client'
 import Link from 'next/link'
-import {Avatar, Navbar, NavbarBrand, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection} from '@nextui-org/react'
+import {
+  Avatar,
+  Navbar,
+  NavbarBrand,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  DropdownSection,
+} from '@nextui-org/react'
 import {HiMiniArrowRightOnRectangle} from 'react-icons/hi2'
 import {Logo, siteName} from '@components/Site'
 import {signOut} from '@app/(shop)/auth/ServerAction'
 
-export const AvatarDropdown = ({user}) =>
+export const AvatarDropdown = ({user}) => (
   <Dropdown>
     <DropdownTrigger>
       <Avatar
@@ -18,7 +27,11 @@ export const AvatarDropdown = ({user}) =>
 
     <DropdownMenu aria-label="Profile actions" variant="flat">
       <DropdownSection showDivider>
-        <DropdownItem className="gap-2" isReadOnly textValue={`Signed in as ${user.name}`}>
+        <DropdownItem
+          className="gap-2"
+          isReadOnly
+          textValue={`Signed in as ${user.name}`}
+        >
           <p className="font-semibold">Signed in as</p>
           <p>{user.name}</p>
         </DropdownItem>
@@ -27,7 +40,9 @@ export const AvatarDropdown = ({user}) =>
       <DropdownSection>
         <DropdownItem
           key="logout"
-          startContent={<HiMiniArrowRightOnRectangle className="text-xl text-default-500" />}
+          startContent={
+            <HiMiniArrowRightOnRectangle className="text-xl text-default-500" />
+          }
           onPress={() => signOut()}
         >
           Log Out
@@ -35,8 +50,9 @@ export const AvatarDropdown = ({user}) =>
       </DropdownSection>
     </DropdownMenu>
   </Dropdown>
+)
 
-export const AdminNavbar = ({user, ...rest}) =>
+export const AdminNavbar = ({user, ...rest}) => (
   <Navbar {...rest}>
     <div className="flex">
       <NavbarBrand href="/admin" as={Link}>
@@ -51,3 +67,4 @@ export const AdminNavbar = ({user, ...rest}) =>
       <AvatarDropdown user={user} />
     </div>
   </Navbar>
+)

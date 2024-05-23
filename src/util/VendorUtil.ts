@@ -34,8 +34,9 @@ export const VendorUtil = {
 
   readRating(rating) {
     rating.count = rating.count || MathUtil.sum(rating.counts)
-    rating.average = rating.average
-      || MathUtil.dot(ArrayUtil.range(1, 6), rating.counts) / rating.count
+    rating.average =
+      rating.average ||
+      MathUtil.dot(ArrayUtil.range(1, 6), rating.counts) / rating.count
   },
 
   autoSlug(vendor) {

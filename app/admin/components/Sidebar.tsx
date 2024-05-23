@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import {homePage, rootPages, canUseRootPage} from '@app/admin/RootPage'
 
-const Item = ({children, href, Icon}) =>
+const Item = ({children, href, Icon}) => (
   <li className="my-1">
     <Link
       href={href}
@@ -12,14 +12,12 @@ const Item = ({children, href, Icon}) =>
       <span className="px-3 flex-1 whitespace-nowrap">{children}</span>
     </Link>
   </li>
+)
 
-export const AdminSidebar = ({user, className, ...rest}) =>
+export const AdminSidebar = ({user, className, ...rest}) => (
   <nav
     aria-label="Sidebar navigation"
-    className={clsx(
-      'bg-gray-50 dark:bg-gray-800 px-3 py-4',
-      className,
-    )}
+    className={clsx('bg-gray-50 dark:bg-gray-800 px-3 py-4', className)}
     {...rest}
   >
     <ul className="top-12 sticky">
@@ -27,11 +25,12 @@ export const AdminSidebar = ({user, className, ...rest}) =>
         {homePage.name}
       </Item>
       {rootPages.map(page =>
-        canUseRootPage(user, page.key)
-          ? <Item key={page.key} href={`/admin/${page.segment}`} Icon={page.Icon}>
-              {page.name}
-            </Item>
-          : undefined
+        canUseRootPage(user, page.key) ? (
+          <Item key={page.key} href={`/admin/${page.segment}`} Icon={page.Icon}>
+            {page.name}
+          </Item>
+        ) : undefined,
       )}
     </ul>
   </nav>
+)

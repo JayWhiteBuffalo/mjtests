@@ -10,7 +10,10 @@ export class TypeaheadStore extends FluxStore {
     this.items = Present.pend
     this.fieldName = fieldName
     this.searchFetcher = new SerialFetcher((keyword, signal) =>
-      fetch(`/api/${this.fieldName}/typeahead?keyword=${encodeURIComponent(keyword)}`, {signal})
+      fetch(
+        `/api/${this.fieldName}/typeahead?keyword=${encodeURIComponent(keyword)}`,
+        {signal},
+      ),
     )
     this.lookupFetcher = new LookupFetcher(fieldName)
   }
@@ -23,7 +26,8 @@ export class TypeaheadStore extends FluxStore {
 
     if (!this.valid && typeof window !== 'undefined') {
       this.valid = true
-      this.searchFetcher.fetch(keyword)
+      this.searchFetcher
+        .fetch(keyword)
         .then(jsonOnOk)
         .then(items => {
           for (const item of items) {
@@ -37,9 +41,8 @@ export class TypeaheadStore extends FluxStore {
     return this.items.orElse(() => [])
   }
 
-  getByKeys = keys => keys.map(key =>
-    this.byKey[key]?.get() ?? {key, name: key}
-  )
+  getByKeys = keys =>
+    keys.map(key => this.byKey[key]?.get() ?? {key, name: key})
 }
 
 class LookupFetcher {
@@ -55,7 +58,6 @@ class LookupFetcher {
     return await response.json()
   }
 }
-
 
 export class KeyedTypeaheadStore extends TypeaheadStore {
   constructor(fieldName) {
@@ -75,10 +77,11 @@ export class KeyedTypeaheadStore extends TypeaheadStore {
     })
 
     if (missing.length !== 0) {
-      this.lookupFetcher.fetch(missing)
-        .then(items => items.forEach(item =>
-          this.byKey[item.key] = Present.resolve(item)
-        ))
+      this.lookupFetcher
+        .fetch(missing)
+        .then(items =>
+          items.forEach(item => (this.byKey[item.key] = Present.resolve(item))),
+        )
         .finally(() => this.notify())
     }
 

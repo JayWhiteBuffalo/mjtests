@@ -8,16 +8,14 @@ import {None, Unknown, InfoSection} from '@components/InfoSection'
 import {PhoneLink} from '@app/(shop)/components/VendorPopup'
 import {AdminPane} from '@app/admin/components/Pane'
 
-export const ProducerPane = ({producer, canEdit}) =>
+export const ProducerPane = ({producer, canEdit}) => (
   <AdminPane>
     <div className="flex justify-end gap-2">
-      {
-        canEdit
-          ? <Link href={`/admin/producers/${producer.id}/edit`}>
-              <Button>Edit</Button>
-            </Link>
-          : undefined
-      }
+      {canEdit ? (
+        <Link href={`/admin/producers/${producer.id}/edit`}>
+          <Button>Edit</Button>
+        </Link>
+      ) : undefined}
     </div>
 
     <InfoSection>
@@ -29,17 +27,25 @@ export const ProducerPane = ({producer, canEdit}) =>
         <dd>{producer.name}</dd>
 
         <dt>Address</dt>
-        {
-          producer.location.address
-            ? <dd className="!inline-block whitespace-pre-line">{producer.location.address}</dd>
-            : <dd><None /></dd>
-        }
+        {producer.location.address ? (
+          <dd className="!inline-block whitespace-pre-line">
+            {producer.location.address}
+          </dd>
+        ) : (
+          <dd>
+            <None />
+          </dd>
+        )}
 
         <dt>Flags</dt>
-        <dd><code>{JSON.stringify(producer.flags)}</code></dd>
+        <dd>
+          <code>{JSON.stringify(producer.flags)}</code>
+        </dd>
 
         <dt>Signup status</dt>
-        <dd><code>{JSON.stringify(producer.signupStatus)}</code></dd>
+        <dd>
+          <code>{JSON.stringify(producer.signupStatus)}</code>
+        </dd>
       </dl>
     </InfoSection>
 
@@ -49,25 +55,35 @@ export const ProducerPane = ({producer, canEdit}) =>
       </header>
       <dl>
         <dt>Phone</dt>
-        <dd>{
-          producer.contact.tel
-            ? <PhoneLink tel={producer.contact.tel} />
-            : <None />
-        }</dd>
+        <dd>
+          {producer.contact.tel ? (
+            <PhoneLink tel={producer.contact.tel} />
+          ) : (
+            <None />
+          )}
+        </dd>
 
         <dt>Email</dt>
-        <dd>{
-          producer.contact.email
-            ? <BlueExternalLink href={`mailto:${producer.contact.email}`}>{producer.contact.email}</BlueExternalLink>
-            : <None />
-        }</dd>
+        <dd>
+          {producer.contact.email ? (
+            <BlueExternalLink href={`mailto:${producer.contact.email}`}>
+              {producer.contact.email}
+            </BlueExternalLink>
+          ) : (
+            <None />
+          )}
+        </dd>
 
         <dt>Website</dt>
-        <dd>{
-          producer.contact.url
-            ? <BlueExternalLink href={producer.contact.url}>producer.contact.url</BlueExternalLink>
-            : <None />
-        }</dd>
+        <dd>
+          {producer.contact.url ? (
+            <BlueExternalLink href={producer.contact.url}>
+              producer.contact.url
+            </BlueExternalLink>
+          ) : (
+            <None />
+          )}
+        </dd>
       </dl>
     </InfoSection>
 
@@ -75,24 +91,26 @@ export const ProducerPane = ({producer, canEdit}) =>
       <header>
         <h2>Brand</h2>
       </header>
-      {
-        producer.mainImageRefId
-          ? <>
-            <p>Logo</p>
-            <div className="w-24 h-18">
-              <Image
-                alt="Logo of producer"
-                className="object-cover"
-                fill={true}
-                publicId={producer.mainImageRefId}
-                />
-            </div>
-          </>
-          : <dl>
-            <dt>Logo</dt>
-            <dd><None /></dd>
-          </dl>
-      }
+      {producer.mainImageRefId ? (
+        <>
+          <p>Logo</p>
+          <div className="w-24 h-18">
+            <Image
+              alt="Logo of producer"
+              className="object-cover"
+              fill={true}
+              publicId={producer.mainImageRefId}
+            />
+          </div>
+        </>
+      ) : (
+        <dl>
+          <dt>Logo</dt>
+          <dd>
+            <None />
+          </dd>
+        </dl>
+      )}
     </InfoSection>
 
     <InfoSection>
@@ -110,4 +128,4 @@ export const ProducerPane = ({producer, canEdit}) =>
 
     <AuditingSection record={producer} isAdmin={true} />
   </AdminPane>
-
+)

@@ -26,7 +26,9 @@ export const populate = async () => {
   }
 
   for (const product of data.products) {
-    const vendor = await prisma.vendor.findFirst({where: {name: product.vendorName}})
+    const vendor = await prisma.vendor.findFirst({
+      where: {name: product.vendorName},
+    })
     product.vendorId = vendor.id
     delete product.vendorName
     await ProductDto.createOrUpdate(undefined, product)
@@ -38,7 +40,9 @@ export const assignAdmin = async () => {
   await prisma.user.update({
     where: {id: user.id},
     data: {
-      roles: user.roles.includes('admin') ? user.roles : ['admin', ...user.roles],
+      roles: user.roles.includes('admin')
+        ? user.roles
+        : ['admin', ...user.roles],
     },
   })
 }

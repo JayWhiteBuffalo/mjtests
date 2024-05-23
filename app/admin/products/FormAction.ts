@@ -8,12 +8,13 @@ import VendorDto from '@data/VendorDto'
 import {draftFormSchema, publishFormSchema} from './Schema'
 import {redirect} from 'next/navigation'
 
-
 const save = async (productId, product, imageRefIds) => {
   const id = await ProductDto.createOrUpdate(productId, product)
-  await Promise.all((imageRefIds ?? []).map(publicId =>
-    ImageRefDto.update(publicId, {productId: id})
-  ))
+  await Promise.all(
+    (imageRefIds ?? []).map(publicId =>
+      ImageRefDto.update(publicId, {productId: id}),
+    ),
+  )
   redirect(`/admin/products/${id}`)
 }
 
@@ -50,7 +51,10 @@ export const getFormProps = async (user, productId) => {
   let producerItems
   if (user.roles.includes('admin') || user.roles.includes('sales')) {
     const producers = await ProducerDto.findMany()
-    producerItems = producers.map(producer => ({key: producer.id, name: producer.name}))
+    producerItems = producers.map(producer => ({
+      key: producer.id,
+      name: producer.name,
+    }))
   } else {
     const producerEdges = await UserOnProducerDto.findMany({
       where: {userId: user.id},
@@ -59,7 +63,10 @@ export const getFormProps = async (user, productId) => {
         producer: {select: {name: true}},
       },
     })
-    producerItems = producerEdges.map(edge => ({key: edge.producerId, name: edge.producer.name}))
+    producerItems = producerEdges.map(edge => ({
+      key: edge.producerId,
+      name: edge.producer.name,
+    }))
   }
 
   let vendorItems
@@ -74,7 +81,10 @@ export const getFormProps = async (user, productId) => {
         vendor: {select: {name: true}},
       },
     })
-    vendorItems = vendorEdges.map(edge => ({key: edge.vendorId, name: edge.vendor.name}))
+    vendorItems = vendorEdges.map(edge => ({
+      key: edge.vendorId,
+      name: edge.vendor.name,
+    }))
   }
 
   return {

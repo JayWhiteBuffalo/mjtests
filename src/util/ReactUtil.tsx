@@ -1,4 +1,3 @@
-
 export const setRef = (ref, elem) => {
   if (typeof ref === 'function') {
     ref(elem)

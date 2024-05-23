@@ -46,7 +46,7 @@ const ProducerDto = {
 
   async _getRaw(producerId) {
     return await prisma.producer.findUnique({
-      where: {id: producerId}
+      where: {id: producerId},
     })
   },
 
@@ -55,12 +55,14 @@ const ProducerDto = {
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
     const rawProducers = await prisma.producer.findMany(options)
-    return await ArrayUtil.asyncFilter(rawProducers, raw => ProducerDto.canSee(user, raw.id))
+    return await ArrayUtil.asyncFilter(rawProducers, raw =>
+      ProducerDto.canSee(user, raw.id),
+    )
   },
 
   async get(producerId) {
     const user = await UserDto.getCurrent()
-    if (!await ProducerDto.canSee(user, producerId)) {
+    if (!(await ProducerDto.canSee(user, producerId))) {
       return null
     }
     return await ProducerDto._getRaw(producerId)
@@ -80,18 +82,19 @@ const ProducerDto = {
         },
       })
       return producerId
-
     } else {
       assert(await ProducerDto.canCreate(user))
       const id = nanoid()
       await prisma.producer.createMany({
-        data: [{
-          ...producer,
-          id,
-          createdById: user.id,
-          updatedById: user.id,
-          slug: id,
-        }],
+        data: [
+          {
+            ...producer,
+            id,
+            createdById: user.id,
+            updatedById: user.id,
+            slug: id,
+          },
+        ],
       })
       return id
     }

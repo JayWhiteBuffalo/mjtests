@@ -1,6 +1,6 @@
-import {useFluxStore} from "@/state/Flux"
-import {Autocomplete, AutocompleteItem} from "@nextui-org/react"
-import {useFormContext} from "react-hook-form"
+import {useFluxStore} from '@/state/Flux'
+import {Autocomplete, AutocompleteItem} from '@nextui-org/react'
+import {useFormContext} from 'react-hook-form'
 
 export const AutocompleteAdapter = ({TypeaheadStore, name, ...rest}) => {
   const {register, watch} = useFormContext()
@@ -17,7 +17,11 @@ export const AutocompleteAdapter = ({TypeaheadStore, name, ...rest}) => {
       selectedKeys={value ? [value] : []}
       {...rest}
     >
-      {(item) => <AutocompleteItem key={item.key} value={item.key}>{item.name}</AutocompleteItem>}
+      {item => (
+        <AutocompleteItem key={item.key} value={item.key}>
+          {item.name}
+        </AutocompleteItem>
+      )}
     </Autocomplete>
   )
 }
