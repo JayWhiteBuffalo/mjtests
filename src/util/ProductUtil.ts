@@ -15,10 +15,16 @@ export const ProductUtil = {
 
   read(product) {
     product.potency ??= {}
-    product.potency.thc ??= 0
-    product.potency.cbd ??= 0
     product.flags ??= {}
-    product.pricePerGram = product.price / product.weight
+    product.priceList = product.price != null && product.weight != null
+      ? [{
+        price: product.price,
+        weight: product.weight,
+        weightUnit: 'g',
+      }]
+      : []
+    delete product.price
+    delete product.weight
     product.isDraft ??= false
 
     product.slug ??= ProductUtil.autoSlug(product)
@@ -56,6 +62,8 @@ export const ProductUtil = {
       (product.subspecies === 'sativa' || product.subspecies === 'hybridSativa'
         ? ProductUtil.images.sativa
         : ProductUtil.images.indica)
+    
+    product.isDraft = true
 
     return product
   },

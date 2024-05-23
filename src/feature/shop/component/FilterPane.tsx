@@ -227,10 +227,10 @@ const PotencyFilterSection = ({filter, onChange}) => {
         potency={filter.potency}
         onChange={potency => onChange({potency})}
       />
-      <WeightFilter
+      {/* <WeightFilter
         range={filter.weight}
         onChange={weight => onChange({weight})}
-      />
+      /> */}
     </FilterSection>
   )
 }
@@ -414,9 +414,9 @@ const FilterLeftPane = ({filter, onChange}) => (
     <ErrorBoundary>
       <PotencyFilterSection filter={filter} onChange={onChange} />
     </ErrorBoundary>
-    <ErrorBoundary>
+    {/* <ErrorBoundary>
       <PriceFilterSection filter={filter} onChange={onChange} />
-    </ErrorBoundary>
+    </ErrorBoundary> */}
     <ErrorBoundary>
       <LocationFilterSection filter={filter} onChange={onChange} />
     </ErrorBoundary>

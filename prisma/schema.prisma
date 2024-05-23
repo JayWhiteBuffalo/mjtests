@@ -94,6 +94,7 @@ model Product {
   potency         Json
   price           Float?
   pricePerGram    Float?
+  priceList       Json?
   producerId      String?
   productType     String?
   rating          Json?

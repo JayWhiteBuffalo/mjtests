@@ -115,11 +115,11 @@ const ProductSubheader = ({product}) =>
           </span>
         ) : undefined}
       </span>
-      {product.pricePerGram != null ? (
+      {/* {product.pricePerGram != null ? (
         <span className="text-sm">
           (${MathUtil.roundTo(product.pricePerGram, 1)}/g)
         </span>
-      ) : undefined}
+      ) : undefined} */}
     </div>
   ) : undefined
 
@@ -139,12 +139,12 @@ export const ProductAttributeList = ({product}) => (
       </>
     ) : undefined}
 
-    {product.weight != null ? (
+    {/* {product.weight != null ? (
       <>
         <dt>Weight</dt>
         <dd className="ProductWeight">{product.weight}g</dd>
       </>
-    ) : undefined}
+    ) : undefined} */}
 
     {product.potency.thc != null ? (
       <>
@@ -218,6 +218,16 @@ const TerpItem = ({enabled = false, terpName, value}) => {
   )
 }
 
+export const PriceList = ({priceList}) => (
+  <ul>
+    {priceList.map(({price, weight, weightUnit}) => (
+      <li key={weight}>
+        {weight} {weightUnit} = ${price}
+      </li>
+    ))}
+  </ul>
+)
+
 export const Product = ({product, mode}) => {
   const terpEntries = ArrayUtil.sortBy(
     Object.entries(product.terps || []),
@@ -250,9 +260,9 @@ export const Product = ({product, mode}) => {
       <ProductTypeLabel product={product} />
       <div className="flex justify-between">
         <h5 className="flex-1 font-bold">{product.name}</h5>
-        {product.price != null ? (
+        {/* {product.price != null ? (
           <span className="ProductPrice">${product.price}</span>
-        ) : undefined}
+        ) : undefined} */}
       </div>
       <ProductSubheader product={product} />
       {mode === 'full' && product.rating ? (
@@ -262,6 +272,7 @@ export const Product = ({product, mode}) => {
         <OpenStatus status={product.vendor.openStatus} />
       ) : undefined}
       <ProductChips product={product} />
+      <PriceList priceList={product.priceList} />
 
       {mode === 'full' ? <ProductAttributeList product={product} /> : undefined}
       {terpEntries.length && mode === 'full' ? (

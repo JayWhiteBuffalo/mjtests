@@ -1,21 +1,36 @@
-import {z} from 'zod'
+import MathUtil from '@/util/MathUtil'
+import StringUtil from '@/util/StringUtil'
+import {z, type ZodType} from 'zod'
 
-export const orEmpty = x => (x != null ? String(x) : '')
+export const orNan = <X extends NonNullable<unknown>>(
+  x: X | null | undefined,
+): X | number => x ?? NaN
 
-export const unempty = x => {
-  x = x?.trim()
-  return x !== '' ? x : undefined
+export const unnan = <X>(x: X): X | undefined =>
+  typeof x === 'number' ? (MathUtil.unnan(x) as X | undefined) : x
+
+export const parseAndUnnan = (x: unknown): number | undefined => {
+  const y = Number.parseFloat(x as string)
+  return !Number.isNaN(y) ? y : undefined
 }
 
-export const unemptied = schema => z.preprocess(unempty, schema)
+export const orEmpty = StringUtil.orEmpty
 
-export const orNan = x => x ?? NaN
+export const unempty = <X>(x: X): X | undefined =>
+  typeof x === 'string' ? (StringUtil.unempty(x) as X | undefined) : x
 
-export const unNan = x => {
-  x = Number.parseFloat(x)
-  return !Number.isNaN(x) ? x : undefined
-}
+export const unemptied = (schema: ZodType) => z.preprocess(unempty, schema)
 
-export const orNull = x => (x != null ? x : null)
+export const orNull = <X extends NonNullable<unknown>>(
+  x: X | null | undefined,
+): X | null => (x != null ? x : null)
 
-export const mapDefined = (x, f) => (x != null ? f(x) : x)
+export const mapDefined = <
+  X extends NonNullable<unknown>,
+  Y extends NonNullable<unknown>,
+>(
+  x: X | null | undefined,
+  f: (x: X) => Y,
+): Y | null | undefined => (x != null ? f(x) : x)
+
+export const unNan = parseAndUnnan

@@ -30,6 +30,14 @@ const StringUtil = {
   toLowerCamel(s) {
     return StringUtil.wordsToLowerCamel(StringUtil.wordsFromSpaced(s))
   },
+
+  orEmpty: (x: string | null | undefined): string =>
+    x != null ? String(x) : '',
+
+  unempty: (x: string): string | undefined => {
+    x = x.trim()
+    return x !== '' ? x : undefined
+  },
 }
 
 export default StringUtil

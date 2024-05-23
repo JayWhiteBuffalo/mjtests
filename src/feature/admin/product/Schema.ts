@@ -13,6 +13,13 @@ const potency = z.object({
   cbd: z.number().min(0).max(1).optional(),
 })
 
+const priceItem = z.object({
+  price: z.number().min(0),
+  weight: z.number().min(0),
+  weightUnit: z.enum(['g', 'oz', 'lb']),
+})
+
+
 export const publishDbSchema = z.object({
   batch: z.string().nullable(),
   brand: z.string(),
@@ -23,8 +30,7 @@ export const publishDbSchema = z.object({
   mainImageRefId: z.string(),
   name: z.string().min(3).max(100),
   potency,
-  price: z.number().min(0).safe(),
-  pricePerGram: z.number().min(0).safe(),
+  priceList: z.array(priceItem), // TODO check is sorted
   producerId: z.string().nullable(),
   productType: z.enum(Treemap.productTypes.map(x => x.key)),
   rating: z.any(),
@@ -32,7 +38,6 @@ export const publishDbSchema = z.object({
   subspecies: z.enum(Treemap.subspecies.map(x => x.key)),
   terps,
   vendorId: z.string().nullable(),
-  weight: z.number().min(0).safe(),
 })
 
 export const dbSchema = z.object({
@@ -45,15 +50,13 @@ export const dbSchema = z.object({
   mainImageRefId: z.string().nullable(),
   name: z.string().min(3).max(100),
   potency,
-  price: z.number().min(0).safe().nullable(),
-  pricePerGram: z.number().min(0).safe().nullable(),
+  priceList: z.array(priceItem),
   producerId: z.string().nullable(),
   productType: z.enum(Treemap.productTypes.map(x => x.key)).nullable(),
   slug: z.string().min(3).max(60).nullable(),
   subspecies: z.enum(Treemap.subspecies.map(x => x.key)).nullable(),
   terps,
   vendorId: z.string().nullable(),
-  weight: z.number().min(0).safe().nullable(),
 })
 
 export const preprocessFormData =
@@ -63,26 +66,20 @@ export const preprocessFormData =
       ...formData,
       batch: unempty(formData.batch) ?? null,
       brand: unempty(formData.brand) ?? null,
-      concentrateType: formData.concentrateType ?? null,
+      concentrateType: unempty(formData.concentrateType) ?? null,
       cultivar: unempty(formData.cultivar) ?? null,
       flags: {},
       isDraft,
       mainImageRefId: formData.mainImageRefId ?? null,
       name: unempty(formData.name) ?? null,
       potency: ObjectUtil.mapValue(formData.potency, unNan),
-      price: unNan(formData.price) ?? null,
-      producerId: formData.producerId ?? null,
-      productType: formData.productType ?? null,
+      producerId: unempty(formData.producerId) ?? null,
+      productType: unempty(formData.productType) ?? null,
       slug: unempty(formData.slug) ?? null,
-      subspecies: formData.subspecies ?? null,
+      subspecies: unempty(formData.subspecies) ?? null,
       terps: ObjectUtil.mapValue(formData.terps, unNan),
-      vendorId: formData.vendorId ?? null,
-      weight: unNan(formData.weight) ?? null,
+      vendorId: unempty(formData.vendorId) ?? null,
     }
-    product.pricePerGram =
-      product.price !== null && product.weight !== null
-        ? product.price / product.weight
-        : null
     return product
   }
 

@@ -4,7 +4,6 @@ import {AdminOnlyText} from '@/feature/admin/component/AdminForm'
 import {ImageInput} from '@/feature/admin/component/ImageInput'
 import {Input, Button} from '@nextui-org/react'
 import {
-  PotencyInput,
   PotencyTableInput,
 } from '@/feature/admin/component/TerpeneInput'
 import {preprocessFormData} from './Schema'
@@ -12,7 +11,7 @@ import {PreviewContainer} from './Pane'
 import {TerpeneInput} from '@/feature/admin/component/TerpeneInput'
 import {Treemap} from '@/Treemap'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
-import {useController, Controller, FormProvider} from 'react-hook-form'
+import {Controller, FormProvider} from 'react-hook-form'
 import {
   Watch,
   nullResolver,
@@ -22,6 +21,7 @@ import {
 } from '@components/Form'
 import {DropdownAdapter} from '@/components/DropdownAdapter'
 import {AutocompleteAdapter} from '@/components/AutocompleteAdapter'
+import {PriceListInput} from '@/feature/admin/product/PriceListInput'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -47,6 +47,7 @@ export const Form = ({
     formState: {errors},
     control,
     watch,
+    setValue,
   } = methods
   const productType = watch('productType')
 
@@ -107,13 +108,11 @@ export const Form = ({
             />
           </FieldLayout>
 
-          <FieldLayout error={errors.price} label="Price (USD)">
-            <Input step={0.01} type="number" {...register('price')} />
-          </FieldLayout>
-
-          <FieldLayout error={errors.weight} label="Weight (g)">
-            <Input step={0.01} type="number" {...register('weight')} />
-          </FieldLayout>
+          <PriceListInput
+            defaultPriceList={product.priceList ?? []}
+            onChange={priceList => setValue('priceList', priceList)}
+            errors={errors.priceList}
+          />
         </section>
 
         <section>
@@ -219,18 +218,19 @@ export const Form = ({
         <FormErrors errors={errors} />
 
         <div className="flex gap-2">
-          <Button
-            className={product.isDraft ? undefined : 'hidden'}
+          <Button 
+            color={product.isDraft ? 'primary' : 'default'}
             type="submit"
           >
-            Save as Draft
+            {product.isDraft ? 'Save as Draft' : 'Revert to draft'}
           </Button>
+
           <Button
             type="submit"
-            color="secondary"
+            color={product.isDraft ? 'secondary' : 'primary'}
             formAction={handleSubmit(publish)}
           >
-            {product.isDraft ? 'Publish' : 'Save and publish'}
+            {product.isDraft ? 'Publish' : 'Save'}
           </Button>
         </div>
 
