@@ -1,5 +1,5 @@
 import ProductDto from '@data/ProductDto'
-import {ProductFilterUtil} from '@util/ProductFilterUtil'
+import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 
 export async function GET(request: Request) {
   const {searchParams} = new URL(request.url)

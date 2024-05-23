@@ -1,4 +1,4 @@
-import {ProductFilterUtil} from '@util/ProductFilterUtil'
+import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {FluxFieldStore, dispatch} from '@/state/Flux'
 import {UrlUtil} from '@util/UrlUtil'
 

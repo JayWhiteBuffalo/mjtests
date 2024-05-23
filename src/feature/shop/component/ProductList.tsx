@@ -15,7 +15,7 @@ import {
   Spinner,
   Chip,
 } from '@nextui-org/react'
-import {ProductFilterUtil} from '@util/ProductFilterUtil'
+import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {TerpeneSelectorItem} from '@feature/shared/component/TerpeneSelector'
 import {Treemap} from '@/Treemap'
 import {

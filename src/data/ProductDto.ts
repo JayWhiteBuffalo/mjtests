@@ -3,7 +3,7 @@ import ArrayUtil from '@util/ArrayUtil'
 import ProducerDto from '@data/ProducerDto'
 import VendorDto from '@data/VendorDto'
 import UserDto from '@data/UserDto'
-import {ProductFilterUtil} from '@util/ProductFilterUtil'
+import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {prisma} from '@/db'
 import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
@@ -94,7 +94,6 @@ const ProductDto = {
   },
 
   async findMany(options) {
-    console.log(options)
     options ??= {}
     options.orderBy ??= {name: 'asc'}
     const user = await UserDto.getCurrent()
