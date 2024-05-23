@@ -92,8 +92,6 @@ model Product {
   name            String
   normalizedTerps Json?
   potency         Json
-  price           Float?
-  pricePerGram    Float?
   priceList       Json?
   producerId      String?
   productType     String?
@@ -102,7 +100,6 @@ model Product {
   subspecies      String?
   terps           Json?
   vendorId        String?
-  weight          Float?
   archived        Boolean    @default(false)
   createdAt       DateTime   @default(now())
   createdById     String
