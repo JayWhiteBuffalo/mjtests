@@ -11,7 +11,7 @@ pnpm install
 
 `pnpm install` will need to be rerun whenever the new dependencies are added or removed.
 
-2. <removed>
+2. (removed)
 
 3. Start the dev server:
 
