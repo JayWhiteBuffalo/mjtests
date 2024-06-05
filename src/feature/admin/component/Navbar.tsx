@@ -64,7 +64,10 @@ export const AdminNavbar = ({user, ...rest}) => (
     </div>
 
     <div className="flex md:order-2">
-      <AvatarDropdown user={user} />
+      <div className="flex gap-4 items-center">
+        <AvatarDropdown user={user} />
+        <p>{user.name}</p>
+      </div>
     </div>
   </Navbar>
 )

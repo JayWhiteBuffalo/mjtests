@@ -89,10 +89,12 @@ const ProducerDto = {
         data: [
           {
             ...producer,
+            flags: {},  // Ensure flags is included and is a valid JSON object
             id,
             createdById: user.id,
             updatedById: user.id,
             slug: id,
+            signupStatus: {}  // Ensure signupStatus is included and is a valid JSON object
           },
         ],
       })
