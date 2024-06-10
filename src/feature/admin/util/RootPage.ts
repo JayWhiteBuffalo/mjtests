@@ -4,6 +4,7 @@ import {GiBarn} from 'react-icons/gi'
 import {HiInbox, HiShoppingBag, HiUser, HiHome} from 'react-icons/hi'
 import {HiMiniBuildingStorefront} from 'react-icons/hi2'
 import {LuBinary} from 'react-icons/lu'
+import { Permission, hasPermission } from '@/util/Roles';
 
 export const homePage = {
   name: 'Home',
@@ -52,20 +53,13 @@ export const rootPagesByKey = ObjectUtil.fromIterable(rootPages, x => x.key)
 export const getRootPageRouteItem = key => rootPagesByKey[key]
 
 export const canUseAdmin = user => {
-  if (user.roles.includes('admin')) {
-    return true
-  }
-  if (user.roles.includes('vendor')) {
-    return true
-  }
-  if (user.roles.includes('producer')) {
-    return true
-  }
-  //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-  if (user.loggedIn) {
-    return true
-  }
-  return false
+
+  // const userPermission = user.roles;
+
+  // return hasPermission(userPermission, Permission.DEV)
+
+  return true
+
 }
 
 const pagesCanUse = {
@@ -77,87 +71,161 @@ const pagesCanUse = {
   },
 
   dev: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-
-    //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-    if (user.loggedIn) {
-      return true
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN);
+    
   },
 
   producers: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('producer')) {
-      if (user.producers.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN) ||
+           hasPermission(userPermission, Permission.PRODUCER_OWNER) ||
+           hasPermission(userPermission, Permission.PRODUCER_MANAGER);
   },
 
   products: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      return true
-    }
-    if (user.roles.includes('producer')) {
-      return true
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN) ||
+           hasPermission(userPermission, Permission.VENDOR_OWNER) ||
+           hasPermission(userPermission, Permission.PRODUCER_OWNER) ||
+           hasPermission(userPermission, Permission.VENDOR_MANAGER) ||
+           hasPermission(userPermission, Permission.PRODUCER_MANAGER);
   },
 
   requests: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN) ||
+           hasPermission(userPermission, Permission.PRODUCER_MANAGER) ||
+           hasPermission(userPermission, Permission.VENDOR_MANAGER);
   },
 
   users: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      if (user.vendors.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN) ||
+           hasPermission(userPermission, Permission.PRODUCER_MANAGER) ||
+           hasPermission(userPermission, Permission.VENDOR_MANAGER);
   },
 
   vendors: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      if (user.vendors.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    const userPermission = user.roles;
+    return true
+    return hasPermission(userPermission, Permission.ADMIN) ||
+           hasPermission(userPermission, Permission.VENDOR_OWNER) ||
+           hasPermission(userPermission, Permission.VENDOR_MANAGER);
   },
 }
 
-export const canUseRootPage = (user, pageName) => pagesCanUse[pageName](user)
+  export const canUseRootPage = (user, pageName) => {
+    const pagePermissionCheck = pagesCanUse[pageName];
+    if (pagePermissionCheck) {
+      return pagePermissionCheck(user);
+    }
+    return false;
+  }
+  
+  //   if (user.roles.includes('admin')) {
+//     return true
+//   }
+//   if (user.roles.includes('vendor')) {
+//     return true
+//   }
+//   if (user.roles.includes('producer')) {
+//     return true
+//   }
+//   //if (user.loggedIn && process.env.NODE_ENV === 'development') {
+//   if (user.loggedIn) {
+//     return true
+//   }
+//   return false
+
+  // dev: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+
+    //if (user.loggedIn && process.env.NODE_ENV === 'development') {
+  //   if (user.loggedIn) {
+  //     return true
+  //   }
+  //   return false
+  // },
+
+  // producers: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('sales')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('producer')) {
+  //     if (user.producers.some(edge => edge.role === 'admin')) {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // },
+
+  // products: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('sales')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('vendor')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('producer')) {
+  //     return true
+  //   }
+  //   return false
+  // },
+
+  // requests: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('sales')) {
+  //     return true
+  //   }
+  //   return false
+  // },
+
+  // users: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('sales')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('vendor')) {
+  //     if (user.vendors.some(edge => edge.role === 'admin')) {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // },
+
+  // vendors: user => {
+  //   if (user.roles.includes('admin')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('sales')) {
+  //     return true
+  //   }
+  //   if (user.roles.includes('vendor')) {
+  //     if (user.vendors.some(edge => edge.role === 'admin')) {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // },
+//}
+
+// export const canUseRootPage = (user, pageName) => pagesCanUse[pageName](user)
+

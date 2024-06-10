@@ -47,6 +47,16 @@ export const assignAdmin = async () => {
   })
 }
 
+export const assignRole = async (role) => {
+  const user = await UserDto.getCurrent()
+  await prisma.user.update({
+    where: {id: user.id},
+    data:{
+      roles: [role],
+    }
+  })
+}
+
 export const truncateData = async () => {
   'use server'
   await prisma.$executeRaw`truncate table private."Product" cascade`

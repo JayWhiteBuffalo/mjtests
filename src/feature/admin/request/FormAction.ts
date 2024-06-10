@@ -9,23 +9,32 @@ import {redirect} from 'next/navigation'
 import {formSchema} from './Schema'
 import {VendorUtil} from '@util/VendorUtil'
 
-export const apply = async formData => {
+export const apply = async (formData) => {
   'use server'
+
+  try {
   const user = await UserDto.getCurrent()
   const result = formSchema.safeParse(formData)
+
   if (!result.success) {
     return {issues: result.error.issues}
   }
   const request = result.data
+
   if (request.user.email !== user.email) {
     return {error: 'Email must be your own'}
   }
+
   await BusinessRequestDto.create({
     ...request,
     status: 'pending',
   })
-  redirect(`/admin/apply/${request.type}/success`)
-}
+
+  redirect(`/admin/apply/${request.type}/success`);
+  } catch (error) {
+    return {error:error.message}
+  }
+};
 
 export const approve = async requestId => {
   'use server'

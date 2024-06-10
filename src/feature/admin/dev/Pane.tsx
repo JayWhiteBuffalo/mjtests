@@ -3,8 +3,9 @@ import {Button} from '@nextui-org/react'
 import {InfoSection} from '@/feature/shared/component/InfoSection'
 import {useRouter} from 'next/navigation'
 import {useState} from 'react'
+import PermissionSelect from '@/feature/admin/component/PermissionSelect'
 
-const DevActionButton = ({action, children, ...rest}) => {
+export const DevActionButton = ({action, children, ...rest}) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -32,6 +33,7 @@ export const TestingToolsSection = ({
   truncateUser,
   truncateData,
   assignAdmin,
+  assignRole,
 }) => (
   <InfoSection>
     <header>
@@ -70,6 +72,11 @@ export const TestingToolsSection = ({
         </DevActionButton>
       </div>
       <p>Wipes the user, account, and session tables</p>
+
+      <div>
+        <PermissionSelect/>
+      </div>
+      <p>Select the Permission you want to change the account to. (For testing purposes)</p>
     </div>
   </InfoSection>
 )
