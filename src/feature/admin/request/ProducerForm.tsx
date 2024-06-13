@@ -137,6 +137,13 @@ export const Form = ({user, action}) => {
           >
             <Input {...register('referrer')} />
           </FieldLayout>
+
+          <FieldLayout
+            label= "Which POS Systems (if any) do you currently use and plan to continue using in the near future?"
+            error={errors.pos}
+            >
+              <Input {...register('pos')}/>
+            </FieldLayout>
         </section>
 
         <input

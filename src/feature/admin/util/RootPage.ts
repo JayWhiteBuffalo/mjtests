@@ -4,7 +4,7 @@ import {GiBarn} from 'react-icons/gi'
 import {HiInbox, HiShoppingBag, HiUser, HiHome} from 'react-icons/hi'
 import {HiMiniBuildingStorefront} from 'react-icons/hi2'
 import {LuBinary} from 'react-icons/lu'
-import { Permission, hasPermission } from '@/util/Roles';
+import { Permission, hasPermission, hasAdminPermission, hasOwnerPermission, hasManagerPermission, hasSalesPermission, hasEmployeePermission, isVendor, isProducer } from '@/util/Roles';
 
 export const homePage = {
   name: 'Home',
@@ -54,11 +54,18 @@ export const getRootPageRouteItem = key => rootPagesByKey[key]
 
 export const canUseAdmin = user => {
 
-  // const userPermission = user.roles;
+  const userPermission = user.roles;
 
-  // return hasPermission(userPermission, Permission.DEV)
+      if (userPermission.includes('admin') ||
+          hasAdminPermission(userPermission) ||
+          hasSalesPermission(userPermission)||
+          hasOwnerPermission(userPermission) ||
+          hasManagerPermission(userPermission) ||
+          hasEmployeePermission(userPermission)
+      ) {
+    return true
+  }
 
-  return true
 
 }
 
@@ -72,51 +79,53 @@ const pagesCanUse = {
 
   dev: user => {
     const userPermission = user.roles;
+        if (user.roles.includes('admin')) {
     return true
-    return hasPermission(userPermission, Permission.ADMIN);
-    
+  }
+    return hasPermission(userPermission, Permission.GUEST);
   },
 
   producers: user => {
     const userPermission = user.roles;
-    return true
-    return hasPermission(userPermission, Permission.ADMIN) ||
-           hasPermission(userPermission, Permission.PRODUCER_OWNER) ||
-           hasPermission(userPermission, Permission.PRODUCER_MANAGER);
+    return hasAdminPermission(userPermission) ||
+           isVendor(userPermission) ||
+           isProducer(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   products: user => {
     const userPermission = user.roles;
-    return true
-    return hasPermission(userPermission, Permission.ADMIN) ||
-           hasPermission(userPermission, Permission.VENDOR_OWNER) ||
-           hasPermission(userPermission, Permission.PRODUCER_OWNER) ||
-           hasPermission(userPermission, Permission.VENDOR_MANAGER) ||
-           hasPermission(userPermission, Permission.PRODUCER_MANAGER);
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   requests: user => {
     const userPermission = user.roles;
-    return true
-    return hasPermission(userPermission, Permission.ADMIN) ||
-           hasPermission(userPermission, Permission.PRODUCER_MANAGER) ||
-           hasPermission(userPermission, Permission.VENDOR_MANAGER);
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   users: user => {
     const userPermission = user.roles;
-    return true
-    return hasPermission(userPermission, Permission.ADMIN) ||
-           hasPermission(userPermission, Permission.PRODUCER_MANAGER) ||
-           hasPermission(userPermission, Permission.VENDOR_MANAGER);
+    if (user.roles.includes('admin')) {
+      return true
+    }
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   vendors: user => {
     const userPermission = user.roles;
-    return true
-    return hasPermission(userPermission, Permission.ADMIN) ||
-           hasPermission(userPermission, Permission.VENDOR_OWNER) ||
-           hasPermission(userPermission, Permission.VENDOR_MANAGER);
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 }
 

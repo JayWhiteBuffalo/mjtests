@@ -3,7 +3,7 @@ import {getRootPageRouteItem} from '@/feature/admin/util/RootPage'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
 import {ProductTable} from '@feature/admin/product/Table'
-import { Permission, hasPermission, hasRole } from '@/util/Roles'
+import { Permission, hasPermission, hasRole, hasAdminPermission } from '@/util/Roles'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),
@@ -14,13 +14,12 @@ const Page = async ({user}) => {
   const userPermission = user.roles;
   let products
 
-  if(hasPermission(userPermission, Permission.DEV))
+  if(hasAdminPermission(userPermission))
     {
         products = await ProductDto.findMany({
           include: {vendor: true},
         })
     } else if (
-      hasPermission(userPermission, Permission.DEV) ||
       hasRole(userPermission, Permission.VENDOR_OWNER) ||
       hasRole(userPermission, Permission.VENDOR_MANAGER) || 
       hasRole(userPermission, Permission.VENDOR_EMPLOYEE ))
@@ -34,7 +33,6 @@ const Page = async ({user}) => {
       orderBy: {name: 'asc'},
       })
     } else if (
-      hasPermission(userPermission, Permission.DEV) ||
       hasRole(userPermission, Permission.PRODUCER_OWNER) ||
       hasRole(userPermission, Permission.PRODUCER_MANAGER) || 
       hasRole(userPermission, Permission.PRODUCER_EMPLOYEE ))

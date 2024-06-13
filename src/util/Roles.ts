@@ -1,16 +1,18 @@
+import {permission} from 'process'
 
 export enum Permission {
     SUPER_ADMIN = '1',
     ADMIN = '2',
     DEV = '3',
-    PRODUCER_OWNER = '4',
-    VENDOR_OWNER = '5',
-    PRODUCER_MANAGER = '6',
-    VENDOR_MANAGER = '7',
-    PRODUCER_EMPLOYEE = '8',
-    VENDOR_EMPLOYEE = '9',
-    USER = '10',
-    GUEST = '11',
+    SALES = '4',
+    PRODUCER_OWNER = '5',
+    VENDOR_OWNER = '6',
+    PRODUCER_MANAGER = '7',
+    VENDOR_MANAGER = '8',
+    PRODUCER_EMPLOYEE = '9',
+    VENDOR_EMPLOYEE = '10',
+    USER = '11',
+    GUEST = '12',
     // ... (other permissions)
 
 }
@@ -35,6 +37,11 @@ export const PERMISSIONS: Record<Permission, PermissionObject> = {
     [Permission.DEV]: {
         name: Permission.DEV,
         role: 'DEV',
+        path: ['/*'],
+    },    
+    [Permission.SALES]: {
+        name: Permission.SALES,
+        role: 'SALES',
         path: ['/*'],
     },
     [Permission.PRODUCER_OWNER]: {
@@ -79,12 +86,51 @@ export const PERMISSIONS: Record<Permission, PermissionObject> = {
     },
 };
 
-export function hasPermission(userPermission: Permission, requiredPermission: Permission): boolean {
+export function hasPermission(userPermission: Permission[], requiredPermission: Permission): boolean {
     // Compare the numeric values of the permissions
-    return parseInt(userPermission) <= parseInt(requiredPermission);
+    return userPermission.some(permission => parseInt(permission) <= parseInt(requiredPermission));
 }
 
 export function hasRole(userPermission: Permission, requiredPermission: Permission): boolean {
-    return parseInt(userPermission) === parseInt(requiredPermission);
+    return userPermission.includes(requiredPermission);
 }
 
+export function hasAdminPermission(userPermission: Permission[]): boolean {
+    const adminPermissions = [Permission.SUPER_ADMIN, Permission.ADMIN, Permission.DEV];
+    console.log('Checking Admin permission:', userPermission, adminPermissions);
+    return userPermission.some(permission => adminPermissions.includes(permission));
+}
+
+export function hasSalesPermission(userPermission: Permission[]): boolean {
+    const salesPermissions = [Permission.SALES];
+    return userPermission.some(permission => salesPermissions.includes(permission));
+}
+
+export function hasOwnerPermission(userPermission: Permission[]): boolean {
+    const ownerPermission = [Permission.PRODUCER_OWNER, Permission.VENDOR_OWNER];
+    console.log('Checking Owner permission:', userPermission, ownerPermission);
+    return userPermission.some(permission => ownerPermission.includes(permission));
+}
+
+export function hasManagerPermission(userPermission: Permission[]): boolean {
+    const managerPermission = [Permission.PRODUCER_MANAGER, Permission.VENDOR_MANAGER];
+    console.log('Checking Manager permission:', userPermission, managerPermission);
+    return userPermission.some(permission => managerPermission.includes(permission));
+}
+
+export function hasEmployeePermission(userPermission: Permission[]): boolean {
+    const employeePermission = [Permission.PRODUCER_EMPLOYEE, Permission.VENDOR_EMPLOYEE];
+    return userPermission.some(permission => employeePermission.includes(permission));
+}
+
+export function isVendor(userPermission: Permission[]): boolean {
+    const vendorRoles = [Permission.VENDOR_OWNER, Permission.VENDOR_MANAGER, Permission.VENDOR_EMPLOYEE];
+    console.log('Checking if user is on Vendor account', userPermission, vendorRoles);
+    return userPermission.some(permission => vendorRoles.includes(permission))
+}
+
+export function isProducer(userPermission: Permission[]): boolean {
+    const producerRoles = [Permission.PRODUCER_OWNER, Permission.PRODUCER_MANAGER, Permission.PRODUCER_EMPLOYEE];
+    console.log('Checking if user is on Producer account', userPermission, producerRoles);
+    return userPermission.some(permission => producerRoles.includes(permission))
+}

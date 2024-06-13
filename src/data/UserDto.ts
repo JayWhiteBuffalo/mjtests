@@ -2,14 +2,15 @@ import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
 import supabase from '@api/supabaseServer'
 import {prisma} from '@/db'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
 
 const UserDto = {
   async canSee(user, userId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
+
+    if(hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)){
+      return true;
     }
     if (user.id === userId) {
       return true
@@ -29,7 +30,9 @@ const UserDto = {
   },
 
   async canEdit(user, userId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) 
+    ) {
       return true
     }
     if (user.id === userId) {

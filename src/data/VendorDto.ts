@@ -4,15 +4,17 @@ import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
 
 const VendorDto = {
   async canSee(user, vendorId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) ||
+        hasOwnerPermission(user.roles) ||
+        hasSalesPermission(user.roles)
+    ) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
+
     const vendor = await VendorDto._getRaw(vendorId)
     if (vendor.signupStatus.complete) {
       return true
@@ -22,7 +24,9 @@ const VendorDto = {
   },
 
   async canEdit(user, vendorId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) ||
+        hasOwnerPermission(user.roles)
+    ) {
       return true
     }
     const vendor = await VendorDto._getRaw(vendorId)
@@ -37,10 +41,9 @@ const VendorDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)) {
       return true
     }
     return false

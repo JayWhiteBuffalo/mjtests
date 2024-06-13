@@ -8,6 +8,7 @@ import UserOnProducerDto from '@data/UserOnProducerDto'
 import {redirect} from 'next/navigation'
 import {formSchema} from './Schema'
 import {VendorUtil} from '@util/VendorUtil'
+import { Permission } from '@/util/Roles'
 
 export const apply = async (formData) => {
   'use server'
@@ -66,7 +67,7 @@ export const approve = async requestId => {
     await UserOnVendorDto.create({
       userId: requestUser.id,
       vendorId,
-      role: 'admin',
+      role: Permission.VENDOR_OWNER,
     })
 
     await BusinessRequestDto.update(requestId, {
@@ -96,7 +97,7 @@ export const approve = async requestId => {
     await UserOnProducerDto.create({
       userId: requestUser.id,
       producerId,
-      role: 'admin',
+      role: Permission.PRODUCER_OWNER,
     })
 
     await BusinessRequestDto.update(requestId, {
