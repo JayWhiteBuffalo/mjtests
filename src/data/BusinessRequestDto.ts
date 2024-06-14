@@ -3,13 +3,11 @@ import assert from 'assert'
 import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
 import {nanoid} from 'nanoid'
+import { Permission, hasAdminPermission, hasSalesPermission } from '@/util/Roles'
 
 const BusinessRequestDto = {
   async canSee(user, requestId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles)) {
       return true
     }
 
@@ -21,10 +19,7 @@ const BusinessRequestDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles)){
       return true
     }
     if (user.loggedIn) {
@@ -34,10 +29,7 @@ const BusinessRequestDto = {
   },
 
   async canEdit(user, _requestId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles)) {
       return true
     }
     return false

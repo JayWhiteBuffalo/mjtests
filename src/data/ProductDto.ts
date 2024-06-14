@@ -9,10 +9,11 @@ import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
 import {custom} from 'zod'
+import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission } from '@/util/Roles'
 
 const ProductDto = {
   async canSee(user, productId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
@@ -26,7 +27,7 @@ const ProductDto = {
   },
 
   async canEdit(user, productId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
@@ -40,7 +41,7 @@ const ProductDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     return false

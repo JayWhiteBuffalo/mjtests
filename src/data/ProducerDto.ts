@@ -3,15 +3,16 @@ import assert from 'assert'
 import {prisma} from '@/db'
 import UserDto from '@data/UserDto'
 import {nanoid} from 'nanoid'
+import { hasAdminPermission, hasSalesPermission, hasOwnerPermission, hasManagerPermission } from '@/util/Roles'
 
 const ProducerDto = {
   async canSee(user, producerId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
+    // if (user.roles.includes('sales')) {
+    //   return true
+    // }
     const producer = await ProducerDto._getRaw(producerId)
     if (producer.signupStatus.complete) {
       return true
@@ -21,7 +22,7 @@ const ProducerDto = {
   },
 
   async canEdit(user, producerId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasOwnerPermission(user.roles)) {
       return true
     }
     const producer = await ProducerDto._getRaw(producerId)
@@ -35,12 +36,12 @@ const ProducerDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
+    // if (user.roles.includes('sales')) {
+    //   return true
+    // }
     return false
   },
 

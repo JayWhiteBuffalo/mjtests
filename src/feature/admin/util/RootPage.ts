@@ -61,7 +61,8 @@ export const canUseAdmin = user => {
           hasSalesPermission(userPermission)||
           hasOwnerPermission(userPermission) ||
           hasManagerPermission(userPermission) ||
-          hasEmployeePermission(userPermission)
+          hasEmployeePermission(userPermission) ||
+          hasPermission(userPermission, Permission.GUEST)
       ) {
     return true
   }

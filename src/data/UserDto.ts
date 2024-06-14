@@ -3,6 +3,7 @@ import assert from 'assert'
 import supabase from '@api/supabaseServer'
 import {prisma} from '@/db'
 import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
+import {User} from '@nextui-org/react'
 
 const UserDto = {
   async canSee(user, userId) {
@@ -39,6 +40,13 @@ const UserDto = {
       return true
     }
     return false
+  },
+
+  async canDelete(user){ 
+    if (hasAdminPermission(user.roles)){
+      return true;
+    }
+    return false;
   },
 
   async _getRaw(userId) {
@@ -102,6 +110,34 @@ const UserDto = {
       data: user,
     })
   },
+
+  async delete(userId){
+    const currentUser = await UserDto.getCurrent()
+    if (!await UserDto.canDelete(currentUser)) {
+      throw new Error('Permission denied');
+    }
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated UserOnVendor and UserOnProducer records
+      await prisma.userOnVendor.deleteMany({ where: { userId } });
+      await prisma.userOnProducer.deleteMany({ where: { userId } });
+      // Delete associated BusinessRequests Created by User
+      await prisma.businessRequest.deleteMany({ where: { createdById: userId } });
+
+      // Do not delete producers, products, vendors, imageRefs since they need to remain
+      // even if the user who created/updated them is deleted
+      //Must be deleted directly with a seperate action
+
+      // Delete the user
+      await prisma.user.delete({ where: { id: userId } });
+
+      console.log(`User with ID ${userId} and associated records successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting user and associated records:', error);
+      throw new Error('Error deleting user and associated records');
+    }
+    });
+  }
 }
 
 export default UserDto

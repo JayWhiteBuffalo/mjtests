@@ -70,6 +70,10 @@ export const approve = async requestId => {
       role: Permission.VENDOR_OWNER,
     })
 
+    await UserDto.update(requestUser.id, {
+      roles: [Permission.VENDOR_OWNER],
+    })
+
     await BusinessRequestDto.update(requestId, {
       status: 'approved',
       archived: true,
