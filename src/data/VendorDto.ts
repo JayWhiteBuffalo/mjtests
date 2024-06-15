@@ -49,6 +49,13 @@ const VendorDto = {
     return false
   },
 
+  async canDelete(user) { 
+    if (hasAdminPermission(user.roles)){
+      return true;
+    }
+    return false;
+  },
+
   async _getRaw(vendorId) {
     return await prisma.vendor.findUnique({
       where: {id: vendorId},
@@ -110,6 +117,37 @@ const VendorDto = {
       return id
     }
   },
+
+  
+  async delete(vendorId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await VendorDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if vendor exists
+    const currentVendor = await VendorDto._getRaw(vendorId)
+    if (!currentVendor) {
+      throw new Error('Vendor not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated UserOnVendor and UserOnProducer records
+      await prisma.userOnVendor.deleteMany({ where: { vendorId } });
+      await prisma.vendor.delete({ where: { id: vendorId } }) 
+      
+      console.log(`Vendor with ID ${vendorId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting vendor and associated records:', error);
+      throw new Error('Error deleting vendor and associated records');
+    }
+    });
+  }
+
 }
+
+
 
 export default VendorDto

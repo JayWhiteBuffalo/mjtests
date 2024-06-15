@@ -3,6 +3,8 @@ import ImageRefDto from '@data/ImageRefDto'
 import VendorDto from '@data/VendorDto'
 import {formSchema} from './Schema'
 import {redirect} from 'next/navigation'
+import {hasAdminPermission} from '@/util/Roles'
+import {prisma} from '@/db'
 
 export const save = async (vendorId, formData) => {
   'use server'
@@ -13,6 +15,8 @@ export const save = async (vendorId, formData) => {
   const id = await VendorDto.createOrUpdate(vendorId, result.data)
   redirect(`/admin/vendors/${id}`)
 }
+
+
 
 export const getFormProps = async (user, vendorId) => {
   let imageRefs
@@ -27,6 +31,6 @@ export const getFormProps = async (user, vendorId) => {
 
   return {
     imageRefs,
-    isAdmin: user.roles.includes('admin'),
+    isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
   }
 }

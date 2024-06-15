@@ -4,6 +4,26 @@ import {Button} from '@nextui-org/react'
 import {BlueLink} from '@/feature/shared/component/Link'
 import Link from 'next/link'
 
+const deleteVendor = async (vendorId) => {
+  try {
+    const response = await fetch(`/api/vendor/${vendorId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.ok) {
+      console.log('Vendor deleted successfully')
+      window.location.reload()
+    } else {
+      console.error('Failed to delete vendor')
+    }
+  } catch (error) {
+    console.error('Error deleting vendor:', error)
+  }
+}
+
 const NameCell = ({item: vendor}) => (
   <BlueLink href={`/admin/vendors/${vendor.id}`}>{vendor.name}</BlueLink>
 )
@@ -18,11 +38,23 @@ const ActionCell = ({item: {id}}) => (
   </BlueLink>
 )
 
+const DeleteCell = ({ item: vendor }) => (
+  <Button
+    color="danger"
+    onClick={() => deleteVendor(vendor.id)}
+    size="sm"
+  >
+    Delete
+  </Button>
+)
+
+
 export const VendorTable = ({vendors}) => {
   const columns = makeColumns([
     {key: 'name', label: 'Name', Cell: NameCell},
     {key: 'location', label: 'Location', Cell: LocationCell},
     {key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell},
+    {key: 'actions', label: 'Actions', Cell: DeleteCell},
   ])
 
   return (
