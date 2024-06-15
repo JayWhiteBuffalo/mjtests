@@ -39,10 +39,14 @@ const ProducerDto = {
     if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
-    // if (user.roles.includes('sales')) {
-    //   return true
-    // }
     return false
+  },
+
+  async canDelete(user) { 
+    if (hasAdminPermission(user.roles)){
+      return true;
+    }
+    return false;
   },
 
   async _getRaw(producerId) {
@@ -102,6 +106,33 @@ const ProducerDto = {
       return id
     }
   },
+
+  async delete(producerId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await ProducerDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if vendor exists
+    const currentProducer = await ProducerDto._getRaw(producerId)
+    if (!currentProducer) {
+      throw new Error('Producer not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated UserOnVendor and UserOnProducer records
+      await prisma.userOnProducer.deleteMany({ where: { producerId } });
+      await prisma.producer.delete({ where: { id: producerId } }) 
+      
+      console.log(`Producer with ID ${producerId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting Producer and associated records:', error);
+      throw new Error('Error deleting Producer and associated records');
+    }
+    });
+  }
 }
 
 export default ProducerDto

@@ -53,7 +53,7 @@ export const UserTable = ({users}) => {
     {key: 'email', label: 'Email'},
     {key: 'roles', label: 'Roles', Cell: RolesCell},
     {key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell},
-    {key: 'delete', Cell: DeleteCell},
+    {key: 'delete', HeaderCell: ActionHeaderCell, Cell: DeleteCell},
   ])
 
   return <TMTable aria-label="Table of users" columns={columns} items={users} />

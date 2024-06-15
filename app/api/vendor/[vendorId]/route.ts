@@ -17,7 +17,7 @@ export const DELETE = async (request, { params }) => {
       })
     }
     await VendorDto.delete(vendorId)
-    return new Response(JSON.stringify({ message: 'User deleted successfully' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Vendor deleted successfully' }), { status: 200 });
   } catch (error) {
     console.error('Error deleting vendor:', error)
     return new Response(JSON.stringify({ message: 'Error deleting vendor' }), {

@@ -3,6 +3,7 @@ import ImageRefDto from '@data/ImageRefDto'
 import ProducerDto from '@data/ProducerDto'
 import {formSchema} from './Schema'
 import {redirect} from 'next/navigation'
+import {hasAdminPermission} from '@/util/Roles'
 
 export const save = async (producerId, formData) => {
   'use server'
@@ -27,6 +28,6 @@ export const getFormProps = async (user, producerId) => {
 
   return {
     imageRefs,
-    isAdmin: user.roles.includes('admin'),
+    isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
   }
 }
