@@ -17,7 +17,7 @@ const Page = async ({user}) => {
   let userPermission = user.roles;
   let users;
   console.log(typeof user.roles); // Should be 'object' (array)
-
+  console.log(user)
   console.log(userPermission)
 
   if (hasAdminPermission(userPermission)){

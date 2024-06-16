@@ -21,7 +21,7 @@ const deleteUser = async (user) => {
       } catch (error) {
         console.error('Error deleting user:', error);
       }
-    }
+  }
 
 const NameCell = ({item: user}) => (
   <BlueLink href={`/admin/users/${user.id}`}>{user.name}</BlueLink>
@@ -60,31 +60,3 @@ export const UserTable = ({users}) => {
 }
 
 
-
-// const DeleteUserButtonCell = ({ item: user }) => (
-//   <Button
-//   color="danger"
-//   onClick={async () => {
-//     try {
-//       const response = await fetch(`/api/users/${user.id}`, {
-//         method: 'DELETE',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       if (response.ok) {
-//         console.log('User deleted successfully');
-//         window.location.reload();
-//       } else {
-//         console.error('Failed to delete user');
-//       }
-//     } catch (error) {
-//       console.error('Error deleting user:', error);
-//     }
-//   }}
-//   size="sm"
-//   >
-//   Delete User
-//   </Button>
-// );
