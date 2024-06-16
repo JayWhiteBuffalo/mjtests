@@ -47,6 +47,13 @@ const ProductDto = {
     return false
   },
 
+  async canDelete(user) {
+    if(hasAdminPermission(user.roles)) {
+      return true;
+    }
+    return false;
+  },
+
   async _getRaw(productId) {
     return await prisma.product.findUnique({
       where: {id: productId},
@@ -153,6 +160,35 @@ const ProductDto = {
       return id
     }
   },
+
+  async delete(productId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await ProductDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if product exists
+    const currentProduct = await ProductDto._getRaw(productId)
+    if (!currentProduct) {
+      throw new Error('Product not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated Product records
+      await prisma.product.delete({ where: { id: productId } }) 
+      
+      console.log(`Product with ID ${productId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting Product and associated records:', error);
+      throw new Error('Error deleting Product and associated records');
+    }
+    });
+  }
+
 }
+
+
 
 export default ProductDto

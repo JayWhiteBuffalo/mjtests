@@ -7,6 +7,7 @@ import UserOnVendorDto from '@data/UserOnVendorDto'
 import VendorDto from '@data/VendorDto'
 import {draftFormSchema, publishFormSchema} from './Schema'
 import {redirect} from 'next/navigation'
+import {hasAdminPermission} from '@/util/Roles'
 
 const save = async (productId, product, imageRefIds) => {
   const id = await ProductDto.createOrUpdate(productId, product)
@@ -89,7 +90,7 @@ export const getFormProps = async (user, productId) => {
 
   return {
     imageRefs,
-    isAdmin: user.roles.includes('admin') || user.roles.includes('sales'),
+    isAdmin: user.roles.includes('admin') || user.roles.includes('sales') || hasAdminPermission(user.roles),
     producerItems,
     vendorItems,
   }
