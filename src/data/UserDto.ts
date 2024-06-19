@@ -2,7 +2,7 @@ import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
 import supabase from '@api/supabaseServer'
 import {prisma} from '@/db'
-import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission, hasManagerPermission } from '@/util/Roles'
 import {User} from '@nextui-org/react'
 
 const UserDto = {
@@ -21,12 +21,22 @@ const UserDto = {
     const otherVendorIds = new Set(otherUser.vendors.map(edge => edge.vendorId))
     if (
       user.vendors
-        .filter(edge => edge.role === 'admin')
+        .filter(edge => (edge.role === 'admin' || hasAdminPermission(edge.role)))
         .some(edge => otherVendorIds.has(edge.vendorId))
     ) {
       return true
     }
 
+    return false
+  },
+
+  async canCreate(user) {
+    if (hasAdminPermission(user.roles) ||
+     hasSalesPermission(user.roles) || 
+     hasOwnerPermission(user.roles)) {
+      return true
+    }
+    if(user.roles.include('admin'))
     return false
   },
 
@@ -101,6 +111,34 @@ const UserDto = {
       UserDto.canSee(currentUser, raw.id),
     )
   },
+
+  
+    async create(userData, currentUser) {
+      assert(await UserDto.canCreate(currentUser), 'Permission denied')
+  
+      const {
+        firstname,
+        lastname,
+        email,
+        password,
+        role,
+      } = userData
+  
+      // Create new user
+      const newUser = await prisma.user.create({
+        data: {
+          firstname,
+          lastname,
+          email,
+          password,
+          role,
+          createdBy: currentUser.id,
+        }
+      })
+  
+      console.log(newUser)
+      return await newUser;
+    },
 
   async update(userId, user) {
     const currentUser = await UserDto.getCurrent()

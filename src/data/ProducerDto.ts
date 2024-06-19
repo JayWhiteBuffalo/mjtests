@@ -49,6 +49,12 @@ const ProducerDto = {
     return false;
   },
 
+  async _getAll() {
+    return await prisma.producer.findMany({
+      
+    })
+  },
+
   async _getRaw(producerId) {
     return await prisma.producer.findUnique({
       where: {id: producerId},

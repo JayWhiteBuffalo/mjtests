@@ -1,7 +1,7 @@
 'use client'
 import {BlueLink} from '@/feature/shared/component/Link'
 import {TMTable, makeColumns, ActionHeaderCell} from '@/feature/shared/component/Table'
-import {Button} from '@nextui-org/react'
+import {Button, Link} from '@nextui-org/react'
 
 const deleteUser = async (user) => {
   try {
@@ -56,7 +56,19 @@ export const UserTable = ({users}) => {
     {key: 'delete', HeaderCell: ActionHeaderCell, Cell: DeleteCell},
   ])
 
-  return <TMTable aria-label="Table of users" columns={columns} items={users} />
+  return (
+    <>
+      <ActionBar/>
+      <TMTable aria-label="Table of users" columns={columns} items={users} />
+    </>
+  ) 
 }
 
 
+const ActionBar = () => (
+  <div className="flex justify-end gap-2 p-2">
+    <Link href={`/admin/users/create`}>
+      <Button>Add User</Button>
+    </Link>
+  </div>
+)

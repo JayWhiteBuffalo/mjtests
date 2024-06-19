@@ -91,8 +91,8 @@ export function hasPermission(userPermission: Permission[], requiredPermission: 
     return userPermission.some(permission => parseInt(permission) <= parseInt(requiredPermission));
 }
 
-export function hasRole(userPermission: Permission, requiredPermission: Permission): boolean {
-    return userPermission.includes(requiredPermission);
+export function hasRole(userPermission: Permission[], requiredPermission: Permission): boolean {
+    return userPermission.some(permission => requiredPermission.includes(permission));
 }
 
 export function hasAdminPermission(userPermission: Permission[]): boolean {
