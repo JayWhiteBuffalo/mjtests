@@ -3,9 +3,9 @@ import {BlueLink} from '@/feature/shared/component/Link'
 import {TMTable, makeColumns, ActionHeaderCell} from '@/feature/shared/component/Table'
 import {Button, Link} from '@nextui-org/react'
 
-const deleteUser = async (user) => {
+const deleteUser = async (userId) => {
   try {
-        const response = await fetch(`/api/users/${user.id}`, {
+        const response = await fetch(`/api/users/${userId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

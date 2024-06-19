@@ -83,7 +83,7 @@ const pagesCanUse = {
         if (user.roles.includes('admin') || hasAdminPermission(user.roles)) {
     return true
   }
-    return hasPermission(userPermission, Permission.GUEST);
+    // return hasPermission(userPermission, Permission.GUEST);
   },
 
   producers: user => {

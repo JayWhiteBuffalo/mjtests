@@ -1,12 +1,14 @@
 'use server'
+import {createServerActionClient} from '@/api/supabaseServer'
 import ProducerDto from '@/data/ProducerDto'
 import UserDto from '@/data/UserDto'
 import VendorDto from '@/data/VendorDto'
 import {prisma} from '@/db'
 import {formSchema} from '@/feature/admin/user/forms/Schema'
+import {signUpApiSchema} from '@/feature/auth/Schema'
 import {Permission, hasAdminPermission, hasRole, isVendor} from '@/util/Roles'
 import {User} from '@nextui-org/react'
-import {nanoid} from 'nanoid'
+import { headers } from 'next/headers'
 
 const getRoleKey = (request) => {
   if(request.account.vendor){
@@ -25,7 +27,6 @@ const getRoleKey = (request) => {
 }
 
 
-
 export const getVendors = async () => {
   try {
     const vendors = await prisma.vendor.findMany({
@@ -40,6 +41,10 @@ export const getVendors = async () => {
     return []
   }
 }
+
+const makeReturnToUrl = (returnTo: string) =>
+  `http://${headers().get('Host')}${returnTo}`
+
 
 export const createUser = async (formData) => {
     'use server'
@@ -61,16 +66,49 @@ export const createUser = async (formData) => {
     const request = result.data
 
     console.log("RESULT DATA LOG ==============" + JSON.stringify(result))
+    
 
-    const user = {
-      id: nanoid(),
-      name: `${request.user.firstname} ${request.user.lastname}`,
+    const apiData = {
       email: request.user.email,
-      // password: request.password,
-      roles: getRoleKey(request),
+      password: request.password,
+      confirmPassword: request.password,
     }
+
+    const signUpResult = signUpApiSchema.safeParse(apiData)
+
+    if (!signUpResult.success) {
+      return { issues: signUpResult.error.issues }
+    }
+
+    const supabase = createServerActionClient();
+
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email: signUpResult.data.email,
+      password: signUpResult.data.password,
+      options: {
+        emailRedirectTo: makeReturnToUrl('/verify-email'), // Adjust this URL as needed
+      }
+    })
+
+    if (error) {
+      throw error
+    }
+
+    const { user: supabaseUser } = signUpData
+
+    if (!supabaseUser) {
+      throw new Error('Failed to create user in Supabase')
+    }
+
   
-  const newUser = await prisma.User.create({ data:user })
+    const newUser = await prisma.user.create({
+      data: {
+        id: supabaseUser.id,
+        name: `${request.user.firstname} ${request.user.lastname}`,
+        email: request.user.email,
+        roles: getRoleKey(request),
+      }
+    })
 
 
         // Associate user with vendor or producer
@@ -79,7 +117,7 @@ export const createUser = async (formData) => {
             data: {
               userId: newUser.id,
               vendorId: request.account.vendor,
-              role: newUser.role === 'manager' ? Permission.VENDOR_MANAGER : Permission.VENDOR_EMPLOYEE,
+              role: newUser.role === 'employee' ? Permission.VENDOR_MANAGER : Permission.VENDOR_EMPLOYEE,
             }
           })
         } else if (formData.producer) {
@@ -87,7 +125,7 @@ export const createUser = async (formData) => {
             data: {
               userId: newUser.id,
               producerId: request.account.producer,
-              role: newUser.role === 'manager' ? Permission.PRODUCER_MANAGER : Permission.PRODUCER_EMPLOYEE,
+              role: newUser.role === 'employee' ? Permission.PRODUCER_MANAGER : Permission.PRODUCER_EMPLOYEE,
             }
           })
         }
