@@ -7,7 +7,7 @@ import {prisma} from '@/db'
 import {formSchema} from '@/feature/admin/user/forms/Schema'
 import {signUpApiSchema} from '@/feature/auth/Schema'
 import {Permission, hasAdminPermission, hasRole, isVendor} from '@/util/Roles'
-import {User} from '@nextui-org/react'
+import {User, select} from '@nextui-org/react'
 import { headers } from 'next/headers'
 
 const getRoleKey = (request) => {
@@ -38,6 +38,21 @@ export const getVendors = async () => {
     return vendors
   } catch (error) {
     console.error('Error fetching vendors:', error)
+    return []
+  }
+}
+
+export const getProducers = async () => {
+  try{
+    const producers = await prisma.producer.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    })
+    return producers
+  } catch (error) {
+    console.error('Error fetching producers', error)
     return []
   }
 }
@@ -143,9 +158,11 @@ return { issues: [{ message: 'Internal server error' }] }
 export const getFormProps = async () => {
  const user = await UserDto.getCurrent();
  const vendors = await getVendors()
+ const producers = await getProducers()
   return {
     user,
     vendors,
+    producers,
     isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
     // isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
     // isProducerOwner: hasRole(user.roles, Permission.PRODUCER_OWNER),

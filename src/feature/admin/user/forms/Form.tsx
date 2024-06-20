@@ -10,10 +10,10 @@ import {subscribe} from 'diagnostics_channel'
 import {useEffect} from 'react'
 import {FormProvider, useForm} from 'react-hook-form'
 
-const VendorTypeaheadStore = new TypeaheadStore('vendor');
-const ProducerTypeaheadStore = new TypeaheadStore('producers');
+// const VendorTypeaheadStore = new TypeaheadStore('vendor');
+// const ProducerTypeaheadStore = new TypeaheadStore('producers');
 
-export const Form = ({user, action, vendors}) => {
+export const Form = ({user, action, vendors, producers}) => {
     // const defaultValues = {
     //     firstname: '',
     //     lastname: '',
@@ -87,9 +87,9 @@ export const Form = ({user, action, vendors}) => {
                             <SelectItem key={"manager"} value={"manager"}>
                                 Manager
                             </SelectItem>
-                            <SelectItem key={"other"}>
+                            {/* <SelectItem key={"other"}>
                                 Other
-                            </SelectItem>
+                            </SelectItem> */}
                         </Select>
                     </FieldLayout>
 
@@ -162,6 +162,16 @@ export const Form = ({user, action, vendors}) => {
                              ))}
                         </select> 
                         </FieldLayout>
+
+                        <FieldLayout label="Producer">
+                        <select {...methods.register('producer', { required: true })}>
+                            <option value="">Select Producer</option>
+                            {producers.map(producer => (
+                            <option key={producer.id} value={producer.id}>{producer.name}</option>
+                             ))}
+                        </select> 
+                        </FieldLayout>
+
                     {/* <FieldLayout label="Vendor" error={errors.vendor}>
                         <AutocompleteAdapter
                         allowsCustomValue
