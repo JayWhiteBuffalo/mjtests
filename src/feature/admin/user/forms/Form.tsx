@@ -14,20 +14,6 @@ import {FormProvider, useForm} from 'react-hook-form'
 // const ProducerTypeaheadStore = new TypeaheadStore('producers');
 
 export const Form = ({user, action, vendors, producers}) => {
-    // const defaultValues = {
-    //     firstname: '',
-    //     lastname: '',
-    //     email: '',
-    //     mainImageRefId: null,
-    //     password: '',
-    //     createdAt: new Date(),
-    //     createdBy: '',
-    //     role: '',
-    //     owner: '',
-    //     producer: null,
-    //     vendor: null,
-    //     ...user,
-    // };
 
     const methods = useForm({
         resolver: nullResolver(),

@@ -11,7 +11,7 @@ import {User, select} from '@nextui-org/react'
 import { headers } from 'next/headers'
 
 const getRoleKey = (request) => {
-  if(request.account.vendor){
+  if(request.account.vendor != null){
     if(request.role === "employee"){
       return [Permission.VENDOR_EMPLOYEE]
     } else {
@@ -65,13 +65,6 @@ export const createUser = async (formData) => {
     'use server'
 
     try {
-      // if(hasRole(currentUser.roles, Permission.PRODUCER_OWNER )){
-      //   formData.producer = currentProducerId
-      // }
-      // if(hasRole(currentUser.roles, Permission.VENDOR_OWNER)){
-      //   formData.vendor = currentVendorId
-      // }
-    // const user = await UserDto.getCurrent()
     const result = formSchema.safeParse(formData)
 
     if (!result.success) {
@@ -79,6 +72,7 @@ export const createUser = async (formData) => {
     }
 
     const request = result.data
+    console.log("ROLE KEY RESULT " + getRoleKey(request))
 
     console.log("RESULT DATA LOG ==============" + JSON.stringify(result))
     
@@ -93,6 +87,8 @@ export const createUser = async (formData) => {
 
     if (!signUpResult.success) {
       return { issues: signUpResult.error.issues }
+    } else {
+      console.log("Sign up Result Success 500" + signUpResult)
     }
 
     const supabase = createServerActionClient();
@@ -108,39 +104,75 @@ export const createUser = async (formData) => {
     if (error) {
       throw error
     }
+    console.log(signUpData)
 
     const { user: supabaseUser } = signUpData
+
+
 
     if (!supabaseUser) {
       throw new Error('Failed to create user in Supabase')
     }
 
-  
-    const newUser = await prisma.user.create({
+        // Check if user already exists in Prisma
+        // const existingUser = await prisma.user.findUnique({
+        //   where: { id: supabaseUser.id }
+        // })
+        // if (existingUser) {
+        //   return { issues: [{ message: 'User already exists' }] }
+        // }
+
+        console.log("SupaBase ID ====================================" + supabaseUser.id)
+
+    // const newUser = await prisma.user.update({
+    //   data: {
+    //     id: supabaseUser.id,
+    //     name: `${request.user.firstname} ${request.user.lastname}`,
+    //     email: request.user.email,
+    //     roles: getRoleKey(request),
+    //   }
+      
+    // })
+
+    const newUser = await prisma.user.update({
+      where: {
+        id: supabaseUser.id, // This specifies the user to update by their ID
+      },
       data: {
-        id: supabaseUser.id,
-        name: `${request.user.firstname} ${request.user.lastname}`,
-        email: request.user.email,
-        roles: getRoleKey(request),
-      }
-    })
+        name: `${request.user.firstname} ${request.user.lastname}`, // Update name
+        email: request.user.email, // Update email
+        roles: getRoleKey(request), // Update roles
+      },
+    });
+
+    console.log("SupaBase ID ====================================" + supabaseUser.id)
+    console.log("SupaBase ID ====================================" + newUser.id)
+    // const user = await UserDto._getRaw(supabaseUser.id)
+    //   await prisma.user.update({
+    //     where: {id: user.id},
+    //     data:{
+    //       roles: [getRoleKey(request)],
+    //     }
+    //   })
+    
+
 
 
         // Associate user with vendor or producer
-        if (request.account.vendor) {
+        if (request.account.vendor != null) {
           await prisma.UserOnVendor.create({
             data: {
               userId: newUser.id,
               vendorId: request.account.vendor,
-              role: newUser.role === 'employee' ? Permission.VENDOR_MANAGER : Permission.VENDOR_EMPLOYEE,
+              role: request.role === 'employee' ? Permission.VENDOR_MANAGER : Permission.VENDOR_EMPLOYEE,
             }
           })
-        } else if (formData.producer) {
+        } else if (request.account.producer != null) {
           await prisma.userOnProducer.create({
             data: {
               userId: newUser.id,
               producerId: request.account.producer,
-              role: newUser.role === 'employee' ? Permission.PRODUCER_MANAGER : Permission.PRODUCER_EMPLOYEE,
+              role: request.role === 'employee' ? Permission.PRODUCER_MANAGER : Permission.PRODUCER_EMPLOYEE,
             }
           })
         }
