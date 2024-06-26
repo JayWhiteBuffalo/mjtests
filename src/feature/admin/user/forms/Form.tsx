@@ -3,7 +3,7 @@
 import {AutocompleteAdapter} from '@/feature/shared/component/AutocompleteAdapter'
 import {FieldLayout, FormErrors, nullResolver} from '@/feature/shared/component/Form'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
-import {Permission, hasAdminPermission, hasOwnerPermission, hasRole} from '@/util/Roles'
+import {Permission, hasAdminPermission, hasOwnerPermission, hasRole, isProducer, isVendor} from '@/util/Roles'
 import {OptionsDropdown} from '@mantine/core'
 import {Button, Input, Select, SelectItem} from '@nextui-org/react'
 import {subscribe} from 'diagnostics_channel'
@@ -13,7 +13,7 @@ import {FormProvider, useForm} from 'react-hook-form'
 // const VendorTypeaheadStore = new TypeaheadStore('vendor');
 // const ProducerTypeaheadStore = new TypeaheadStore('producers');
 
-export const Form = ({user, action, vendors, producers}) => {
+export const Form = ({user, action, vendors, producers, userOnVendor, userOnProducer}) => {
 
     const methods = useForm({
         resolver: nullResolver(),
@@ -108,9 +108,12 @@ export const Form = ({user, action, vendors, producers}) => {
                     </FieldLayout>
                 </div>
 
-                <FieldLayout>
+                <FieldLayout
+                    label="Employee Email"
+                >
+
                     <Input 
-                        autoComplete='on'
+                        autoComplete='off'
                         type='email'
                         {...register('email')}
                         />
@@ -137,8 +140,8 @@ export const Form = ({user, action, vendors, producers}) => {
                     then we need to have a option to select the associated store or producer to this user creation */}
 
 
-                    {/* SELECT PARENT ACCOUNT */}
-    
+                    {/* SELECT PARENT ACCOUNT FOR ADMIN USERS */}
+                    {hasAdminPermission(user.roles) &&
                         <>
 
                         <FieldLayout label="Vendor">
@@ -158,26 +161,31 @@ export const Form = ({user, action, vendors, producers}) => {
                              ))}
                         </select> 
                         </FieldLayout>
-
-                    {/* <FieldLayout label="Vendor" error={errors.vendor}>
-                        <AutocompleteAdapter
-                        allowsCustomValue
-                        TypeaheadStore={VendorTypeaheadStore}
-                        {...register('vendor')}
-                        />
-                    </FieldLayout> */}
-                    
-                    {/* <FieldLayout label="Producer" error={errors.producer}>
-                        <AutocompleteAdapter
-                        allowsCustomValue
-                        name="producer"
-                        TypeaheadStore={ProducerTypeaheadStore}
-                        {...register('user.producer')}
-                        />
-                    </FieldLayout> */}
                     </>
-  
-                      
+                }
+
+                {/* VENDOR OWNER AND PRODUCER OWNER ACCOUNTS WILL HAVE THIS FIELD DISABLED WITH THEIR RELATED VENDOR ID SELECTED */}
+                {hasOwnerPermission(user.roles) && isVendor(user.roles) && 
+
+                    <>
+                        <FieldLayout>
+                            <select disabled hidden {...methods.register('vendor', { required: true })}>
+                                <option value={userOnVendor.vendorId}>{userOnVendor.vendorId}</option>
+                            </select> 
+                        </FieldLayout>
+                    </>
+                }
+
+                {hasOwnerPermission(user.roles) && isProducer(user.roles) &&
+                
+                <>
+                    <FieldLayout>
+                        <select disabled hidden {...methods.register('producer', { required: true })}>
+                            <option value={userOnProducer.producerId}>{userOnProducer.producerId}</option>
+                        </select> 
+                    </FieldLayout>
+                </>
+                }
                     
                     </section>
 

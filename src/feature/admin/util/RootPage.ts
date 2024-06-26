@@ -72,14 +72,13 @@ export const canUseAdmin = user => {
 
 const pagesCanUse = {
   apply: user => {
-    if (user.loggedIn && !(user.authUser.aud === 'authenticated')) {
+    if (user.loggedIn && (hasPermission(user.roles, Permission.USER)) || user.roles) {
       return true
     }
     return false
   },
 
   dev: user => {
-    const userPermission = user.roles;
         if (user.roles.includes('admin') || hasAdminPermission(user.roles)) {
     return true
   }

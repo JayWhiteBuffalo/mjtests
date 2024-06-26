@@ -59,7 +59,7 @@ const Page = async ({user}) => {
       })
   }
 
-  return <UserTable users={users} />
+  return <UserTable users={users} userPermission={userPermission} />
   
 }
 

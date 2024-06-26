@@ -58,6 +58,45 @@ export const getProducers = async () => {
   }
 }
 
+export const getUserOnVendor = async (userId: number) => {
+  try {
+    const userOnVendor = await prisma.userOnVendor.findFirst({
+      where: {
+        userId: userId,
+      },
+      select: {
+        vendorId: true,
+        // Add other fields as needed
+      },
+    });
+
+    return userOnVendor; // Return the fetched data
+  } catch (error) {
+    console.error('Error fetching userOnVendor:', error);
+    throw error; // Handle or rethrow the error as per your application's needs
+  }
+};
+
+export const getUserOnProducer = async (userId: number) => {
+  try {
+    const userOnProducer = await prisma.userOnProducer.findFirst({
+      where: {
+        userId: userId,
+      },
+      select: {
+        producerId: true,
+        // Add other fields as needed
+      },
+    });
+
+    return userOnProducer; // Return the fetched data
+  } catch (error) {
+    console.error('Error fetching userOnVendor:', error);
+    throw error; // Handle or rethrow the error as per your application's needs
+  }
+};
+
+
 const makeReturnToUrl = (returnTo: string) =>
   `http://${headers().get('Host')}${returnTo}`
 
@@ -153,10 +192,14 @@ export const getFormProps = async () => {
  const user = await UserDto.getCurrent();
  const vendors = await getVendors()
  const producers = await getProducers()
+ const userOnVendor = await getUserOnVendor(user.id);
+ const userOnProducer = await getUserOnProducer(user.id)
   return {
     user,
     vendors,
     producers,
+    userOnVendor,
+    userOnProducer,
     isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
     // isAdmin: (user.roles.includes('admin') || hasAdminPermission(user.roles)),
     // isProducerOwner: hasRole(user.roles, Permission.PRODUCER_OWNER),
