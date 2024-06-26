@@ -55,6 +55,7 @@ export const Form = ({user, action, vendors, producers}) => {
         } else {
           // Handle successful form submission
           console.log('User created successfully')
+          window.location.href = '/admin/users';
         }
       }
 

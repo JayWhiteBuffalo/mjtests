@@ -9,6 +9,7 @@ import {signUpApiSchema} from '@/feature/auth/Schema'
 import {Permission, hasAdminPermission, hasRole, isVendor} from '@/util/Roles'
 import {User, select} from '@nextui-org/react'
 import { headers } from 'next/headers'
+import supabase from '@/api/supabaseBrowser'
 
 const getRoleKey = (request) => {
   if(request.account.vendor != null){
@@ -71,11 +72,7 @@ export const createUser = async (formData) => {
       return {issues: result.error.issues}
     }
 
-    const request = result.data
-    console.log("ROLE KEY RESULT " + getRoleKey(request))
-
-    console.log("RESULT DATA LOG ==============" + JSON.stringify(result))
-    
+    const request = result.data  
 
     const apiData = {
       email: request.user.email,
@@ -91,8 +88,6 @@ export const createUser = async (formData) => {
       console.log("Sign up Result Success 500" + signUpResult)
     }
 
-    const supabase = createServerActionClient();
-
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: signUpResult.data.email,
       password: signUpResult.data.password,
@@ -104,7 +99,6 @@ export const createUser = async (formData) => {
     if (error) {
       throw error
     }
-    console.log(signUpData)
 
     const { user: supabaseUser } = signUpData
 
@@ -113,26 +107,6 @@ export const createUser = async (formData) => {
     if (!supabaseUser) {
       throw new Error('Failed to create user in Supabase')
     }
-
-        // Check if user already exists in Prisma
-        // const existingUser = await prisma.user.findUnique({
-        //   where: { id: supabaseUser.id }
-        // })
-        // if (existingUser) {
-        //   return { issues: [{ message: 'User already exists' }] }
-        // }
-
-        console.log("SupaBase ID ====================================" + supabaseUser.id)
-
-    // const newUser = await prisma.user.update({
-    //   data: {
-    //     id: supabaseUser.id,
-    //     name: `${request.user.firstname} ${request.user.lastname}`,
-    //     email: request.user.email,
-    //     roles: getRoleKey(request),
-    //   }
-      
-    // })
 
     const newUser = await prisma.user.update({
       where: {
@@ -144,19 +118,7 @@ export const createUser = async (formData) => {
         roles: getRoleKey(request), // Update roles
       },
     });
-
-    console.log("SupaBase ID ====================================" + supabaseUser.id)
-    console.log("SupaBase ID ====================================" + newUser.id)
-    // const user = await UserDto._getRaw(supabaseUser.id)
-    //   await prisma.user.update({
-    //     where: {id: user.id},
-    //     data:{
-    //       roles: [getRoleKey(request)],
-    //     }
-    //   })
     
-
-
 
         // Associate user with vendor or producer
         if (request.account.vendor != null) {
