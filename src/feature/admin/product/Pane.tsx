@@ -11,8 +11,9 @@ import {Treemap} from '@/Treemap'
 import {useFluxStore} from '@/state/Flux'
 import {VendorStore} from '@/feature/admin/state/DataStore'
 import {AdminPane} from '@/feature/admin/component/Pane'
+import { calculatePricePerGram } from '@/util/CalculationHelper'
 
-export const ProductPane = ({product, canEdit}) => (
+export const ProductPane = ({product, canEdit, producer}) => (
   <AdminPane>
     <div className="flex justify-end gap-2">
       {canEdit ? (
@@ -73,9 +74,9 @@ export const ProductPane = ({product, canEdit}) => (
 
         <dt>Producer</dt>
         <dd>
-          {product.producer ? (
+          {product.producerId ? (
             <BlueLink href={`/admin/producers/${product.producerId}`}>
-              {product.producer.name}
+              {producer.name}
             </BlueLink>
           ) : (
             <Unknown />
@@ -112,7 +113,7 @@ export const ProductPane = ({product, canEdit}) => (
       <dl>
         <dt>Batch number</dt>
         <dd>
-          {product.batch} ?? <None />
+          {product.batch ? `${product.batch}` : <None />}
         </dd>
 
         <dt>Subspecies</dt>
@@ -153,15 +154,23 @@ export const ProductPane = ({product, canEdit}) => (
       </header>
       <dl>
         <dt>Price</dt>
-        <dd>{product.price != null ? `$${product.price}` : <Unknown />}</dd>
+        <dd>{product.priceList != null ? `$${product.priceList[0].price}` : <Unknown />}</dd>
 
         <dt>Price per gram</dt>
         <dd>
-          {product.price != null ? `$${product.pricePerGram}g` : <Unknown />}
+          {product.priceList != null ? (
+            `$${calculatePricePerGram(
+              product.priceList[0].price,
+              product.priceList[0].weight,
+              product.priceList[0].weightUnit
+            )}`
+          ) : (
+            <Unknown />
+          )}
         </dd>
 
         <dt>Weight</dt>
-        <dd>{product.weight != null ? `${product.weight}g` : <Unknown />}</dd>
+        <dd>{product.priceList != null ? `${product.priceList[0].weight}${product.priceList[0].weightUnit}` : <Unknown />}</dd>
       </dl>
     </InfoSection>
 

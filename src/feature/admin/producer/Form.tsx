@@ -149,6 +149,7 @@ export const Form = ({producer, isAdmin, imageRefs, action}) => {
               autoComplete="off"
               format={orEmpty}
               parse={VendorUtil.parsePartialOmmaNumber}
+              isReadOnly={!isAdmin}
             />
           </FieldLayout>
         </section>

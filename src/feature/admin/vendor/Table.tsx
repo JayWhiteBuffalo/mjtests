@@ -49,17 +49,19 @@ const DeleteCell = ({ item: vendor }) => (
 )
 
 
-export const VendorTable = ({vendors}) => {
+export const VendorTable = ({vendors, isAdmin}) => {
   const columns = makeColumns([
     {key: 'name', label: 'Name', Cell: NameCell},
     {key: 'location', label: 'Location', Cell: LocationCell},
     {key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell},
-    {key: 'actions', label: 'Actions', Cell: DeleteCell},
+    ...(isAdmin ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : [])
   ])
 
   return (
     <>
-      <ActionBar />
+    {isAdmin ? 
+      (<ActionBar />) : (null)
+    }
       <TMTable
         aria-label="Table of vendors"
         columns={columns}

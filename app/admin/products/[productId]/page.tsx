@@ -3,6 +3,7 @@ import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
 import {ProductPane} from '@feature/admin/product/Pane'
+import ProducerDto from '@/data/ProducerDto'
 
 export const getRoute = async ({productId, ...params}) => {
   const product = await ProductDto.get(productId)
@@ -21,7 +22,11 @@ const Page = async ({user, productId}) => {
     notFound()
   }
   const canEdit = await ProductDto.canEdit(user, productId)
-  return <ProductPane product={product} canEdit={canEdit} />
+  //take producerId from product
+  //map producer table to find match
+  //return name
+  const producer = await ProducerDto._getRaw(product.producerId)
+  return <ProductPane product={product} canEdit={canEdit} producer={producer} />
 }
 
 export default makeMain({Page, getRoute})

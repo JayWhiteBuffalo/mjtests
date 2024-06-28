@@ -64,21 +64,7 @@ export const Form = ({user, action, vendors, producers, userOnVendor, userOnProd
         <FormProvider {...methods}>
             <form className="AdminForm" action={handleSubmit(onSubmit)}>
                 <section>
-                    <h2>Create User Form</h2>
-
-                    <FieldLayout>
-                        <Select label="Select role" {...register('role')}>
-                            <SelectItem key={"employee"} value={"employee"}>
-                                Employee
-                            </SelectItem>
-                            <SelectItem key={"manager"} value={"manager"}>
-                                Manager
-                            </SelectItem>
-                            {/* <SelectItem key={"other"}>
-                                Other
-                            </SelectItem> */}
-                        </Select>
-                    </FieldLayout>
+                    <h2>Create Employee Form</h2>
 
                 <div className='flex gap-8'>
                     <FieldLayout
@@ -134,6 +120,20 @@ export const Form = ({user, action, vendors, producers, userOnVendor, userOnProd
                             />
                     </FieldLayout>
 
+                    <FieldLayout label="Select role">
+                        <Select  {...register('role')}>
+                            <SelectItem key={"employee"} value={"employee"}>
+                                Employee
+                            </SelectItem>
+                            <SelectItem key={"manager"} value={"manager"}>
+                                Manager
+                            </SelectItem>
+                            {/* <SelectItem key={"other"}>
+                                Other
+                            </SelectItem> */}
+                        </Select>
+                    </FieldLayout>
+
                     {/* POSSIBLE FIELD TO SELECT PERMISSIONS */}
 
                     {/* If user is not an owner or manager and does not have a associated subscriber account active/valid/logged in
@@ -169,7 +169,7 @@ export const Form = ({user, action, vendors, producers, userOnVendor, userOnProd
 
                     <>
                         <FieldLayout>
-                            <select disabled hidden {...methods.register('vendor', { required: true })}>
+                            <select hidden {...methods.register('vendor', { required: true })}>
                                 <option value={userOnVendor.vendorId}>{userOnVendor.vendorId}</option>
                             </select> 
                         </FieldLayout>
@@ -180,7 +180,7 @@ export const Form = ({user, action, vendors, producers, userOnVendor, userOnProd
                 
                 <>
                     <FieldLayout>
-                        <select disabled hidden {...methods.register('producer', { required: true })}>
+                        <select hidden {...methods.register('producer', { required: true })}>
                             <option value={userOnProducer.producerId}>{userOnProducer.producerId}</option>
                         </select> 
                     </FieldLayout>
