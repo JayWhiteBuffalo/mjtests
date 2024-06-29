@@ -3,7 +3,7 @@ import {Form} from '@feature/admin/product/Form'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {ProductUtil} from '@util/ProductUtil'
-import {publish, saveDraft, getFormProps} from '@feature/admin/product/FormAction'
+import {publish, saveDraft, submitForReview, getFormProps} from '@feature/admin/product/FormAction'
 
 export const getRoute = async params => {
   return [
@@ -25,6 +25,7 @@ const Page = async ({user}) => {
       {...await getFormProps(user)}
       publish={publish.bind(null, undefined)}
       saveDraft={saveDraft.bind(null, undefined)}
+      submitForReview={submitForReview.bind(null, undefined)}
       product={ProductUtil.read({})}
     />
   )

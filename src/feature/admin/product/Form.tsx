@@ -34,8 +34,10 @@ export const Form = ({
   producerItems,
   imageRefs,
   isAdmin,
+  isEmployee,
   publish,
   saveDraft,
+  submitForReview, 
 }) => {
   const methods = useForm({
     resolver: nullResolver(),
@@ -51,6 +53,7 @@ export const Form = ({
   } = methods
   const productType = watch('productType')
 
+  
   return (
     <FormProvider {...methods}>
       <form className="AdminForm" action={handleSubmit(saveDraft)}>
@@ -117,7 +120,7 @@ export const Form = ({
 
         <section>
           <h2>Activity</h2>
-
+          
           <FieldLayout
             bottomDescription={
               <AdminOnlyText isAdmin={isAdmin && product.producerId != null} />
@@ -128,6 +131,8 @@ export const Form = ({
             <DropdownAdapter
               items={producerItems}
               name="producerId"
+              // value={product.producerId || producerItems.key}
+              defaultValue={producerItems.map((item) => item.key)}
               readOnly={!isAdmin && product.producerId != null}
             />
           </FieldLayout>
@@ -225,6 +230,7 @@ export const Form = ({
             {product.isDraft ? 'Save as Draft' : 'Revert to draft'}
           </Button>
 
+        {!isEmployee &&
           <Button
             type="submit"
             color={product.isDraft ? 'secondary' : 'primary'}
@@ -232,6 +238,17 @@ export const Form = ({
           >
             {product.isDraft ? 'Publish' : 'Save'}
           </Button>
+        }
+
+        {isEmployee &&
+          <Button
+            type="submit"
+            color={product.isDraft ? 'secondary' : 'primary'}
+            formAction={handleSubmit(submitForReview)}
+          >
+            {product.isDraft ? 'Submit for Review' : 'Save'}
+          </Button>
+        }
         </div>
 
         <hr className="my-4 border-gray-400" />

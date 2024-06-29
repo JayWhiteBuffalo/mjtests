@@ -11,7 +11,7 @@ import {Treemap} from '@/Treemap'
 import {useFluxStore} from '@/state/Flux'
 import {VendorStore} from '@/feature/admin/state/DataStore'
 import {AdminPane} from '@/feature/admin/component/Pane'
-import { calculatePricePerGram } from '@/util/CalculationHelper'
+import { calculatePricePerGram, formatWeight, priceBreaks } from '@/util/CalculationHelper'
 
 export const ProductPane = ({product, canEdit, producer}) => (
   <AdminPane>
@@ -152,27 +152,42 @@ export const ProductPane = ({product, canEdit, producer}) => (
       <header>
         <h2>Price and Weight</h2>
       </header>
+
+      {product.priceList.length > 0 ? (
       <dl>
         <dt>Price</dt>
-        <dd>{product.priceList != null ? `$${product.priceList[0].price}` : <Unknown />}</dd>
-
-        <dt>Price per gram</dt>
-        <dd>
-          {product.priceList != null ? (
-            `$${calculatePricePerGram(
-              product.priceList[0].price,
-              product.priceList[0].weight,
-              product.priceList[0].weightUnit
-            )}`
-          ) : (
-            <Unknown />
-          )}
-        </dd>
+        <dd>     
+          {product.priceList && product.priceList.length > 0 
+          ? `$${product.priceList[0].price}` 
+          : <Unknown />
+      }</dd>
 
         <dt>Weight</dt>
-        <dd>{product.priceList != null ? `${product.priceList[0].weight}${product.priceList[0].weightUnit}` : <Unknown />}</dd>
+        <dd>{product.priceList && product.priceList.length > 0 
+          ? `${product.priceList[0].weight}${product.priceList[0].weightUnit}` 
+          : <Unknown />}
+        </dd>
+        
+        {priceBreaks.map((breakWeight) => {
+          const pricePerGram = calculatePricePerGram(
+            product.priceList[0].price,
+            breakWeight,
+            'g'
+          );
+          return (
+            <dl key={breakWeight}>
+              <dt> {breakWeight}g</dt>
+              <dd>{`&${pricePerGram}`}</dd>
+            </dl>
+          );
+        })}
       </dl>
+      ) : (
+        <Unknown/>
+      )
+      }
     </InfoSection>
+    
 
     <AuditingSection record={product} isAdmin={true} />
 

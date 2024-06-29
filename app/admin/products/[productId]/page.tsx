@@ -22,9 +22,6 @@ const Page = async ({user, productId}) => {
     notFound()
   }
   const canEdit = await ProductDto.canEdit(user, productId)
-  //take producerId from product
-  //map producer table to find match
-  //return name
   const producer = await ProducerDto._getRaw(product.producerId)
   return <ProductPane product={product} canEdit={canEdit} producer={producer} />
 }

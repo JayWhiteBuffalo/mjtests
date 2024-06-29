@@ -2,12 +2,12 @@ import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
 import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
-import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission, isProducer } from '@/util/Roles'
 
 const UserOnProducerDto = {
   async canSee(user, _userId, producerId) {
     if (hasAdminPermission(user.roles) ||
-    hasOwnerPermission(user.roles) ||
+    hasOwnerPermission(user.roles) || isProducer(user.roles) ||
     hasSalesPermission(user.roles)) {
       return true
     }

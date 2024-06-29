@@ -1,6 +1,6 @@
 import ProductDto from '@data/ProductDto'
 import {Form} from '@feature/admin/product/Form'
-import {publish, saveDraft, getFormProps} from '@feature/admin/product/FormAction'
+import {publish, saveDraft, submitForReview, getFormProps} from '@feature/admin/product/FormAction'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain, UnauthorizedPage} from '@/feature/admin/util/Main'
 import {notFound} from 'next/navigation'
@@ -28,6 +28,7 @@ const Page = async ({user, productId}) => {
       product={product}
       publish={publish.bind(null, productId)}
       saveDraft={saveDraft.bind(null, productId)}
+      submitForReview={submitForReview.bind(null, undefined)}
     />
   )
 }
