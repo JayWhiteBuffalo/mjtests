@@ -72,7 +72,7 @@ export const canUseAdmin = user => {
 
 const pagesCanUse = {
   apply: user => {
-    if (user.loggedIn && (hasPermission(user.roles, Permission.USER))) {
+    if (user.loggedIn ) {
       return true
     }
     return false
@@ -137,104 +137,5 @@ const pagesCanUse = {
     return false;
   }
   
-  //   if (user.roles.includes('admin')) {
-//     return true
-//   }
-//   if (user.roles.includes('vendor')) {
-//     return true
-//   }
-//   if (user.roles.includes('producer')) {
-//     return true
-//   }
-//   //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-//   if (user.loggedIn) {
-//     return true
-//   }
-//   return false
 
-  // dev: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-
-    //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-  //   if (user.loggedIn) {
-  //     return true
-  //   }
-  //   return false
-  // },
-
-  // producers: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('sales')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('producer')) {
-  //     if (user.producers.some(edge => edge.role === 'admin')) {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // },
-
-  // products: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('sales')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('vendor')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('producer')) {
-  //     return true
-  //   }
-  //   return false
-  // },
-
-  // requests: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('sales')) {
-  //     return true
-  //   }
-  //   return false
-  // },
-
-  // users: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('sales')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('vendor')) {
-  //     if (user.vendors.some(edge => edge.role === 'admin')) {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // },
-
-  // vendors: user => {
-  //   if (user.roles.includes('admin')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('sales')) {
-  //     return true
-  //   }
-  //   if (user.roles.includes('vendor')) {
-  //     if (user.vendors.some(edge => edge.role === 'admin')) {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // },
-//}
-
-// export const canUseRootPage = (user, pageName) => pagesCanUse[pageName](user)
 
