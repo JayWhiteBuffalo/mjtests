@@ -16,12 +16,34 @@ const Page = async ({user}) => {
   let products;
   let isEmployee = hasEmployeePermission(userPermission)
   let canEdit = await ProductDto.canUseEdit(user);
+  let pendingProducts
+  let publishedProducts
 
   if(hasAdminPermission(userPermission) || user.roles.includes('admin'))
     {
         products = await ProductDto.findMany({
-          include: {vendor: true},
+          include: {
+            vendor: true, 
+            producer: true
+          },
+          orderBy: {name: 'asc'},
         })
+
+        pendingProducts = await ProductDto.findMany({
+          where: {
+            isDraft: true,
+            },
+          orderBy: {name: 'asc'},
+        })
+
+        publishedProducts = await ProductDto.findMany({
+          where: {
+            isDraft: false,
+            },
+          orderBy: {name: 'asc'},
+        })
+
+        
     } else if (
       isVendor(userPermission))
     {
@@ -33,6 +55,23 @@ const Page = async ({user}) => {
       include: {vendor: true},
       orderBy: {name: 'asc'},
       })
+
+      pendingProducts = await ProductDto.findMany({
+        where: {
+          isDraft: true,
+          vendorId: {in: vendorIds},
+          },
+        orderBy: {name: 'asc'},
+      })
+
+      publishedProducts = await ProductDto.findMany({
+        where: {
+          isDraft: false,
+          vendorId: {in: vendorIds},
+          },
+        orderBy: {name: 'asc'},
+      })
+      
     } else if (
       isProducer(userPermission))
     {
@@ -44,14 +83,31 @@ const Page = async ({user}) => {
       include: {vendor: true},
       orderBy: {name: 'asc'},
       })
+
+      pendingProducts = await ProductDto.findMany({
+        where: {
+          isDraft: true,
+          producerId: {in: producerIds},
+          },
+      })
+
+      publishedProducts = await ProductDto.findMany({
+        where: {
+          isDraft: false,
+          producerId: {in: producerIds},
+          },
+        orderBy: {name: 'asc'},
+      })
     } else {
          products = []
     }
 
+console.log(pendingProducts)
+
   return (
   <>
     {/* <ProductTable products={products} canEdit={canEdit} isEmployee={isEmployee}/> */}
-    <TabTable products={products} canEdit={canEdit} isEmployee={isEmployee} />
+    <TabTable products={products} canEdit={canEdit} isEmployee={isEmployee} pendingProducts={pendingProducts} publishedProducts={publishedProducts}/>
 
   </>
   )

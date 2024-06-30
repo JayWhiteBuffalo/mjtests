@@ -19,9 +19,9 @@ const Page = async ({user}) => {
   let userPermission = user.roles;
   let users;
 
-  // if (hasAdminPermission(userPermission)){
-  //   users = await UserDto.findMany()
-  // } 
+  if (hasAdminPermission(userPermission)){
+    users = await UserDto.findMany()
+  } 
 
   if(isVendor(userPermission) && (hasOwnerPermission(userPermission) || hasManagerPermission(userPermission))){
     const vendorId = await getUserOnVendor(user.id);

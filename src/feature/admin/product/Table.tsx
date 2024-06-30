@@ -105,6 +105,28 @@ export const PendingTable = ({pendingProducts, canEdit, isEmployee}) => {
   )
 }
 
+export const PublishedTable = ({publishedProducts, canEdit, isEmployee}) => {
+  const columns = makeColumns([
+    {key: 'name', label: 'Name', Cell: NameCell},
+    {key: 'vendor.name', label: 'Vendor'},
+    {key: 'productType', label: 'Product Type'},
+    {key: 'isDraft', label: 'Status', Cell: StatusCell},
+    { key: 'action', HeaderCell: ActionHeaderCell, Cell: ({ item }) => <ActionCell item={item} isEmployee={isEmployee} /> },
+    ...(canEdit ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : []),
+  ])
+
+  return (
+    <>
+      <ActionBar />
+      <TMTable
+        aria-label="Table of products"
+        columns={columns}
+        items={publishedProducts}
+      />
+    </>
+  )
+}
+
 
 
 

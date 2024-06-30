@@ -86,6 +86,10 @@ export const PERMISSIONS: Record<Permission, PermissionObject> = {
     },
 };
 
+export const renderUserRoles = (permissions) => {
+    return permissions.map(permission => PERMISSIONS[permission].role).join(', ');
+};
+
 export function hasPermission(userPermission: Permission[], requiredPermission: Permission): boolean {
     // Compare the numeric values of the permissions
     return userPermission.some(permission => parseInt(permission) <= parseInt(requiredPermission));
@@ -98,6 +102,7 @@ export function hasRole(userPermission: Permission[], requiredPermission: Permis
 export function hasAdminPermission(userPermission: Permission[]): boolean {
     const adminPermissions = [Permission.SUPER_ADMIN, Permission.ADMIN, Permission.DEV];
     console.log('Checking Admin permission:', userPermission, adminPermissions);
+    console.log(renderUserRoles(userPermission))
     return userPermission.some(permission => adminPermissions.includes(permission));
 }
 
