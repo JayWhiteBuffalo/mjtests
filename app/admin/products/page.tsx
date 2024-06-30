@@ -14,8 +14,8 @@ export const getRoute = async params => [
 const Page = async ({user}) => {
   const userPermission = user.roles;
   let products;
-  let isEmployee = hasEmployeePermission(userPermission)
-  let canEdit = await ProductDto.canUseEdit(user);
+  const isEmployee = hasEmployeePermission(userPermission)
+  const canEdit = await ProductDto.canUseEdit(user);
   let pendingProducts
   let publishedProducts
 

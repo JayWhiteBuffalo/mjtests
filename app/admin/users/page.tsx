@@ -16,7 +16,7 @@ export const getRoute = async params => [
 ]
 
 const Page = async ({user}) => {
-  let userPermission = user.roles;
+  const userPermission = user.roles;
   let users;
 
   if (hasAdminPermission(userPermission)){
