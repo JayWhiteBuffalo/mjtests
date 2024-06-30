@@ -46,7 +46,10 @@ export const PriceItemInput = ({item, onChange}: {
       <Select
         aria-label="Select weight unit"
         className="mr-4"
-        onSelectionChange={units => onChange({...item, weightUnit: units[0] as WeightUnit})}
+        onSelectionChange={units => {
+          const selectedUnit = Array.from(units)[0] as WeightUnit;
+          onChange({...item, weightUnit: selectedUnit});
+        }}
         selectedKeys={[item.weightUnit]}
       >
         <SelectItem key="g" value="g">g</SelectItem>

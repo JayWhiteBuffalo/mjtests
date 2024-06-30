@@ -72,18 +72,17 @@ export const canUseAdmin = user => {
 
 const pagesCanUse = {
   apply: user => {
-    if (user.loggedIn && !(user.authUser.aud === 'authenticated')) {
+    if (user.loggedIn && (hasPermission(user.roles, Permission.USER))) {
       return true
     }
     return false
   },
 
   dev: user => {
-    const userPermission = user.roles;
-        if (user.roles.includes('admin') || hasAdminPermission(user.roles)) {
+        if (user.roles.includes('admin') || hasAdminPermission(user.roles))  {
     return true
   }
-    // return hasPermission(userPermission, Permission.GUEST);
+    return true;
   },
 
   producers: user => {
@@ -97,8 +96,8 @@ const pagesCanUse = {
   products: user => {
     const userPermission = user.roles;
     return hasAdminPermission(userPermission) ||
-           hasOwnerPermission(userPermission) ||
-           hasManagerPermission(userPermission) ||
+           isVendor(userPermission) ||
+           isProducer(userPermission) ||
            hasSalesPermission(userPermission)
   },
 

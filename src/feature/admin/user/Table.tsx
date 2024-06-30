@@ -1,7 +1,9 @@
 'use client'
 import {BlueLink} from '@/feature/shared/component/Link'
 import {TMTable, makeColumns, ActionHeaderCell} from '@/feature/shared/component/Table'
+import {hasAdminPermission, hasOwnerPermission, renderUserRoles} from '@/util/Roles'
 import {Button, Link} from '@nextui-org/react'
+import { PERMISSIONS } from '@/util/Roles'
 
 const deleteUser = async (userId) => {
   try {
@@ -45,9 +47,13 @@ const DeleteCell = ({ item: user }) => (
 )
 
 
-const RolesCell = ({value: roles}) => roles.join(', ')
+const RolesCell = ({item: user}) => (
+  <span>
+    {user.roles.map(role => PERMISSIONS[role]?.role).join(', ')}
+  </span>
+);
 
-export const UserTable = ({users}) => {
+export const UserTable = ({users, userPermission}) => {
   const columns = makeColumns([
     {key: 'name', label: 'Name', Cell: NameCell},
     {key: 'email', label: 'Email'},
@@ -58,7 +64,9 @@ export const UserTable = ({users}) => {
 
   return (
     <>
-      <ActionBar/>
+    {hasAdminPermission(userPermission) || hasOwnerPermission(userPermission) ? 
+    (<ActionBar/>) : (null)
+    }
       <TMTable aria-label="Table of users" columns={columns} items={users} />
     </>
   ) 

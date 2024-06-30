@@ -11,8 +11,10 @@ export const getRoute = async params => [
 ]
 
 const Page = async ({user}) => {
+  let isAdmin = false;
   let vendors
   if (hasAdminPermission(user.roles)) {
+    isAdmin = true;
     vendors = await VendorDto.findMany()
   } else if (user.roles.includes('vendor')) {
     vendors = await VendorDto.findMany({
@@ -26,7 +28,7 @@ const Page = async ({user}) => {
     vendors = []
   }
 
-  return <VendorTable vendors={vendors} />
+  return <VendorTable vendors={vendors} isAdmin={isAdmin}/>
 }
 
 export default makeMain({Page, getRoute})

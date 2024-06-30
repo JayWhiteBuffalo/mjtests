@@ -4,13 +4,13 @@ import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
-import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
+import { Permission, hasAdminPermission, hasEmployeePermission, hasOwnerPermission, hasSalesPermission, isProducer, isVendor } from '@/util/Roles'
 
 const VendorDto = {
   async canSee(user, vendorId) {
     if (hasAdminPermission(user.roles) ||
         hasOwnerPermission(user.roles) ||
-        hasSalesPermission(user.roles)
+        hasSalesPermission(user.roles) || hasEmployeePermission(user.roles)
     ) {
       return true
     }
@@ -25,7 +25,7 @@ const VendorDto = {
 
   async canEdit(user, vendorId) {
     if (hasAdminPermission(user.roles) ||
-        hasOwnerPermission(user.roles)
+        hasOwnerPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)
     ) {
       return true
     }
