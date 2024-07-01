@@ -5,6 +5,10 @@ import {getRootPageRouteItem} from '@/feature/admin/util/RootPage'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
 import {UserTable} from '@feature/admin/user/Table'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasManagerPermission, isProducer, isVendor } from '@/util/Roles'
+import {select} from '@nextui-org/react'
+import {getUserOnVendor, getUserOnProducer} from '@/feature/admin/user/forms/FormAction'
+import {prisma} from '@/db'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),
@@ -12,48 +16,59 @@ export const getRoute = async params => [
 ]
 
 const Page = async ({user}) => {
-  let users
-  if (user.roles.includes('admin')) {
+  const userPermission = user.roles;
+  let users;
+
+  if (hasAdminPermission(userPermission)){
     users = await UserDto.findMany()
-  } else if (user.roles.includes('vendor')) {
-    const edges = await UserOnVendorDto.findMany({
-      select: {vendorId: true},
+  } 
+
+  if(isVendor(userPermission) && (hasOwnerPermission(userPermission) || hasManagerPermission(userPermission))){
+    const vendorId = await getUserOnVendor(user.id);
+    const edges = await prisma.userOnVendor.findMany({
       where: {
-        userId: user.id,
-        role: 'admin',
+        vendorId: vendorId.vendorId,
+      },
+      select: {
+        userId: true,
       },
     })
+    // Extract userIds from userOnVendors to query users
+    const userIds = edges.map(edge => edge.userId);
+    // Fetch users from UserDto where userId is in the array of userIds
     users = await UserDto.findMany({
       where: {
-        vendors: {
-          some: {
-            vendorId: {in: edges.map(edge => edge.vendorId)},
-          },
-        },
+        id: {
+          in: userIds,
+            },
       },
-    })
-  } else if (user.roles.includes('producer')) {
-    const edges = await UserOnProducerDto.findMany({
-      select: {producerId: true},
-      where: {
-        userId: user.id,
-        role: 'admin',
-      },
-    })
-    users = await UserDto.findMany({
-      where: {
-        producers: {
-          some: {
-            producerId: {in: edges.map(edge => edge.producerId)},
-          },
-        },
-      },
-    })
-  } else {
-    users = []
+    });
   }
 
-  return <UserTable users={users} />
+  if(isProducer(userPermission) && (hasOwnerPermission(userPermission) || hasManagerPermission(userPermission))){
+    const producerId = await getUserOnProducer(user.id);
+    const edges = await prisma.userOnProducer.findMany({
+      where: {
+        producerId: producerId.producerId,
+      },
+      select: {
+        userId: true,
+      },
+    })
+    // Extract userIds from userOnVendors to query users
+    const userIds = edges.map(edge => edge.userId);
+    // Fetch users from UserDto where userId is in the array of userIds
+    users = await UserDto.findMany({
+      where: {
+        id: {
+          in: userIds,
+            },
+      },
+    });
+  }
+
+  return <UserTable users={users} userPermission={userPermission} />
+  
 }
 
 export default makeMain({Page, getRoute})

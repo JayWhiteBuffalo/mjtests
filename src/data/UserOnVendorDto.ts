@@ -2,13 +2,13 @@ import ArrayUtil from '@util/ArrayUtil'
 import assert from 'assert'
 import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
+import { Permission, hasAdminPermission, hasOwnerPermission, hasSalesPermission } from '@/util/Roles'
 
 const UserOnVendorDto = {
   async canSee(user, _userId, vendorId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)) {
       return true
     }
 
@@ -24,10 +24,9 @@ const UserOnVendorDto = {
   },
 
   async canEdit(user, _userId, vendorId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)) {
       return true
     }
 
@@ -43,10 +42,9 @@ const UserOnVendorDto = {
   },
 
   async canCreate(user, _userId, vendorId) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)) {
       return true
     }
 

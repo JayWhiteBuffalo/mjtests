@@ -9,6 +9,27 @@ import {
   LocationCell,
 } from '@/feature/shared/component/Table'
 
+
+const deleteProducer = async (producerId) => {
+  try {
+    const response = await fetch(`/api/producers/${producerId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.ok) {
+      console.log('Producer deleted successfully')
+      window.location.reload()
+    } else {
+      console.error('Failed to delete producer')
+    }
+  } catch (error) {
+    console.error('Error deleting producer:', error)
+  }
+}
+
 const NameCell = ({item: producer}) => (
   <BlueLink href={`/admin/producers/${producer.id}`} className="py-4">
     {producer.name}
@@ -21,16 +42,27 @@ const ActionCell = ({item: {id}}) => (
   </BlueLink>
 )
 
-export const ProducerTable = ({producers}) => {
+const DeleteCell = ({ item: producer }) => (
+  <Button
+    color="danger"
+    onClick={() => deleteProducer(producer.id)}
+    size="sm"
+  >
+    Delete
+  </Button>
+)
+
+export const ProducerTable = ({producers, isAdmin}) => {
   const columns = makeColumns([
     {key: 'name', label: 'Name', Cell: NameCell},
     {key: 'location', label: 'Location', Cell: LocationCell},
     {key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell},
+    ...(isAdmin ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : [])
   ])
 
   return (
     <>
-      <ActionBar />
+    {isAdmin ? (<ActionBar />):(null)}
       <TMTable
         aria-label="Table of producers"
         columns={columns}

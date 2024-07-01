@@ -3,15 +3,16 @@ import assert from 'assert'
 import {prisma} from '@/db'
 import UserDto from '@data/UserDto'
 import {nanoid} from 'nanoid'
+import { hasAdminPermission, hasSalesPermission, hasOwnerPermission, hasManagerPermission } from '@/util/Roles'
 
 const ProducerDto = {
   async canSee(user, producerId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
+    // if (user.roles.includes('sales')) {
+    //   return true
+    // }
     const producer = await ProducerDto._getRaw(producerId)
     if (producer.signupStatus.complete) {
       return true
@@ -21,7 +22,7 @@ const ProducerDto = {
   },
 
   async canEdit(user, producerId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasOwnerPermission(user.roles)) {
       return true
     }
     const producer = await ProducerDto._getRaw(producerId)
@@ -35,13 +36,23 @@ const ProducerDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     return false
+  },
+
+  async canDelete(user) { 
+    if (hasAdminPermission(user.roles)){
+      return true;
+    }
+    return false;
+  },
+
+  async _getAll() {
+    return await prisma.producer.findMany({
+      
+    })
   },
 
   async _getRaw(producerId) {
@@ -101,6 +112,33 @@ const ProducerDto = {
       return id
     }
   },
+
+  async delete(producerId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await ProducerDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if vendor exists
+    const currentProducer = await ProducerDto._getRaw(producerId)
+    if (!currentProducer) {
+      throw new Error('Producer not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated UserOnVendor and UserOnProducer records
+      await prisma.userOnProducer.deleteMany({ where: { producerId } });
+      await prisma.producer.delete({ where: { id: producerId } }) 
+      
+      console.log(`Producer with ID ${producerId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting Producer and associated records:', error);
+      throw new Error('Error deleting Producer and associated records');
+    }
+    });
+  }
 }
 
 export default ProducerDto

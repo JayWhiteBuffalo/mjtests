@@ -40,6 +40,25 @@ export const publishDbSchema = z.object({
   vendorId: z.string().nullable(),
 })
 
+export const submissionDbSchema = z.object({
+  batch: z.string().nullable(),
+  brand: z.string().nullable(),
+  concentrateType: z.enum(Treemap.concentrateTypes.map(x => x.key)).nullable(),
+  cultivar: z.string().nullable(),
+  flags: z.object({}),
+  isDraft: z.literal(true),
+  mainImageRefId: z.string().nullable(),
+  name: z.string().min(3).max(100),
+  potency,
+  priceList: z.array(priceItem),
+  producerId: z.string().nullable(),
+  productType: z.enum(Treemap.productTypes.map(x => x.key)).nullable(),
+  slug: z.string().min(3).max(60).nullable(),
+  subspecies: z.enum(Treemap.subspecies.map(x => x.key)).nullable(),
+  terps,
+  vendorId: z.string().nullable(),
+})
+
 export const dbSchema = z.object({
   batch: z.string().nullable(),
   brand: z.string().nullable(),
@@ -90,4 +109,8 @@ export const publishFormSchema = z.preprocess(
 export const draftFormSchema = z.preprocess(
   preprocessFormData({isDraft: true}),
   dbSchema,
+)
+export const submissionFormSchema = z.preprocess(
+  preprocessFormData({ isDraft: true }), 
+  submissionDbSchema, 
 )

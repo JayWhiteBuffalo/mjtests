@@ -4,10 +4,11 @@ import ProductDto from '@data/ProductDto'
 import UserDto from '@data/UserDto'
 import VendorDto from '@data/VendorDto'
 import {prisma} from '@/db'
+import { hasAdminPermission, hasSalesPermission, hasOwnerPermission, hasManagerPermission } from '@/util/Roles'
 
 const ImageRefDto = {
   async canSee(user, publicId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     const imageRef = await ImageRefDto._getRaw(publicId)
@@ -30,7 +31,7 @@ const ImageRefDto = {
   },
 
   async canEdit(user, publicId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     const imageRef = await ImageRefDto._getRaw(publicId)
@@ -50,18 +51,18 @@ const ImageRefDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      return true
-    }
-    if (user.roles.includes('producer')) {
-      return true
-    }
+    // if (user.roles.includes('sales')) {
+    //   return true
+    // }
+    // if (user.roles.includes('vendor')) {
+    //   return true
+    // }
+    // if (user.roles.includes('producer')) {
+    //   return true
+    // }
     return false
   },
 

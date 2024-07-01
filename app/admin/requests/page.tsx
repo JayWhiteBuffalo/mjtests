@@ -3,6 +3,7 @@ import {getRootPageRouteItem} from '@/feature/admin/util/RootPage'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
 import {RequestTable} from '@feature/admin/request/Table'
+import { Permission, hasAdminPermission, hasSalesPermission } from '@/util/Roles'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),
@@ -11,7 +12,7 @@ export const getRoute = async params => [
 
 const Page = async ({user}) => {
   let requests
-  if (user.roles.includes('admin') || user.roles.includes('sales')) {
+  if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles)) {
     requests = await BusinessRequestDto.findMany({
       where: {archived: false},
     })

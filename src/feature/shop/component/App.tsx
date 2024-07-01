@@ -13,6 +13,7 @@ import {SearchBarContainer} from './SearchBar'
 import {ShopFooter} from './Footer'
 import {useFluxStore} from '@/state/Flux'
 import {usePathname} from 'next/navigation'
+import {Header} from '@/feature/shop/component/Nav/Header'
 import {useRef, useCallback, useState, useEffect} from 'react'
 
 const AnimatedPane = ({open, className, children}) => {
@@ -61,6 +62,7 @@ const App = ({layout}) => (
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
+    <Header/>
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
     <FilterPaneWrapper layout={layout} />

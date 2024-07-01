@@ -9,10 +9,11 @@ import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
 import {custom} from 'zod'
+import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer } from '@/util/Roles'
 
 const ProductDto = {
   async canSee(user, productId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
@@ -26,7 +27,7 @@ const ProductDto = {
   },
 
   async canEdit(user, productId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
@@ -39,11 +40,25 @@ const ProductDto = {
     return false
   },
 
-  async canCreate(user) {
-    if (user.roles.includes('admin')) {
+  async canUseEdit(user) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
       return true
     }
     return false
+  },
+
+  async canCreate(user) {
+    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)) {
+      return true
+    }
+    return false
+  },
+
+  async canDelete(user) {
+    if(hasAdminPermission(user.roles)) {
+      return true;
+    }
+    return false;
   },
 
   async _getRaw(productId) {
@@ -92,6 +107,21 @@ const ProductDto = {
       return null
     }
     return await ProductDto._getRaw(productId)
+  },
+
+  async getUserByProductId(productId){
+    const product = await ProducerDto.get(productId)
+    const user = await prisma.user.findUnique({
+      where: { id: product.createdById },
+      include: {
+        roles: true,
+      },
+    })
+  
+    if (!user) {
+      throw new Error('User not found')
+    }
+    return { user }
   },
 
   async findMany(options = {}) {
@@ -152,6 +182,78 @@ const ProductDto = {
       return id
     }
   },
+
+  async delete(productId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await ProductDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if product exists
+    const currentProduct = await ProductDto._getRaw(productId)
+    if (!currentProduct) {
+      throw new Error('Product not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated Product records
+      await prisma.product.delete({ where: { id: productId } }) 
+      
+      console.log(`Product with ID ${productId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting Product and associated records:', error);
+      throw new Error('Error deleting Product and associated records');
+    }
+    });
+  },
+
+  async  getDraftsCreatedByEmployees (userId) {
+    // Retrieve the user and their associated producers or vendors
+    const userWithAssociations = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        userOnVendor: true,
+        userOnProducer: true,
+      },
+    });
+  
+    if (!userWithAssociations) {
+      throw new Error('User not found');
+    }
+  
+    const vendorIds = userWithAssociations.userOnVendor.map(assoc => assoc.vendorId);
+    const producerIds = userWithAssociations.userOnProducer.map(assoc => assoc.producerId);
+  
+    // Retrieve drafts created by employees for the retrieved vendors or producers
+    const draftProducts = await prisma.product.findMany({
+      where: {
+        isDraft: true,
+        OR: [
+          { vendorId: { in: vendorIds } },
+          { producerId: { in: producerIds } },
+        ],
+        createdBy: {
+          roles: {
+            some: {
+              id: { in: ['employeeRoleId1', 'employeeRoleId2'] } // Adjust according to your employee role IDs
+            }
+          }
+        }
+      },
+      include: {
+        createdBy: true,
+      },
+    });
+  
+    return draftProducts;
+  }
+  
+  
+
 }
+
+
 
 export default ProductDto

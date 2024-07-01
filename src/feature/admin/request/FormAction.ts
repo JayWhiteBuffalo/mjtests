@@ -8,24 +8,34 @@ import UserOnProducerDto from '@data/UserOnProducerDto'
 import {redirect} from 'next/navigation'
 import {formSchema} from './Schema'
 import {VendorUtil} from '@util/VendorUtil'
+import { Permission } from '@/util/Roles'
 
-export const apply = async formData => {
+export const apply = async (formData) => {
   'use server'
+
+  try {
   const user = await UserDto.getCurrent()
   const result = formSchema.safeParse(formData)
+
   if (!result.success) {
     return {issues: result.error.issues}
   }
   const request = result.data
+
   if (request.user.email !== user.email) {
     return {error: 'Email must be your own'}
   }
+
   await BusinessRequestDto.create({
     ...request,
     status: 'pending',
   })
-  redirect(`/admin/apply/${request.type}/success`)
-}
+
+  redirect(`/admin/apply/${request.type}/success`);
+  } catch (error) {
+    return {error:error.message}
+  }
+};
 
 export const approve = async requestId => {
   'use server'
@@ -57,7 +67,11 @@ export const approve = async requestId => {
     await UserOnVendorDto.create({
       userId: requestUser.id,
       vendorId,
-      role: 'admin',
+      role: Permission.VENDOR_OWNER,
+    })
+
+    await UserDto.update(requestUser.id, {
+      roles: [Permission.VENDOR_OWNER],
     })
 
     await BusinessRequestDto.update(requestId, {
@@ -87,7 +101,7 @@ export const approve = async requestId => {
     await UserOnProducerDto.create({
       userId: requestUser.id,
       producerId,
-      role: 'admin',
+      role: Permission.PRODUCER_OWNER,
     })
 
     await BusinessRequestDto.update(requestId, {

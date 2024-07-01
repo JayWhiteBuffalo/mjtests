@@ -4,6 +4,7 @@ import {GiBarn} from 'react-icons/gi'
 import {HiInbox, HiShoppingBag, HiUser, HiHome} from 'react-icons/hi'
 import {HiMiniBuildingStorefront} from 'react-icons/hi2'
 import {LuBinary} from 'react-icons/lu'
+import { Permission, hasPermission, hasAdminPermission, hasOwnerPermission, hasManagerPermission, hasSalesPermission, hasEmployeePermission, isVendor, isProducer } from '@/util/Roles';
 
 export const homePage = {
   name: 'Home',
@@ -52,112 +53,89 @@ export const rootPagesByKey = ObjectUtil.fromIterable(rootPages, x => x.key)
 export const getRootPageRouteItem = key => rootPagesByKey[key]
 
 export const canUseAdmin = user => {
-  if (user.roles.includes('admin')) {
+
+  const userPermission = user.roles;
+
+      if (userPermission.includes('admin') ||
+          hasAdminPermission(userPermission) ||
+          hasSalesPermission(userPermission)||
+          hasOwnerPermission(userPermission) ||
+          hasManagerPermission(userPermission) ||
+          hasEmployeePermission(userPermission) ||
+          hasPermission(userPermission, Permission.GUEST)
+      ) {
     return true
   }
-  if (user.roles.includes('vendor')) {
-    return true
-  }
-  if (user.roles.includes('producer')) {
-    return true
-  }
-  //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-  if (user.loggedIn) {
-    return true
-  }
-  return false
+
+
 }
 
 const pagesCanUse = {
   apply: user => {
-    if (user.loggedIn) {
+    if (user.loggedIn ) {
       return true
     }
     return false
   },
 
   dev: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-
-    //if (user.loggedIn && process.env.NODE_ENV === 'development') {
-    if (user.loggedIn) {
-      return true
-    }
-    return false
+        if (user.roles.includes('admin') || hasAdminPermission(user.roles))  {
+    return true
+  }
+    return true;
   },
 
   producers: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('producer')) {
-      if (user.producers.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    const userPermission = user.roles;
+    return hasAdminPermission(userPermission) ||
+           isVendor(userPermission) ||
+           isProducer(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   products: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      return true
-    }
-    if (user.roles.includes('producer')) {
-      return true
-    }
-    return false
+    const userPermission = user.roles;
+    return hasAdminPermission(userPermission) ||
+           isVendor(userPermission) ||
+           isProducer(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   requests: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    return false
+    const userPermission = user.roles;
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   users: user => {
+    const userPermission = user.roles;
     if (user.roles.includes('admin')) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      if (user.vendors.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 
   vendors: user => {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
-      return true
-    }
-    if (user.roles.includes('vendor')) {
-      if (user.vendors.some(edge => edge.role === 'admin')) {
-        return true
-      }
-    }
-    return false
+    const userPermission = user.roles;
+    return hasAdminPermission(userPermission) ||
+           hasOwnerPermission(userPermission) ||
+           hasManagerPermission(userPermission) ||
+           hasSalesPermission(userPermission)
   },
 }
 
-export const canUseRootPage = (user, pageName) => pagesCanUse[pageName](user)
+  export const canUseRootPage = (user, pageName) => {
+    const pagePermissionCheck = pagesCanUse[pageName];
+    if (pagePermissionCheck) {
+      return pagePermissionCheck(user);
+    }
+    return false;
+  }
+  
+
+

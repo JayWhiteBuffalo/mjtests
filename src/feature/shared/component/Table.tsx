@@ -9,7 +9,10 @@ import {
   TableCell,
   TableRow,
   TableColumn,
+  Button,
 } from '@nextui-org/react'
+import {hasAdminPermission} from '@/util/Roles'
+import UserDto from '@/data/UserDto'
 
 export const DefaultCell = ({value}) => value
 
@@ -32,6 +35,16 @@ export const ActionCell = () => (
     Edit
   </BlueLink>
 )
+
+// export const DeleteUserButtonCell = ({item}) => {
+//   <Button
+//     color="danger"
+//     onClick={() => UserDto.delete(item.id)}
+//     size="sm"
+//     >
+//       Delete User
+//     </Button>
+// }
 
 export const ActionHeaderCell = () => <span className="sr-only">Actions</span>
 
@@ -73,6 +86,7 @@ export const TMTable = ({items, columns, getItemKey, ...rest}) => {
                   </TableCell>
                 )
               }}
+
             </TableRow>
           )}
         </TableBody>

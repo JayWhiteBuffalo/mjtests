@@ -3,6 +3,9 @@ import {jsonOnOk} from '@util/FetchUtil'
 import {Present} from '@util/Present'
 import {SerialFetcher} from '@/state/SerialFetcher'
 
+// TypeaheadStore class and its derived class,
+// KeyedTypeaheadStore, are designed to handle asynchronous typeahead (autocomplete) and lookup functionalities
+
 export type TypeaheadItem = {
   key: string
   name: string

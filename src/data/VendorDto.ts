@@ -4,15 +4,17 @@ import UserDto from '@data/UserDto'
 import {prisma} from '@/db'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
+import { Permission, hasAdminPermission, hasEmployeePermission, hasOwnerPermission, hasSalesPermission, isProducer, isVendor } from '@/util/Roles'
 
 const VendorDto = {
   async canSee(user, vendorId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) ||
+        hasOwnerPermission(user.roles) ||
+        hasSalesPermission(user.roles) || hasEmployeePermission(user.roles)
+    ) {
       return true
     }
-    if (user.roles.includes('sales')) {
-      return true
-    }
+
     const vendor = await VendorDto._getRaw(vendorId)
     if (vendor.signupStatus.complete) {
       return true
@@ -22,7 +24,9 @@ const VendorDto = {
   },
 
   async canEdit(user, vendorId) {
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(user.roles) ||
+        hasOwnerPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)
+    ) {
       return true
     }
     const vendor = await VendorDto._getRaw(vendorId)
@@ -37,13 +41,19 @@ const VendorDto = {
   },
 
   async canCreate(user) {
-    if (user.roles.includes('admin')) {
-      return true
-    }
-    if (user.roles.includes('sales')) {
+    if (hasAdminPermission(user.roles) ||
+    hasOwnerPermission(user.roles) ||
+    hasSalesPermission(user.roles)) {
       return true
     }
     return false
+  },
+
+  async canDelete(user) { 
+    if (hasAdminPermission(user.roles)){
+      return true;
+    }
+    return false;
   },
 
   async _getRaw(vendorId) {
@@ -107,6 +117,37 @@ const VendorDto = {
       return id
     }
   },
+
+  
+  async delete(vendorId){
+
+    //Checks to see if Current User has permission to delete
+    const user = await UserDto.getCurrent()
+    if (!await VendorDto.canDelete(user)) {
+      throw new Error('Permission denied');
+    }
+    //Checks to see if vendor exists
+    const currentVendor = await VendorDto._getRaw(vendorId)
+    if (!currentVendor) {
+      throw new Error('Vendor not found')
+    }
+
+    return await prisma.$transaction(async (prisma) => {
+      try{
+      // Delete associated UserOnVendor and UserOnProducer records
+      await prisma.userOnVendor.deleteMany({ where: { vendorId } });
+      await prisma.vendor.delete({ where: { id: vendorId } }) 
+      
+      console.log(`Vendor with ID ${vendorId} successfully deleted.`);
+    } catch (error) {
+      console.error('Error deleting vendor and associated records:', error);
+      throw new Error('Error deleting vendor and associated records');
+    }
+    });
+  }
+
 }
+
+
 
 export default VendorDto

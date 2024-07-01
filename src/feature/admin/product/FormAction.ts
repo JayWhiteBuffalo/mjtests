@@ -5,8 +5,9 @@ import ProductDto from '@data/ProductDto'
 import UserOnProducerDto from '@data/UserOnProducerDto'
 import UserOnVendorDto from '@data/UserOnVendorDto'
 import VendorDto from '@data/VendorDto'
-import {draftFormSchema, publishFormSchema} from './Schema'
+import {draftFormSchema, publishFormSchema, submissionFormSchema} from './Schema'
 import {redirect} from 'next/navigation'
+import {hasAdminPermission, hasEmployeePermission, hasSalesPermission} from '@/util/Roles'
 
 const save = async (productId, product, imageRefIds) => {
   const id = await ProductDto.createOrUpdate(productId, product)
@@ -17,6 +18,15 @@ const save = async (productId, product, imageRefIds) => {
   )
   redirect(`/admin/products/${id}`)
 }
+
+export const submitForReview = async (productId, formData) => {
+  'use server';
+  const result = submissionFormSchema.safeParse(formData);
+  if (!result.success) {
+    return { issues: result.error.issues };
+  }
+  return await save(productId, result.data);
+};
 
 export const saveDraft = async (productId, formData) => {
   'use server'
@@ -49,7 +59,7 @@ export const getFormProps = async (user, productId) => {
   }
 
   let producerItems
-  if (user.roles.includes('admin') || user.roles.includes('sales')) {
+  if (user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
     const producers = await ProducerDto.findMany()
     producerItems = producers.map(producer => ({
       key: producer.id,
@@ -67,10 +77,11 @@ export const getFormProps = async (user, productId) => {
       key: edge.producerId,
       name: edge.producer.name,
     }))
+    console.log(producerEdges)
   }
 
   let vendorItems
-  if (user.roles.includes('admin') || user.roles.includes('sales')) {
+  if (user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
     const vendors = await VendorDto.findMany()
     vendorItems = vendors.map(vendor => ({key: vendor.id, name: vendor.name}))
   } else {
@@ -89,7 +100,8 @@ export const getFormProps = async (user, productId) => {
 
   return {
     imageRefs,
-    isAdmin: user.roles.includes('admin') || user.roles.includes('sales'),
+    isAdmin: user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles),
+    isEmployee: hasEmployeePermission(user.roles),
     producerItems,
     vendorItems,
   }
