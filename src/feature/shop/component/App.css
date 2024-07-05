@@ -1,6 +1,7 @@
 .FilterPaneWrapper {
   opacity: 0.3;
   transform: translateY(-30%);
+  max-width: 25dvw;
 }
 
 .FilterPaneWrapper[open] {
@@ -18,3 +19,23 @@
   flex-basis: max-content;
   flex-grow: 1;
 }
+
+.neu-input{
+  all: unset;
+  border-radius: 15px;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+  text-align: center;
+}
+.neu-input:focus{
+  box-shadow:
+              inset -6px -6px 6px #ffffff70,
+              inset 6px 6px 6px #aeaec025;
+}
+
+/* .neu-input::selection{
+  border: none;
+  background-color: aqua;
+} */

@@ -18,9 +18,9 @@ const productTypes = [
   {
     name: 'Edible',
   },
-  {
-    name: 'Related Products',
-  },
+  // {
+  //   name: 'Related Products',
+  // },
 ]
 
 productTypes.forEach((props, ix) => {

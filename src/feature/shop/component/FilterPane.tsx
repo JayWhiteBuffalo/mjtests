@@ -52,15 +52,15 @@ const FlagFilterItems = [
 ]
 
 const FilterSection = ({children}) => (
-  <section className="border-gray-500 border-t my-3">{children}</section>
+  <section className=" my-3 divide-y-2 divide-slate-200 ">{children}</section>
 )
 
 const FilterSectionHeader = ({children}) => (
-  <header className="flex justify-between items-center my-1">{children}</header>
+  <header className="flex justify-between items-center my-1 mb-2 text-xl tracking-widest">{children}</header>
 )
 
 const FilterItem = ({children}) => (
-  <div className="FilterPaneItem flex items-center justify-around my-1">
+  <div className="FilterPaneItem">
     {children}
   </div>
 )
@@ -452,6 +452,10 @@ const FilterLeftPane = ({filter, onChange}: {
     <ErrorBoundary>
       <LocationFilterSection filter={filter} onChange={onChange} />
     </ErrorBoundary>
+    <FilterRightPane
+      filter={filter}
+      onChange={onChange}
+    />
   </div>
 )
 
@@ -573,10 +577,10 @@ const FilterPane = ({filter, onChange}: {
 }) => (
   <form className="FilterPane grid border-t border-gray-300">
     <FilterLeftPane filter={filter} onChange={onChange} />
-    <FilterRightPane
+    {/* <FilterRightPane
       filter={filter}
       onChange={onChange}
-    />
+    /> */}
   </form>
 )
 

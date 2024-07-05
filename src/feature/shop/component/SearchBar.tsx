@@ -76,10 +76,10 @@ const SortDropdown = ({sortBy, onChange}: {
   nullthrows(selectedProps)
 
   return (
-    <Dropdown classNames={{content: 'min-w-30'}}>
+    <Dropdown classNames={{content: 'min-w-90'}}>
       <DropdownTrigger>
         <Button
-          className="SortDropdown"
+          className="SortDropdown neu-input"
           startContent={selectedProps.Icon && <selectedProps.Icon />}
           endContent={<HiOutlineChevronDown />}
         >
@@ -90,6 +90,7 @@ const SortDropdown = ({sortBy, onChange}: {
       <DropdownMenu
         aria-label="Product list sort by"
         onAction={key => onChange(key)}
+        className='neu-input'
       >
         {itemProps.map(props => (
           <DropdownItem key={props.key} startContent={props.Icon && <props.Icon />}>
@@ -116,7 +117,7 @@ const ToggleFilterPane = ({showFilterPane, onClick}: {
   onClick: () => void
 }) => (
   <Button
-    className="ToggleFilterPane"
+    className="ToggleFilterPane neu-input"
     onPress={onClick}
     endContent={
       showFilterPane ? (
@@ -165,9 +166,9 @@ const ProductListModeSelector = ({mode, onChange}: {
   const selectedProps = modeItemProps.find(x => x.key === mode)!
 
   return (
-    <Dropdown classNames={{content: 'min-w-20'}}>
-      <DropdownTrigger>
-        <Button className="SortDropdown" isIconOnly>
+    <Dropdown>
+      <DropdownTrigger >
+        <Button className="ToggleFilterPane bg-blue-300 neu-input" isIconOnly>
           <selectedProps.Icon className="h-5 w-5" />
         </Button>
       </DropdownTrigger>
@@ -202,16 +203,24 @@ const FilterKeyword = ({keyword, onChange}: {
   keyword: string
   onChange: (keyword: string) => void
 }) => (
-  <Input
-    className="flex-1 basis-40"
+  //<Input
+  //   className="shadow-neu flex-1 basis-40"
+  //   id="filterKeyword"
+  //   isClearable
+  //   onChange={e => onChange(e.target.value)}
+  //   placeholder="Search products"
+  //   startContent={<CgSearch className="w-6 h-6 text-gray-500" />}
+  //   type="search"
+  //   value={keyword}
+  // />
+  <input className="shadow-neu flex-1 basis-40 neu-input"
     id="filterKeyword"
-    isClearable
+    // isClearable
     onChange={e => onChange(e.target.value)}
     placeholder="Search products"
-    startContent={<CgSearch className="w-6 h-6 text-gray-500" />}
+    // startContent={<CgSearch className="w-6 h-6 text-gray-500" />}
     type="search"
-    value={keyword}
-  />
+    value={keyword}></input>
 )
 
 const FilterKeywordContainer = () => {
@@ -376,12 +385,12 @@ const MapKeyword = ({
 
   return (
     <>
-      <Input
+      <input
         {...getReferenceProps({onKeyDown, onChange, onFocus, onClick})}
         aria-autocomplete="list"
         autoComplete="off"
-        className="flex-1 basis-32"
-        startContent={<HiLocationMarker className="w-6 h-6 fill-gray-500" />}
+        className="flex-1 basis-32 neu-input"
+        // startContent={<HiLocationMarker className="w-6 h-6 fill-gray-500" />}
         id="mapKeyword"
         placeholder="Near me"
         ref={refs.setReference}
@@ -416,20 +425,23 @@ const MapKeywordContainer = () => {
 }
 
 const SearchBar = () => (
-  <div className="flex flex-wrap bg-white flex-1 basis-1 gap-1 mx-auto px-2 py-1 justify-end max-w-[900px]">
-    <search className="flex flex-wrap gap-1">
+  <div className="searchBarCont">
+    <search className="flex flex-wrap gap-4 ">
       <ErrorBoundary>
         <FilterKeywordContainer />
         <MapKeywordContainer />
+        <SortDropdownContainer />
+        <ToggleFilterPaneContainer />
+        <ProductListModeSelectorContainer />
       </ErrorBoundary>
     </search>
-    <div className="SearchBarRight flex flex-wrap flex-initial gap-1">
+    {/* <div className="SearchBarRight flex flex-wrap  gap-4 w-1/2">
       <ErrorBoundary>
         <SortDropdownContainer />
         <ToggleFilterPaneContainer />
         <ProductListModeSelectorContainer />
       </ErrorBoundary>
-    </div>
+    </div> */}
   </div>
 )
 

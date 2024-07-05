@@ -1,5 +1,33 @@
 
 
+ .SearchBarRight {
+  justify-content: end;
+}
+
+ .searchBarCont{
+  display: flex;
+  flex: 1 1 0%;
+  flex-wrap: wrap;
+  flex-basis: 0.25rem /* 4px */;
+  background-color: white;
+  gap: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5rem /* 8px */;
+  width: 100%;
+  max-width: 91.5dvw;
+  justify-content: end;
+  margin-left: 6.25rem;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+ }
+
+
 .MapKeywordPopup {
   align-items: stretch;
   background: white;
@@ -40,6 +68,28 @@
   }
 
   .SortDropdown {
+    min-width: 300px;
     flex: 1 1 auto;
   }
 }
+
+.ToggleFilterPane{
+  min-width: 100px;
+  display:flex;
+  flex-direction: row;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+}
+
+.SortDropdown{
+  min-width: 160px;
+  display:flex;
+  flex-direction: row;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+

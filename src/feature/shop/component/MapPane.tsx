@@ -22,9 +22,10 @@ const MapContainer = dynamic(
 export const MapPaneContainer = () => {
   const layout = useFluxStore(LayoutStore)
   return (
+    
     <div
       className={clsx(
-        'relative flex-0 basis-[300px] border-b border-gray-300',
+        'relative flex-0 basis-[500px] shadow-xl max-w-3xl left-24',
         layout.expandMapPane ? 'basis-[75vh]' : undefined,
       )}
     >

@@ -1,11 +1,56 @@
 
 .FilterPane {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   max-width: 976px;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+  border-radius: 20px;
+  padding: 1rem;
 }
 
 @media (width < 616px) {
   .FilterPane {
     grid-template-columns: 1fr;
   }
+}
+
+.FilterPaneItem{
+padding: .75rem;
+display: flex;
+justify-content: space-evenly;
+align-items: stretch;
+}
+
+.neoButton{
+  all: unset;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+  border-radius: 15px !important;
+  padding: .75rem;
+  text-align: center;
+}
+
+.neoButton:checked{
+  box-shadow:
+              inset -6px -6px 6px #ffffff70,
+              inset 6px 6px 6px #aeaec025;
+}
+.neoButton::selection{
+  box-shadow:
+              inset -6px -6px 6px #ffffff70,
+              inset 6px 6px 6px #aeaec025;
+}
+.neoButton:active{
+  box-shadow:
+              inset -6px -6px 6px #ffffff70,
+              inset 6px 6px 6px #aeaec025;
+}
+
+
+.neoButton:hover{
+  scale: 105%;
 }

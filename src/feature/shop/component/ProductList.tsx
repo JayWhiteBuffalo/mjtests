@@ -38,6 +38,7 @@ import {
 import {type Product, type Vendor} from '@prisma/client'
 import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
+import TerpsDetails from '@/feature/shop/component/TerpDetails'
 
 const emDash = '—'
 
@@ -137,11 +138,13 @@ const ProductSubheader = ({product}: {
 export const ProductAttributeList = ({product}: {
   product: Product
 }) => (
-  <dl className="ProductAttributeList py-1 border-t border-gray-400">
+  <dl className="ProductAttributeList p-2 border-l border-gray-400">
     {product.brand ? (
       <>
+      <div className='whitespace-nowrap'>
         <dt>Brand</dt>
         <dd className="ProductBrand">{product.brand}</dd>
+      </div>
       </>
     ) : undefined}
 
@@ -197,7 +200,7 @@ export const ProductAttributeList = ({product}: {
   </dl>
 )
 
-const TerpItem = ({enabled = false, terpName, value}: {
+export const TerpItem = ({enabled = false, terpName, value}: {
   enabled: boolean
   terpName: TerpName
   value: number
@@ -276,50 +279,76 @@ export const ProductItem = ({product, mode}: {
     <li
       className={clsx(
         `Product ${mode}`,
-        'p-2 border-gray-400 border text-base transition',
+        'p-4 text-base transition flex flex-col mb-8',
       )}
     >
-      {product.mainImageRefId ? (
-        <div
-          className={clsx(
-            'relative',
-            mode === 'full' ? 'h-[240px]' : 'h-[100px]',
-          )}
-        >
-          <Image
-            alt="Product"
-            className="mx-auto object-contain"
-            fill={true}
-            publicId={product.mainImageRefId}
-            sizes="360px"
-          />
-        </div>
-      ) : undefined}
-      <ProductTypeLabel product={product} />
-      <div className="flex justify-between">
-        <h5 className="flex-1 font-bold">{product.name}</h5>
-        {/* {product.price != null ? (
-          <span className="ProductPrice">${product.price}</span>
-        ) : undefined} */}
-      </div>
-      <ProductSubheader product={product} />
-      {mode === 'full' && product.rating ? (
-        <VendorRating rating={product.rating} />
-      ) : undefined}
-      {product.vendor?.openStatus ? (
-        <OpenStatus status={product.vendor.openStatus} />
-      ) : undefined}
-      <ProductChips product={product} />
-      <PriceList priceList={product.priceList} />
+      <div>
+        <div className={clsx('grid grid-cols-8 gap-8 p-2')}>
+          <div  className='col-span-2'>
 
-      {mode === 'full' ? <ProductAttributeList product={product} /> : undefined}
-      {terpEntries.length && mode === 'full' ? (
-        <ul className="py-1 border-gray-400 border-t flex flex-col items-start">
-          {terpEntries.map(([terpName, value]) => (
-            <TerpItem key={terpName} terpName={terpName} value={value} />
-          ))}
-        </ul>
-      ) : undefined}
+          {product.mainImageRefId ? (
+            <div
+              className={clsx(
+                'relative',
+                mode === 'full' ? 'h-[175px]' : 'h-[100px]',
+              )}
+            >
+              <Image
+                alt="Product"
+                className="mx-auto object-contain"
+                fill={true}
+                publicId={product.mainImageRefId}
+                sizes="360px"
+              />
+            </div>
+          ) : undefined}
+          </div>
+
+          <div className='flex flex-col justify-between items-stretch col-span-3'>
+            <div className='pt-2 flex flex-col gap-1'>
+            <ProductTypeLabel product={product} />
+              <div className="flex justify-between">
+                <h5 className="flex-1 font-bold text-2xl">{product.name}</h5>
+                {/* {product.price != null ? (
+                  <span className="ProductPrice">${product.price}</span>
+                ) : undefined} */}
+              </div>
+            <ProductSubheader product={product} />
+            
+            {mode === 'full' && product.rating ? (
+                <VendorRating rating={product.rating} />
+              ) : undefined}
+            </div>
+
+
+            <div className='flex flex-col gap-1'>
+
+              {product.vendor?.openStatus ? (
+                <OpenStatus status={product.vendor.openStatus} />
+              ) : undefined}
+              <ProductChips product={product} />
+            </div>
+          </div>
+
+          <div className='flex flex-col p-2 justify-center items-center'>
+            <ProductAttributeList product={product} />
+          </div>
+
+          <div>
+            <PriceList priceList={product.priceList} />
+          </div>
+
+        </div>
+        
+        </div>
+
+        {mode === 'full' && (
+        <div className="flex flex-col gap-4">
+          {terpEntries.length ? (
+              <TerpsDetails terpEntries={terpEntries} />
+          ) : null}
+        </div>
+      )}
     </li>
   )
 }
@@ -361,8 +390,8 @@ const ProductList = ({filter, products, mode}: {
 const ProductListPane = ({filter, products, mode}) => (
   <div
     className={clsx(
-      'ProductListPane border-t border-gray-300 flex-1 basis-[400px]',
-      'flex flex-col items-stretch',
+      'ProductListPane flex-1 basis-[400px]',
+      'flex flex-col items-stretch pl-8',
     )}
   >
     <ErrorBoundary>
@@ -384,7 +413,7 @@ export const ProductListPaneContainer = () => {
   const products = useFluxStore(FilteredProductStore)
   const layout = useFluxStore(LayoutStore)
   return (
-    <ProductListPane
+    <ProductListPane 
       filter={filter}
       mode={layout.productListMode}
       products={products}

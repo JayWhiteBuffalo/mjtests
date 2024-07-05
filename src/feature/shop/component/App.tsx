@@ -65,8 +65,12 @@ const App = ({layout}) => (
     <Header/>
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
-    <FilterPaneWrapper layout={layout} />
+    <section className='w-full h-full flex p-10'>
+      <div className='relative flex justify-center items-center w-1/3 h-full'>
+        <FilterPaneWrapper layout={layout} />
+      </div>
     <ProductListPaneContainer />
+    </section>
     <ShopFooter />
   </main>
 )
