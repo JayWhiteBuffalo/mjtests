@@ -2,9 +2,10 @@ import MathUtil from '@util/MathUtil'
 import {FormattedInput} from '@/feature/shared/component/FormattedInput'
 import {RemoveButton, RecursiveErrors} from '@/feature/shared/component/Form'
 import {mapDefined, parseAndUnnan} from '@util/ValidationUtil'
-import {Select, SelectItem} from '@nextui-org/react'
+import {Button, Select, SelectItem} from '@nextui-org/react'
 import {useState} from 'react'
 import ArrayUtil from '@/util/ArrayUtil'
+import ComponentToRemove from '@/feature/shared/component/VisableWrap'
 
 export type WeightUnit = 'g' | 'oz' | 'lb'
 export type PriceItem = {
@@ -29,10 +30,16 @@ export const parsePrice = (x: string) =>
 export const formatPrice = (price: number) => 
   price ? `$${price.toFixed(2)}` : ''
 
-export const PriceItemInput = ({item, onChange}: {
+export const PriceItemInput = ({item, onChange, onRemove}: {
   item: PartialPriceItem
   onChange: (item: PartialPriceItem) => void
 }) => {
+
+  const handleRemoveAndChange = () => {
+    onChange({ ...item, price: undefined, weight: undefined });
+  };
+
+
   return (
     <div className="contents">
       <FormattedInput
@@ -64,7 +71,7 @@ export const PriceItemInput = ({item, onChange}: {
         parse={parsePrice}
         format={formatPrice}
       />
-      <RemoveButton onClick={() => onChange({...item, price: undefined, weight: undefined})} />
+       <Button onClick={handleRemoveAndChange}> Clear </Button>
     </div>
   )
 }
@@ -75,49 +82,60 @@ const validatePriceList = (items: PartialPriceItem[]) =>
     item => item.weight,
   ) as PriceItem[]
 
-export const PriceListInput = ({defaultPriceList, errors, onChange}: {
-  defaultPriceList: PriceItem[]
-  errors?: Record<string, string>
-  onChange: (priceList: PriceItem[]) => void
-}) => {
-  const [priceList, setPriceList] = useState<PartialPriceItem[]>(() => 
-    defaultPriceList.length > 0 
-      ? defaultPriceList 
-      : [{price: undefined, weight: undefined, weightUnit: 'g'}]
-  )
+  export const PriceListInput = ({ defaultPriceList, errors, onChange }: {
+    defaultPriceList: PriceItem[];
+    errors?: Record<string, string>;
+    onChange: (priceList: PriceItem[]) => void;
+  }) => {
+    const [priceList, setPriceList] = useState<PartialPriceItem[]>(() => 
+      defaultPriceList.length > 0 
+        ? defaultPriceList 
+        : [{ price: undefined, weight: undefined, weightUnit: 'g' }]
+    );
+  
+    const changeItem = (item: PartialPriceItem, index: number) => {
+      const list = [...priceList];
+      list[index] = item;
+      if (index === list.length - 1 && (item.price != null || item.weight != null)) {
+        list.push({ price: undefined, weight: undefined, weightUnit: 'g' });
+      }
+  
+      setPriceList(list);
+      onChange(validatePriceList(list));
+    };
+  
+    const handleRemove = (idToRemove: number) => {
+      const updatedPriceList = priceList.filter((item, index) => index !== idToRemove);
+      setPriceList(updatedPriceList);
+      onChange(validatePriceList(updatedPriceList));
+      console.log("Hand Removed fired");
+    };
+  
+    return (
+      <div className="grid items-center gap-2" >
+        <div className="font-bold grid grid-cols-4 gap-10 justify-evenly">
+          <p cl>Weight</p>
+          <p>Unit</p>
+          <p>Price</p>
+          <p />
+        </div>
 
-  const changeItem = (item: PartialPriceItem, index: number) => {
-    const list = [...priceList]
-    list[index] = item
-    if (index === list.length - 1 && (item.price != null || item.weight != null)) {
-      list.push({price: undefined, weight: undefined, weightUnit: 'g'})
-    }
-
-    setPriceList(list)
-    onChange(validatePriceList(list))
-  }
-
-  return (
-    <div
-      className="grid items-center gap-2"
-      style={{gridTemplateColumns: '160px 120px 160px max-content'}}
-    >
-      <div className="contents font-bold">
-        <p>Weight</p>
-        <p>Unit</p>
-        <p>Price</p>
-        <p />
+        <div className='w-full'>
+        {priceList.map((item, index) => (
+        <ComponentToRemove key={index} id={index} onRemove={() => handleRemove(index)} onChange={() => console.log('Item changed')}>
+          <PriceItemInput
+            item={item}
+            key={index}
+            onChange={(updatedItem) => changeItem(updatedItem, index)}
+          />
+        </ComponentToRemove>
+      ))}
       </div>
 
-      {priceList.map((item, ix) =>
-        <PriceItemInput
-          item={item}
-          key={ix}
-          onChange={item => changeItem(item, ix)}
-        />
-      )}
-
+      {/* Assuming RecursiveErrors is another component to display errors */}
       <RecursiveErrors errors={errors} />
     </div>
-  )
-}
+  );
+};
+
+
