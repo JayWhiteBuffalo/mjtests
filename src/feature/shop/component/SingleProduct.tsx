@@ -119,7 +119,6 @@ const TerpsDetailPane = ({ terpEntries }) => {
   return (
 
         <>
-        <h3 className='text-xl text-center'></h3>
             {terpEntries.length &&
                 <div className='flex flex-col items-start px-2'>
                     <ul className="py-1 grid grid-cols-2 col-auto gap-4 items-start justify-between mt-2">

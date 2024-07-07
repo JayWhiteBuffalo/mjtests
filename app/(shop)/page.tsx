@@ -8,6 +8,8 @@ const Page = async ({searchParams: query}) => {
   const filter = ProductFilterUtil.fromQuery(query)
   const products = await ProductDto.getProducts(filter)
   const initial = {query, filter, products}
+
+  console.log(initial)
   return <AppContainer initial={initial} />
 }
 export default Page
