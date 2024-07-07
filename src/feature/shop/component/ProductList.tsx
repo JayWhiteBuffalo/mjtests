@@ -6,7 +6,7 @@ import {BlueButton} from '@feature/shared/component/Link'
 import {ErrorBoundary} from '@feature/shared/component/Error'
 import {FilteredProductStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import {Image} from '@feature/shared/component/Image'
 import {
   Popover,
@@ -14,6 +14,7 @@ import {
   PopoverContent,
   Spinner,
   Chip,
+  Button,
 } from '@nextui-org/react'
 import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {TerpeneSelectorItem} from '@feature/shared/component/TerpeneSelector'
@@ -39,10 +40,11 @@ import {type Product, type Vendor} from '@prisma/client'
 import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
 import TerpsDetails from '@/feature/shop/component/TerpDetails'
+import SingleProduct from '@/feature/shop/component/SingleProduct'
 
 const emDash = '—'
 
-const ProductTypeLabel = ({product}: {
+export const ProductTypeLabel = ({product}: {
   product: Product
 }) => (
   <div className="text-gray-500 text-sm font-bold leading-none uppercase">
@@ -53,7 +55,7 @@ const ProductTypeLabel = ({product}: {
   </div>
 )
 
-const ProductChips = ({product}: {
+export const ProductChips = ({product}: {
   product: Product
 }) => (
   // openNow, closing soon
@@ -113,7 +115,7 @@ const VendorNameButton = ({vendor}: {
   </Popover>
 )
 
-const ProductSubheader = ({product}: {
+export const ProductSubheader = ({product}: {
   product: Product
 }) =>
   product.vendor ? (
@@ -266,7 +268,7 @@ export const PriceList = ({priceList}) => (
   </ul>
 )
 
-export const ProductItem = ({product, mode}: {
+export const ProductItem = ({product, mode, setProductId}: {
   product: Product
   mode: ProductListMode
 }) => {
@@ -279,7 +281,7 @@ export const ProductItem = ({product, mode}: {
     <li
       className={clsx(
         `Product ${mode}`,
-        'p-4 text-base transition flex flex-col mb-8',
+        'p-4 text-base transition flex flex-col mb-8 neu-product-card',
       )}
     >
       <div>
@@ -338,6 +340,12 @@ export const ProductItem = ({product, mode}: {
             <PriceList priceList={product.priceList} />
           </div>
 
+          <div>
+            <Button onClick={()=> setProductId(product)}>
+              Details
+            </Button>
+          </div>
+
         </div>
         
         </div>
@@ -353,7 +361,7 @@ export const ProductItem = ({product, mode}: {
   )
 }
 
-const ProductList = ({filter, products, mode}: {
+const ProductList = ({filter, products, mode, setProductId}: {
   filter: ProductFilter
   products: Product[]
   mode: ProductListMode
@@ -375,7 +383,7 @@ const ProductList = ({filter, products, mode}: {
     >
       {products.map(product => (
         <ErrorBoundary key={product.id}>
-          <ProductItem mode={mode} product={product} />
+          <ProductItem mode={mode} product={product} setProductId={setProductId} />
         </ErrorBoundary>
       ))}
     </ul>
@@ -387,17 +395,17 @@ const ProductList = ({filter, products, mode}: {
   </>
 )
 
-const ProductListPane = ({filter, products, mode}) => (
+const ProductListPane = ({filter, products, mode, setProductId}) => (
   <div
     className={clsx(
       'ProductListPane flex-1 basis-[400px]',
-      'flex flex-col items-stretch pl-8',
+      'flex flex-col items-stretch',
     )}
   >
     <ErrorBoundary>
       {products
         .then(products => (
-          <ProductList filter={filter} products={products} mode={mode} />
+          <ProductList filter={filter} products={products} mode={mode} setProductId={setProductId} />
         ))
         .orPending(() => (
           <div className="flex justify-center">
@@ -412,11 +420,39 @@ export const ProductListPaneContainer = () => {
   const filter = useFluxStore(FilterStore)
   const products = useFluxStore(FilteredProductStore)
   const layout = useFluxStore(LayoutStore)
+  const [singleProductOpen, setSingleProductOpen] = useState(false);
+  const [productId, setProductId] = useState(null);
+
+  useEffect(() => {
+    if (productId !== null) {
+      setSingleProductOpen(true);
+    } else {
+      setSingleProductOpen(false);
+    }
+  }, [productId]);
+
+  const toggleProductPanel = () => {
+    if(singleProductOpen){
+      setSingleProductOpen(false)
+    }
+  }
+
+
   return (
-    <ProductListPane 
+    <>
+    {singleProductOpen && productId != null? (
+      <>
+      <SingleProduct product={productId} togglePanel={toggleProductPanel}/>
+      </>
+    ) : (
+      <ProductListPane 
       filter={filter}
       mode={layout.productListMode}
       products={products}
+      setProductId={setProductId}
     />
+    )
+  }
+    </>
   )
 }
