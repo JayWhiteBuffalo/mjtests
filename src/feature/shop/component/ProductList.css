@@ -1,14 +1,33 @@
 
 .ProductListPane {
+  overflow: hidden;
+  overflow-y:scroll;
+  max-height: 130dvh;
+  scroll-behavior: smooth;
+  scroll-margin: 0;
+  scroll-snap-stop: always;
   .App.pinMapPane > & {
     flex-basis: 0;
     overflow-y: scroll;
   }
+
 }
 
 .ProductList {
-  grid-template-columns: repeat(auto-fit, 360px);
-
+  position: relative;
+  grid-template-columns: repeat(auto-fit, 70vw);
+  /* box-shadow: 2px 2px 5px rgba(0,0,0,0.2),
+  -3px -3px 6px 0 rgba(255, 255, 255, 0.55); */
+  border-radius: 15px !important;
+  padding: 2rem 2rem;
+  max-width: 70vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  scroll-behavior: smooth;
+  scroll-margin: 0;
+  scroll-snap-stop: always;
   &.full {
     @media (width < 500px) {
       & {
@@ -42,12 +61,19 @@
 
 .Product {
   &.full {
-    border-radius: 50px;
-    box-shadow: 1px 1px 2px hsl(0 0% 0% / .4);
+    /* border-radius: 50px; */
+    /* box-shadow: 1px 1px 2px hsl(0 0% 0% / .4);  */
+    display: flex;
+    /* border: none;
+    border-bottom: 1px solid grey; */
+    max-width: 65vw;
+    padding: 1rem;
   }
 
   &.full:hover {
-    box-shadow: 1px 1px 2px hsl(0 0% 0% / .4), 0px 0px 8px hsl(0 0% 0% / .3);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2),
+    -3px -3px 6px 0 rgba(255, 255, 255, 0.55);
+    border-radius: 20px;
   }
 
   &.compact {
@@ -69,12 +95,14 @@
 
 .ProductAttributeList > dt:not(:first-child)::before {
   content: '\A';
-  white-space: pre;
+  /* white-space: pre; */
 }
 
 .ProductAttributeList > dt::after {
   content: ': ';
 }
+
+.ProductAttributeItem
 
 .ProductTerpItem.enabled {
   cursor: pointer;

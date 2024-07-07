@@ -6,7 +6,7 @@ import {BlueButton} from '@feature/shared/component/Link'
 import {ErrorBoundary} from '@feature/shared/component/Error'
 import {FilteredProductStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import {Image} from '@feature/shared/component/Image'
 import {
   Popover,
@@ -14,6 +14,7 @@ import {
   PopoverContent,
   Spinner,
   Chip,
+  Button,
 } from '@nextui-org/react'
 import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
 import {TerpeneSelectorItem} from '@feature/shared/component/TerpeneSelector'
@@ -38,10 +39,12 @@ import {
 import {type Product, type Vendor} from '@prisma/client'
 import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
+import TerpsDetails from '@/feature/shop/component/TerpDetails'
+import SingleProduct from '@/feature/shop/component/SingleProduct'
 
 const emDash = '—'
 
-const ProductTypeLabel = ({product}: {
+export const ProductTypeLabel = ({product}: {
   product: Product
 }) => (
   <div className="text-gray-500 text-sm font-bold leading-none uppercase">
@@ -52,7 +55,7 @@ const ProductTypeLabel = ({product}: {
   </div>
 )
 
-const ProductChips = ({product}: {
+export const ProductChips = ({product}: {
   product: Product
 }) => (
   // openNow, closing soon
@@ -112,7 +115,7 @@ const VendorNameButton = ({vendor}: {
   </Popover>
 )
 
-const ProductSubheader = ({product}: {
+export const ProductSubheader = ({product}: {
   product: Product
 }) =>
   product.vendor ? (
@@ -137,11 +140,13 @@ const ProductSubheader = ({product}: {
 export const ProductAttributeList = ({product}: {
   product: Product
 }) => (
-  <dl className="ProductAttributeList py-1 border-t border-gray-400">
+  <dl className="ProductAttributeList p-2 border-l border-gray-400">
     {product.brand ? (
       <>
+      <div className='whitespace-nowrap'>
         <dt>Brand</dt>
         <dd className="ProductBrand">{product.brand}</dd>
+      </div>
       </>
     ) : undefined}
 
@@ -197,7 +202,7 @@ export const ProductAttributeList = ({product}: {
   </dl>
 )
 
-const TerpItem = ({enabled = false, terpName, value}: {
+export const TerpItem = ({enabled = false, terpName, value}: {
   enabled: boolean
   terpName: TerpName
   value: number
@@ -263,7 +268,7 @@ export const PriceList = ({priceList}) => (
   </ul>
 )
 
-export const ProductItem = ({product, mode}: {
+export const ProductItem = ({product, mode, setProductId}: {
   product: Product
   mode: ProductListMode
 }) => {
@@ -276,55 +281,87 @@ export const ProductItem = ({product, mode}: {
     <li
       className={clsx(
         `Product ${mode}`,
-        'p-2 border-gray-400 border text-base transition',
+        'p-4 text-base transition flex flex-col mb-8 neu-product-card',
       )}
     >
-      {product.mainImageRefId ? (
-        <div
-          className={clsx(
-            'relative',
-            mode === 'full' ? 'h-[240px]' : 'h-[100px]',
-          )}
-        >
-          <Image
-            alt="Product"
-            className="mx-auto object-contain"
-            fill={true}
-            publicId={product.mainImageRefId}
-            sizes="360px"
-          />
-        </div>
-      ) : undefined}
-      <ProductTypeLabel product={product} />
-      <div className="flex justify-between">
-        <h5 className="flex-1 font-bold">{product.name}</h5>
-        {/* {product.price != null ? (
-          <span className="ProductPrice">${product.price}</span>
-        ) : undefined} */}
-      </div>
-      <ProductSubheader product={product} />
-      {mode === 'full' && product.rating ? (
-        <VendorRating rating={product.rating} />
-      ) : undefined}
-      {product.vendor?.openStatus ? (
-        <OpenStatus status={product.vendor.openStatus} />
-      ) : undefined}
-      <ProductChips product={product} />
-      <PriceList priceList={product.priceList} />
+      <div>
+        <div className={clsx('grid grid-cols-8 gap-8 p-2')}>
+          <div  className='col-span-2'>
 
-      {mode === 'full' ? <ProductAttributeList product={product} /> : undefined}
-      {terpEntries.length && mode === 'full' ? (
-        <ul className="py-1 border-gray-400 border-t flex flex-col items-start">
-          {terpEntries.map(([terpName, value]) => (
-            <TerpItem key={terpName} terpName={terpName} value={value} />
-          ))}
-        </ul>
-      ) : undefined}
+          {product.mainImageRefId ? (
+            <div
+              className={clsx(
+                'relative',
+                mode === 'full' ? 'h-[175px]' : 'h-[100px]',
+              )}
+            >
+              <Image
+                alt="Product"
+                className="mx-auto object-contain"
+                fill={true}
+                publicId={product.mainImageRefId}
+                sizes="360px"
+              />
+            </div>
+          ) : undefined}
+          </div>
+
+          <div className='flex flex-col justify-between items-stretch col-span-3'>
+            <div className='pt-2 flex flex-col gap-1'>
+            <ProductTypeLabel product={product} />
+              <div className="flex justify-between">
+                <h5 className="flex-1 font-bold text-2xl">{product.name}</h5>
+                {/* {product.price != null ? (
+                  <span className="ProductPrice">${product.price}</span>
+                ) : undefined} */}
+              </div>
+            <ProductSubheader product={product} />
+            
+            {mode === 'full' && product.rating ? (
+                <VendorRating rating={product.rating} />
+              ) : undefined}
+            </div>
+
+
+            <div className='flex flex-col gap-1'>
+
+              {product.vendor?.openStatus ? (
+                <OpenStatus status={product.vendor.openStatus} />
+              ) : undefined}
+              <ProductChips product={product} />
+            </div>
+          </div>
+
+          <div className='flex flex-col p-2 justify-center items-center'>
+            <ProductAttributeList product={product} />
+          </div>
+
+          <div>
+            <PriceList priceList={product.priceList} />
+          </div>
+
+          <div>
+            <Button onClick={()=> setProductId(product)}>
+              Details
+            </Button>
+          </div>
+
+        </div>
+        
+        </div>
+
+        {mode === 'full' && (
+        <div className="flex flex-col gap-4">
+          {terpEntries.length ? (
+              <TerpsDetails terpEntries={terpEntries} />
+          ) : null}
+        </div>
+      )}
     </li>
   )
 }
 
-const ProductList = ({filter, products, mode}: {
+const ProductList = ({filter, products, mode, setProductId}: {
   filter: ProductFilter
   products: Product[]
   mode: ProductListMode
@@ -346,7 +383,7 @@ const ProductList = ({filter, products, mode}: {
     >
       {products.map(product => (
         <ErrorBoundary key={product.id}>
-          <ProductItem mode={mode} product={product} />
+          <ProductItem mode={mode} product={product} setProductId={setProductId} />
         </ErrorBoundary>
       ))}
     </ul>
@@ -358,17 +395,17 @@ const ProductList = ({filter, products, mode}: {
   </>
 )
 
-const ProductListPane = ({filter, products, mode}) => (
+const ProductListPane = ({filter, products, mode, setProductId}) => (
   <div
     className={clsx(
-      'ProductListPane border-t border-gray-300 flex-1 basis-[400px]',
+      'ProductListPane flex-1 basis-[400px]',
       'flex flex-col items-stretch',
     )}
   >
     <ErrorBoundary>
       {products
         .then(products => (
-          <ProductList filter={filter} products={products} mode={mode} />
+          <ProductList filter={filter} products={products} mode={mode} setProductId={setProductId} />
         ))
         .orPending(() => (
           <div className="flex justify-center">
@@ -383,11 +420,39 @@ export const ProductListPaneContainer = () => {
   const filter = useFluxStore(FilterStore)
   const products = useFluxStore(FilteredProductStore)
   const layout = useFluxStore(LayoutStore)
+  const [singleProductOpen, setSingleProductOpen] = useState(false);
+  const [productId, setProductId] = useState(null);
+
+  useEffect(() => {
+    if (productId !== null) {
+      setSingleProductOpen(true);
+    } else {
+      setSingleProductOpen(false);
+    }
+  }, [productId]);
+
+  const toggleProductPanel = () => {
+    if(singleProductOpen){
+      setSingleProductOpen(false)
+    }
+  }
+
+
   return (
-    <ProductListPane
+    <>
+    {singleProductOpen && productId != null? (
+      <>
+      <SingleProduct product={productId} togglePanel={toggleProductPanel}/>
+      </>
+    ) : (
+      <ProductListPane 
       filter={filter}
       mode={layout.productListMode}
       products={products}
+      setProductId={setProductId}
     />
+    )
+  }
+    </>
   )
 }

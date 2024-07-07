@@ -1,0 +1,42 @@
+.closebutton{
+    position: absolute;
+    font-size: 5rem;
+    top: 10;
+    left: 5;
+}
+.closebutton:hover{
+    scale: 125%;
+}
+
+.singleProductSection{
+    width: auto;
+    min-width: 60dvw;
+    height: auto;
+    display: flex;
+    flex: 1 1 0%;
+    justify-content: center;
+    align-items: start;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 6px 6px 18px #fff,
+                -6px -6px 18px #aeaec025,
+                inset -6px -6px 6px #aeaec025,
+                inset 6px 6px 6px #fff;
+}
+
+.singleProductCont{
+    width: 100%;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4;
+}
+
+.productCardHead{
+    display: grid;
+    grid-template-columns: 2fr .1fr 2fr;
+}
+
+.productImageContainer{
+    border-right: 1px solid gray;
+}
