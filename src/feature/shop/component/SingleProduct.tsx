@@ -131,12 +131,6 @@ const TerpsDetailPane = ({ terpEntries }) => {
   );
 };
 
-const previousPage = () => {
-
-}
-
-
-
     return(
 
         <section className=' singleProductSection'>
