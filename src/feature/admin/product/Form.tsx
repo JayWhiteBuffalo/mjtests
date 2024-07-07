@@ -22,6 +22,7 @@ import {
 import {DropdownAdapter} from '@/feature/shared/component/DropdownAdapter'
 import {AutocompleteAdapter} from '@/feature/shared/component/AutocompleteAdapter'
 import {PriceListInput} from '@/feature/admin/product/PriceListInput'
+import { useState } from 'react'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -46,17 +47,50 @@ export const Form = ({
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: {errors, isSubmitSuccessful},
+    reset,
     control,
     watch,
     setValue,
   } = methods
   const productType = watch('productType')
 
+  const [formData, setFormData] = useState(product); // State to manage form data independently
+
+  const handleFormSubmit = async (data) => {
+    // Perform submission logic here (saveDraft, publish, submitForReview)
+    // Assuming an async action that returns a promise
+
+    try {
+      // Simulate async submission (replace with actual submission logic)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Update formData state with latest form values upon successful submission
+      setFormData(data);
+
+      // Handle different submission actions (saveDraft, publish, submitForReview)
+      // Replace with actual logic as per your application requirements
+      if (product.isDraft) {
+        saveDraft(data);
+      } else if (!isEmployee) {
+        publish(data);
+      } else {
+        submitForReview(data);
+      }
+
+    } catch (error) {
+      console.error('Submission error:', error);
+    }
+  };
+
+  // Reset form fields to last known formData state on successful form submission
+  if (isSubmitSuccessful) {
+    reset(formData);
+  }
   
   return (
     <FormProvider {...methods}>
-      <form className="AdminForm" action={handleSubmit(saveDraft)}>
+      <form className="AdminForm" action={handleSubmit(handleFormSubmit)}>
         <section>
           <h2>General</h2>
 
