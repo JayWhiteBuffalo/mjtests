@@ -20,6 +20,7 @@ const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
   const [lastOpen, setLastOpen] = useState(open)
 
+
   const onTransitionEnd = useCallback(
     event => {
       if (event.propertyName === 'transform') {
@@ -54,7 +55,8 @@ const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({layout}) => (
+const App = ({layout}) => {
+  return(
   <main
     className={clsx(
       'App',
@@ -65,11 +67,16 @@ const App = ({layout}) => (
     <Header/>
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
-    <FilterPaneWrapper layout={layout} />
+    <section className='w-full h-full flex p-10'>
+      <div className='relative flex justify-center items-center w-1/3 h-full'>
+        <FilterPaneWrapper layout={layout} />
+      </div>
     <ProductListPaneContainer />
+    </section>
     <ShopFooter />
   </main>
 )
+}
 
 export const AppContainer = ({initial}) => {
   const pathname = usePathname()
