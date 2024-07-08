@@ -24,7 +24,7 @@ export const publishDbSchema = z.object({
   batch: z.string().nullable(),
   brand: z.string(),
   concentrateType: z.enum(Treemap.concentrateTypes.map(x => x.key)).nullable(),
-  cultivar: z.string(),
+  cultivar: z.string().nullable(),
   flags: z.object({}),
   isDraft: z.literal(false),
   mainImageRefId: z.string(),
