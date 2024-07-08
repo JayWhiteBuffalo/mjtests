@@ -15,6 +15,7 @@ import {useFluxStore} from '@/state/Flux'
 import {usePathname} from 'next/navigation'
 import {Header} from '@/feature/shop/component/Nav/Header'
 import {useRef, useCallback, useState, useEffect} from 'react'
+import ProductDto from '@/data/ProductDto'
 
 const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
@@ -79,17 +80,34 @@ const App = ({layout}) => {
 }
 
 export const AppContainer = ({initial}) => {
+
+  const [producerToggle, setProducerToggle] = useState(false)
+
   const pathname = usePathname()
 
   useEffect(() => dispatcher.registerActions(Actions), [])
 
   useEffect(() => {
+
+    if(producerToggle === true){
+      dispatch({type: 'route.initialize', pathname, query: initial.query})
+      FilteredProductStore.set({
+        filter: initial.filter,
+        products: Present.resolve(initial.producerProducts),
+      })
+      
+    }
+    if(producerToggle === false){
+    
     dispatch({type: 'route.initialize', pathname, query: initial.query})
     FilteredProductStore.set({
       filter: initial.filter,
       products: Present.resolve(initial.products),
     })
+  }
   }, [initial, pathname])
+  
+  console.log(initial.producerProducts)
 
   const onPopState = useCallback(event => {
     if (event.state) {

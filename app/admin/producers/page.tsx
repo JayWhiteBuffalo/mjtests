@@ -13,7 +13,7 @@ export const getRoute = async params => [
 const Page = async ({user}) => {
   let producers
   let isAdmin = false;
-  if (user.roles.includes('admin') || hasAdminPermission(user.roles)) {
+  if (hasAdminPermission(user.roles)) {
     isAdmin = true;
     producers = await ProducerDto.findMany()
   } else if (isProducer(user.roles)) {

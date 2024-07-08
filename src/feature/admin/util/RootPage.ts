@@ -79,10 +79,10 @@ const pagesCanUse = {
   },
 
   dev: user => {
-        if (user.roles.includes('admin') || hasAdminPermission(user.roles))  {
+        if (hasAdminPermission(user.roles))  {
     return true
   }
-    return true;
+
   },
 
   producers: user => {
@@ -103,19 +103,18 @@ const pagesCanUse = {
 
   requests: user => {
     const userPermission = user.roles;
-    return hasAdminPermission(userPermission) ||
-           hasOwnerPermission(userPermission) ||
-           hasManagerPermission(userPermission) ||
-           hasSalesPermission(userPermission)
+    return hasAdminPermission(userPermission) 
+          //  hasOwnerPermission(userPermission) ||
+          //  hasManagerPermission(userPermission) ||
+          //  hasSalesPermission(userPermission)
   },
 
   users: user => {
     const userPermission = user.roles;
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(userPermission) ) {
       return true
     }
-    return hasAdminPermission(userPermission) ||
-           hasOwnerPermission(userPermission) ||
+    return  hasOwnerPermission(userPermission) ||
            hasManagerPermission(userPermission) ||
            hasSalesPermission(userPermission)
   },
