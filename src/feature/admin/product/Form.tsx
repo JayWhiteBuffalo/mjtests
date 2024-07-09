@@ -142,6 +142,7 @@ export const Form = ({
               items={vendorItems}
               name="vendorId"
               readOnly={!isAdmin && product.vendorId != null}
+              defaultValue={vendorItems.length > 0 ? vendorItems[0].key : ''}
             />
           </FieldLayout>
 

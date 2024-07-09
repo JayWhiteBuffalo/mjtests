@@ -195,7 +195,9 @@ export const ProductPane = ({product, canEdit, producer}) => (
       <header>
         <h2>Preview</h2>
       </header>
-      <PreviewContainer product={product} />
+      <section>
+        <PreviewContainer product={product} />
+      </section>
     </InfoSection>
   </AdminPane>
 )
@@ -208,11 +210,11 @@ export const PreviewContainer = ({product}) => {
 
   return vendorPresent
     .then(vendor => (
-      <div className="flex gap-4 flex-wrap">
-        <ul className="w-[360px] bg-white">
+      <div className="w-full flex gap-4 flex-wrap">
+        {/* <ul className=" w-full bg-white">
           <ProductItem product={{...product, vendor}} mode="full" />
-        </ul>
-        <ul className="w-[280px] bg-white">
+        </ul> */}
+        <ul className="w-[300px] bg-white">
           <ProductItem product={{...product, vendor}} mode="compact" />
         </ul>
       </div>

@@ -3,7 +3,7 @@ import {getRootPageRouteItem} from '@/feature/admin/util/RootPage'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
 import {ProducerTable} from '@feature/admin/producer/Table'
-import {hasAdminPermission, isProducer} from '@/util/Roles'
+import {hasAdminPermission, isProducer, isVendor} from '@/util/Roles'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),
@@ -13,6 +13,7 @@ export const getRoute = async params => [
 const Page = async ({user}) => {
   let producers
   let isAdmin = false;
+  let isOwnerAccount = false
   if (hasAdminPermission(user.roles)) {
     isAdmin = true;
     producers = await ProducerDto.findMany()
@@ -25,11 +26,15 @@ const Page = async ({user}) => {
       },
       orderBy: {name: 'asc'},
     })
+    isOwnerAccount = true;
+  } else if(isVendor){
+    producers = await ProducerDto.findMany()
+
   } else {
     producers = []
   }
 
-  return <ProducerTable producers={producers} isAdmin={isAdmin} />
+  return <ProducerTable producers={producers} isAdmin={isAdmin} isOwnerAccount={isOwnerAccount} />
 }
 
 export default makeMain({Page, getRoute})

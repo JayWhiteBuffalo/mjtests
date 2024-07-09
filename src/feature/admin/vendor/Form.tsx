@@ -234,9 +234,11 @@ export const Form = ({vendor, imageRefs, isAdmin, action}) => {
               autoComplete="off"
               format={orEmpty}
               parse={VendorUtil.parsePartialOmmaNumber}
+              isReadOnly
             />
           </FieldLayout>
         </section>
+
 
         <section className="hidden">
           <h2>SEO</h2>
