@@ -56,7 +56,7 @@ const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({layout}) => {
+const App = ({ layout }) => {
   return(
   <main
     className={clsx(
@@ -81,7 +81,7 @@ const App = ({layout}) => {
 
 export const AppContainer = ({initial}) => {
 
-  const [producerToggle, setProducerToggle] = useState(false)
+  const [producerToggle, setProducerToggle] = useState(true)
 
   const pathname = usePathname()
 
@@ -89,25 +89,25 @@ export const AppContainer = ({initial}) => {
 
   useEffect(() => {
 
-    if(producerToggle === true){
-      dispatch({type: 'route.initialize', pathname, query: initial.query})
-      FilteredProductStore.set({
-        filter: initial.filter,
-        products: Present.resolve(initial.producerProducts),
-      })
+  //   if(producerToggle === true){
+  //     dispatch({type: 'route.initialize', pathname, query: initial.query})
+  //     FilteredProductStore.set({
+  //       filter: initial.filter,
+  //       products: Present.resolve(initial.producerProducts),
+  //     })
       
-    }
-    if(producerToggle === false){
+  //   }
+  //   if(producerToggle === false){
     
     dispatch({type: 'route.initialize', pathname, query: initial.query})
     FilteredProductStore.set({
       filter: initial.filter,
       products: Present.resolve(initial.products),
     })
-  }
+  
   }, [initial, pathname])
   
-  console.log(initial.producerProducts)
+
 
   const onPopState = useCallback(event => {
     if (event.state) {

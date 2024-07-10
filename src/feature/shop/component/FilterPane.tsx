@@ -207,7 +207,7 @@ const SpeciesFilterSection = ({filter, onChange}: {
         <LargeMultiDropdown
           className="w-40"
           id="cultivars"
-          onChange={cultivars => onChange({cultivars})}
+          onChange={cultivars => onChange({...cultivars})}
           placeholder="Strains"
           TypeaheadStore={CultivarTypeaheadStore}
           values={filter.cultivars}

@@ -338,12 +338,15 @@ export const ProductItem = ({product, mode, setProductId}: {
             <ProductAttributeList product={product} />
           </div>
         
+        {product.priceList != undefined &&
           <div>
             <PriceList priceList={product.priceList} />
           </div>
+          }
           </>
           )
             : (null)   
+        
           }
 
           <div>
@@ -371,7 +374,10 @@ const ProductList = ({filter, products, mode, setProductId}: {
   filter: ProductFilter
   products: Product[]
   mode: ProductListMode
-}) => (
+
+
+}) => {
+  return(
   <>
     {products.length !== 0 && ProductFilterUtil.isEmpty(filter) ? (
       <p>
@@ -388,9 +394,13 @@ const ProductList = ({filter, products, mode, setProductId}: {
       )}
     >
       {products.map(product => (
+        <>
+        {product.id &&
         <ErrorBoundary key={product.id}>
           <ProductItem mode={mode} product={product} setProductId={setProductId} />
         </ErrorBoundary>
+        }
+        </>
       ))}
     </ul>
     {products.length === 0 ? (
@@ -400,6 +410,7 @@ const ProductList = ({filter, products, mode, setProductId}: {
     ) : undefined}
   </>
 )
+}
 
 const ProductListPane = ({filter, products, mode, setProductId}) => (
   <div
@@ -439,8 +450,8 @@ export const ProductListPaneContainer = () => {
   const filter = useFluxStore(FilterStore)
 
 
-  let products = useFluxStore(FilteredProductStore)
-  // let producer = useFluxStore(FilteredProducerStore)
+   let products = useFluxStore(FilteredProductStore)
+  //  let products = useFluxStore(FilteredProducerStore)
   const layout = useFluxStore(LayoutStore)
   const [singleProductOpen, setSingleProductOpen] = useState(false);
   const [productId, setProductId] = useState(null);
