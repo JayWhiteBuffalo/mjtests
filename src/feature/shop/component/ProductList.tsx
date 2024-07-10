@@ -450,7 +450,7 @@ export const ProductListPaneContainer = () => {
   const filter = useFluxStore(FilterStore)
 
 
-   let products = useFluxStore(FilteredProductStore)
+  const products = useFluxStore(FilteredProductStore)
   //  let products = useFluxStore(FilteredProducerStore)
   const layout = useFluxStore(LayoutStore)
   const [singleProductOpen, setSingleProductOpen] = useState(false);

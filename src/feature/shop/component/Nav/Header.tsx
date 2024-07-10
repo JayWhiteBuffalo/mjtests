@@ -10,7 +10,7 @@ export const Header = () => {
     return(
         <>
         <section className='mb-10 h-28  shadow-lg'>
-            <div className='flex justify-around items-center bg-lime-100 gap-4 p-6 shadow-lg'>
+            <div className='flex justify-around items-center bg-lime-300 gap-4 p-6 shadow-lg'>
                 <div className='logo'>
                 <Link href="/" className="flex flex-row self-start items-center mr-4">
                     <Logo width={60} height={60} className="mr-1" />
@@ -20,11 +20,11 @@ export const Header = () => {
                 </Link>
                 </div>
                 <div className='w-1/2 flex gap-24 justify-end items-center p-4 text-xl leading-loose'>
-                    <div>
+                    {/* <div>
                         <a href={"/"}>
                             Contact
                         </a>
-                    </div>
+                    </div> */}
                     <div>
                         <a href='/auth'>
                             <button>Subscriber Login</button>

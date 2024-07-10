@@ -1,7 +1,7 @@
 import ProductDto from '@data/ProductDto'
 import {AppContainer} from '@feature/shop/component/App'
 import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
-import {SearchParamsContext} from 'next/dist/shared/lib/hooks-client-context.shared-runtime'
+
 
 export const generateStaticParams = () => ({searchParams: {}})
 
@@ -17,14 +17,7 @@ const Page = async ({searchParams: query}) => {
   const dropDownData = {strains, stores, brands}
   const initial = {query, filter, products, producerProducts, dropDownData} 
 
-  console.log("Query" + JSON.stringify(query))
-
-  console.log(dropDownData)
-
-
-
   return <AppContainer initial={initial} />
-
 
 
 // Helper function to extract unique brands from products and producerProducts
@@ -69,12 +62,6 @@ function extractUniqueStrains(products) {
   return Object.values(strainsMap);
 }
 
-// Generate a unique key based on the provided name
-function generateKey(name) {
-  // You can implement your own logic to generate a unique key based on the name
-  // Here, a simple approach is used where non-alphanumeric characters are removed
-  return name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-}
 }
 
 export default Page;
