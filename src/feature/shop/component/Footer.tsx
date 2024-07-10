@@ -76,7 +76,7 @@ export const FooterBar = () => (
 )
 
 export const ShopFooter = () => (
-  <footer className="w-full bg-lime-100">
+  <footer className="w-full bg-lime-300">
     <FooterNav />
     <hr />
     <FooterBar />

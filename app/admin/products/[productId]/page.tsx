@@ -17,12 +17,21 @@ export const getRoute = async ({productId, ...params}) => {
 }
 
 const Page = async ({user, productId}) => {
+  let producer;
+  
+  const canEdit = await ProductDto.canEdit(user, productId)
+
   const product = await ProductDto.get(productId)
   if (!product) {
     notFound()
   }
-  const canEdit = await ProductDto.canEdit(user, productId)
-  const producer = await ProducerDto._getRaw(product.producerId)
+  
+  if(product. producerId){
+    producer = await ProducerDto._getRaw(product.producerId)
+   } else {
+     producer = null
+   }
+
   return <ProductPane product={product} canEdit={canEdit} producer={producer} />
 }
 

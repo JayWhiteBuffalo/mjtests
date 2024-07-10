@@ -9,6 +9,7 @@ import {RecordStore} from '@/state/RecordStore'
 import {SerialFetcher} from '@/state/SerialFetcher'
 import {TypeaheadStore} from '@/state/TypeaheadStore'
 import {UrlUtil} from '@util/UrlUtil'
+import ProducerDto from '@/data/ProducerDto'
 
 export const FilteredProductStore = new (class extends FluxFieldStore {
   constructor() {
@@ -18,6 +19,7 @@ export const FilteredProductStore = new (class extends FluxFieldStore {
       const url = UrlUtil.makeUrl('/api/products', query)
       return fetch(url, {signal})
     })
+
     FilterStore.subscribe(this.notify.bind(this))
   }
 
@@ -54,6 +56,11 @@ export const FilteredVendorStore = new ComputedStore(
       ])
     }),
 )
+
+
+export const ProducerStore = new RecordStore('producer')
+
+export const ProducerTypeaheadStore = new TypeaheadStore('producer')
 
 export const VendorStore = new RecordStore('vendor')
 

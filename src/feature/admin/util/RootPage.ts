@@ -3,8 +3,10 @@ import StringUtil from '@util/StringUtil'
 import {GiBarn} from 'react-icons/gi'
 import {HiInbox, HiShoppingBag, HiUser, HiHome} from 'react-icons/hi'
 import {HiMiniBuildingStorefront} from 'react-icons/hi2'
+import { FaBagShopping } from "react-icons/fa6";
 import {LuBinary} from 'react-icons/lu'
 import { Permission, hasPermission, hasAdminPermission, hasOwnerPermission, hasManagerPermission, hasSalesPermission, hasEmployeePermission, isVendor, isProducer } from '@/util/Roles';
+import {Icon} from '@iconify/react/dist/iconify.js'
 
 export const homePage = {
   name: 'Home',
@@ -40,6 +42,11 @@ export const rootPages = [
     key: 'dev',
     Icon: LuBinary,
   },
+  {
+    name: 'Shop',
+    key: 'shop',
+    Icon: FaBagShopping,
+  }
 ]
 
 const populateRootPage = (page, index) => {
@@ -79,10 +86,10 @@ const pagesCanUse = {
   },
 
   dev: user => {
-        if (user.roles.includes('admin') || hasAdminPermission(user.roles))  {
+        if (hasAdminPermission(user.roles))  {
     return true
   }
-    return true;
+
   },
 
   producers: user => {
@@ -103,19 +110,18 @@ const pagesCanUse = {
 
   requests: user => {
     const userPermission = user.roles;
-    return hasAdminPermission(userPermission) ||
-           hasOwnerPermission(userPermission) ||
-           hasManagerPermission(userPermission) ||
-           hasSalesPermission(userPermission)
+    return hasAdminPermission(userPermission) 
+          //  hasOwnerPermission(userPermission) ||
+          //  hasManagerPermission(userPermission) ||
+          //  hasSalesPermission(userPermission)
   },
 
   users: user => {
     const userPermission = user.roles;
-    if (user.roles.includes('admin')) {
+    if (hasAdminPermission(userPermission) ) {
       return true
     }
-    return hasAdminPermission(userPermission) ||
-           hasOwnerPermission(userPermission) ||
+    return  hasOwnerPermission(userPermission) ||
            hasManagerPermission(userPermission) ||
            hasSalesPermission(userPermission)
   },
@@ -127,6 +133,14 @@ const pagesCanUse = {
            hasManagerPermission(userPermission) ||
            hasSalesPermission(userPermission)
   },
+
+  shop: user => {
+    if (user.loggedIn ) {
+      return true
+    }
+    return false
+  },
+  
 }
 
   export const canUseRootPage = (user, pageName) => {

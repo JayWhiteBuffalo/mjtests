@@ -49,11 +49,11 @@ const DeleteCell = ({ item: vendor }) => (
 )
 
 
-export const VendorTable = ({vendors, isAdmin}) => {
+export const VendorTable = ({vendors, isAdmin, isOwnerAccount}) => {
   const columns = makeColumns([
     {key: 'name', label: 'Name', Cell: NameCell},
     {key: 'location', label: 'Location', Cell: LocationCell},
-    {key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell},
+    ...(isAdmin || isOwnerAccount ?[{key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell}] : []),
     ...(isAdmin ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : [])
   ])
 
