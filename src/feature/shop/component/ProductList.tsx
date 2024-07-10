@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import MathUtil from '@util/MathUtil'
 import {BlueButton} from '@feature/shared/component/Link'
 import {ErrorBoundary} from '@feature/shared/component/Error'
-import {FilteredProductStore} from '../state/DataStore'
+import {FilteredProducerStore, FilteredProductStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
 import {useState, useRef, useEffect} from 'react'
 import {Image} from '@feature/shared/component/Image'
@@ -285,14 +285,14 @@ export const ProductItem = ({product, mode, setProductId}: {
       )}
     >
       <div>
-        <div className={clsx('grid grid-cols-8 gap-8 p-2')}>
+        <div className={clsx('grid grid-cols-8 gap-8 p-2',`productCard ${mode}`)}>
           <div  className='col-span-2'>
 
           {product.mainImageRefId ? (
             <div
               className={clsx(
                 'relative',
-                mode === 'full' ? 'h-[175px]' : 'h-[100px]',
+                mode === 'full' ? 'h-[175px]' : 'h-auto]',
               )}
             >
               <Image
@@ -325,20 +325,29 @@ export const ProductItem = ({product, mode, setProductId}: {
 
             <div className='flex flex-col gap-1'>
 
-              {product.vendor?.openStatus ? (
+              {/* {product.vendor?.openStatus ? (
                 <OpenStatus status={product.vendor.openStatus} />
-              ) : undefined}
+              ) : undefined} */}
               <ProductChips product={product} />
             </div>
           </div>
 
+          {mode === 'full' ? (
+            <>
           <div className='flex flex-col p-2 justify-center items-center'>
             <ProductAttributeList product={product} />
           </div>
-
+        
+        {product.priceList != undefined &&
           <div>
             <PriceList priceList={product.priceList} />
           </div>
+          }
+          </>
+          )
+            : (null)   
+        
+          }
 
           <div>
             <Button onClick={()=> setProductId(product)}>
@@ -365,7 +374,10 @@ const ProductList = ({filter, products, mode, setProductId}: {
   filter: ProductFilter
   products: Product[]
   mode: ProductListMode
-}) => (
+
+
+}) => {
+  return(
   <>
     {products.length !== 0 && ProductFilterUtil.isEmpty(filter) ? (
       <p>
@@ -382,9 +394,13 @@ const ProductList = ({filter, products, mode, setProductId}: {
       )}
     >
       {products.map(product => (
+        <>
+        {product.id &&
         <ErrorBoundary key={product.id}>
           <ProductItem mode={mode} product={product} setProductId={setProductId} />
         </ErrorBoundary>
+        }
+        </>
       ))}
     </ul>
     {products.length === 0 ? (
@@ -394,6 +410,7 @@ const ProductList = ({filter, products, mode, setProductId}: {
     ) : undefined}
   </>
 )
+}
 
 const ProductListPane = ({filter, products, mode, setProductId}) => (
   <div
@@ -417,8 +434,24 @@ const ProductListPane = ({filter, products, mode, setProductId}) => (
 )
 
 export const ProductListPaneContainer = () => {
+
+//   const [seeProducers, setSeeProducer] = useState(true)
+
+//   const getStatus = () => {
+//   if(seeProducers === true){
+//     const products = useFluxStore(FilteredProductStore)
+//     return products
+//   } else {
+//     const products = useFluxStore(FilteredProductStore)
+//     return products
+//   }
+// }
+
   const filter = useFluxStore(FilterStore)
+
+
   const products = useFluxStore(FilteredProductStore)
+  //  let products = useFluxStore(FilteredProducerStore)
   const layout = useFluxStore(LayoutStore)
   const [singleProductOpen, setSingleProductOpen] = useState(false);
   const [productId, setProductId] = useState(null);
@@ -450,6 +483,7 @@ export const ProductListPaneContainer = () => {
       mode={layout.productListMode}
       products={products}
       setProductId={setProductId}
+      // producer={producer}
     />
     )
   }

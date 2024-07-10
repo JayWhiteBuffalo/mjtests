@@ -28,7 +28,7 @@ export const FilterStore = new (class extends FluxFieldStore<ProductFilter> {
 
   set(changes) {
     const changed = super.set(changes)
-
+    console.log("Changes set" + changed)
     if (changed) {
       RouteStore.replace(ProductFilterUtil.toQuery(this.get()))
     }

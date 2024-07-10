@@ -19,6 +19,7 @@ const Page = async ({user, vendorId}) => {
   if (!vendor) {
     notFound()
   }
+  
   const canEdit = await VendorDto.canEdit(user, vendorId)
   return <VendorPane vendor={vendor} canEdit={canEdit} />
 }

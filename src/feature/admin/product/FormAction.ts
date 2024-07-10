@@ -59,7 +59,7 @@ export const getFormProps = async (user, productId) => {
   }
 
   let producerItems
-  if (user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
+  if (hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
     const producers = await ProducerDto.findMany()
     producerItems = producers.map(producer => ({
       key: producer.id,
@@ -77,11 +77,10 @@ export const getFormProps = async (user, productId) => {
       key: edge.producerId,
       name: edge.producer.name,
     }))
-    console.log(producerEdges)
   }
 
   let vendorItems
-  if (user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
+  if (hasSalesPermission(user.roles) || hasAdminPermission(user.roles)) {
     const vendors = await VendorDto.findMany()
     vendorItems = vendors.map(vendor => ({key: vendor.id, name: vendor.name}))
   } else {
@@ -96,11 +95,12 @@ export const getFormProps = async (user, productId) => {
       key: edge.vendorId,
       name: edge.vendor.name,
     }))
+    console.log(vendorItems)
   }
 
   return {
     imageRefs,
-    isAdmin: user.roles.includes('admin') || hasSalesPermission(user.roles) || hasAdminPermission(user.roles),
+    isAdmin: hasAdminPermission(user.roles),
     isEmployee: hasEmployeePermission(user.roles),
     producerItems,
     vendorItems,

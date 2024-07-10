@@ -74,9 +74,12 @@ export const ProductUtil = {
     )
     return StringUtil.wordsToKebab(words).substring(0, 48)
   },
-
+  
+  
   populateFlags(product) {
-    product.flags.openNow = product.vendor.openStatus.isOpen
+    if (product.vendor && product.vendor.openStatus && product.vendor.openStatus.isOpen) {
+      product.flags.openNow = product.vendor.openStatus.isOpen;
+    }
   },
 
   normalizeTerps(terps) {

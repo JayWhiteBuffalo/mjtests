@@ -10,6 +10,7 @@ import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
 import {custom} from 'zod'
 import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer } from '@/util/Roles'
+import {ProducerUtil} from '@/util/ProducerUtil'
 
 const ProductDto = {
   async canSee(user, productId) {
@@ -67,6 +68,44 @@ const ProductDto = {
       include: {},
     })
   },
+
+  async getProducerProducts(filter) {
+    filter ??= ProductFilterUtil.defaultFilter();
+    // Modify the filter to include producerId check
+    filter.producerId = { not: null };
+  
+    let products = await ProductDto.findMany({
+      ...ProductFilterUtil.toPrisma(filter),
+      where: { producerId: {not: null}},
+      include: { vendor: true, producer:true, imageRefs: true },
+    });
+  
+    for (const product of products) {
+      ProducerUtil.populate(product.producer);
+      ProducerUtil.populateDistance(product.producer, filter.location.center);
+      ProductUtil.populateFlags(product);
+    }
+  
+    if (filter.flags.openNow) {
+      products = products.filter((product) => product.flags.openNow);
+    }
+  
+    if (filter.location.distance != null) {
+      products = products.filter((product) =>
+        ProductFilterUtil.testLocationFilter(filter.location, product)
+      );
+    }
+  
+    if (filter.sortBy === 'distance') {
+      ArrayUtil.sortInPlaceBy(products, (x) => [
+        x.producer.distance ?? Infinity,
+        x.name,
+      ]);
+    }
+  
+    return products;
+  },
+  
 
   async getProducts(filter) {
     filter ??= ProductFilterUtil.defaultFilter()

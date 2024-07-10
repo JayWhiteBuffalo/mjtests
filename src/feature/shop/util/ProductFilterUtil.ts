@@ -23,6 +23,7 @@ const defaultFilter = Object.freeze({
   subspecies: {},
   terps: {},
   vendors: {},
+  producers: {},
   weight: [undefined, undefined],
 })
 
@@ -39,6 +40,8 @@ export const ProductFilterUtil = {
       filter,
       (key, value) => !ObjectUtil.equals(value, defaultFilter[key]),
     )
+    console.log("DIFF LOG ===================" + JSON.stringify(diff))
+    console.log("FILTER =======================" + JSON.stringify(filter))
     return ObjectUtil.isEmpty(diff)
   },
 
@@ -189,17 +192,51 @@ export const ProductFilterUtil = {
     ])
   },
 
-  flagsFromUrl(urlValue?: string): ProductFlagsFilter {
-    return urlValue != null
-      ? FlagObjectUtil.fromIterable(urlValue.split(','))
-      : {}
+  flagsFromUrl(urlValue?: string): FlagObject<string> {
+    if (!urlValue) {
+      return {};
+    }
+    
+    // Decode the URL value first
+    const decodedValue = decodeURIComponent(urlValue);
+  
+    // Split the decoded URL value by comma and trim whitespace
+    const values = decodedValue.split(',').map(value => value.trim());
+    
+    // Create a FlagObject with each value as key with value true
+    const flagObject: FlagObject<string> = {};
+    values.forEach(value => {
+      flagObject[value] = true;
+    });
+  
+    return flagObject;
   },
 
-  flagsToUrl(flags) {
-    const keys = [...Object.keys(flags)]
-    return keys.length !== 0
-      ? keys.toSorted().join(',').replace(' ', '+')
-      : undefined
+  
+  // flagsFromUrl(urlValue?: string): ProductFlagsFilter {
+  //   return urlValue != null
+  //     ? FlagObjectUtil.fromIterable(urlValue.split(','))
+  //     : {}
+  // },
+
+  // flagsToUrl(flags) {
+  //   const keys = [...Object.keys(flags)]
+  //   console.log("Keys" + JSON.stringify(keys))
+  //   return keys.length !== 0
+  //     ? keys.toSorted().join(',').replace(' ', ' ')
+  //     : undefined
+  // },
+
+flagsToUrl(flags) {
+    const keys = Object.keys(flags);
+  
+    // Sort keys alphabetically
+    keys.sort();
+  
+    // Join sorted keys into a comma-separated string
+    const queryString = keys.map(key => encodeURIComponent(key)).join(',');
+  
+    return queryString.length !== 0 ? queryString : undefined;
   },
 
   rangeFromUrl(urlValue) {

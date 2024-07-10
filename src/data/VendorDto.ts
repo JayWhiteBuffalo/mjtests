@@ -24,8 +24,7 @@ const VendorDto = {
   },
 
   async canEdit(user, vendorId) {
-    if (hasAdminPermission(user.roles) ||
-        hasOwnerPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)
+    if (hasAdminPermission(user.roles)
     ) {
       return true
     }

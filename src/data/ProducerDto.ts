@@ -22,7 +22,7 @@ const ProducerDto = {
   },
 
   async canEdit(user, producerId) {
-    if (hasAdminPermission(user.roles) || hasOwnerPermission(user.roles)) {
+    if (hasAdminPermission(user.roles)) {
       return true
     }
     const producer = await ProducerDto._getRaw(producerId)

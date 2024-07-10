@@ -2,6 +2,7 @@ import {Select, SelectItem} from '@nextui-org/react'
 import {useFormContext} from 'react-hook-form'
 
 export const DropdownAdapter = ({items, name, defaultValue, ...rest}) => {
+  console.log(defaultValue)
   const {register, watch} = useFormContext()
   const value = watch(name)
   const selectedKey = value || defaultValue || '';

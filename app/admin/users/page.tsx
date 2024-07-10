@@ -67,7 +67,7 @@ const Page = async ({user}) => {
     });
   }
 
-  return <UserTable users={users} userPermission={userPermission} />
+  return <UserTable currentUser = {user} users={users} userPermission={userPermission} />
   
 }
 
