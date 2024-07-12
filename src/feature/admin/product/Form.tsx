@@ -284,7 +284,16 @@ export const Form = ({
             {product.isDraft ? 'Submit for Review' : 'Save'}
           </Button>
         }
+
+        <Button
+            color="default"
+            onClick={() => window.location.href = '/admin/products'}
+          >
+            Cancel
+          </Button>
         </div>
+
+
 
         <hr className="my-4 border-gray-400" />
         <section>

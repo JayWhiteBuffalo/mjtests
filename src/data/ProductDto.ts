@@ -9,7 +9,7 @@ import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
 import {custom} from 'zod'
-import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer } from '@/util/Roles'
+import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer, hasEmployeePermission } from '@/util/Roles'
 import {ProducerUtil} from '@/util/ProducerUtil'
 
 const ProductDto = {
@@ -35,7 +35,7 @@ const ProductDto = {
     if (!product) {
       return false
     }
-    if (await VendorDto.canEdit(user, product.vendorId)) {
+    if (product.vendorId != null && await VendorDto.canEdit(user, product.vendorId)) {
       return true
     }
     return false

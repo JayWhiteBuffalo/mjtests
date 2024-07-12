@@ -29,14 +29,15 @@ const NameCell = ({ item: product }) => (
 )
 
 const ActionCell = ({ item: { id, isDraft }, isEmployee }) => {
-  if (!isDraft && isEmployee) {
+  if ( isEmployee) {
     return null;
-  }
+  } else {
   return (
     <BlueLink href={`/admin/products/${id}/edit`} className="font-medium">
       Edit
     </BlueLink>
   )
+}
 }
 
 const DeleteCell = ({ item: product }) => (
