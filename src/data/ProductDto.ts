@@ -59,6 +59,9 @@ const ProductDto = {
     if(hasAdminPermission(user.roles)) {
       return true;
     }
+    if(hasOwnerPermission(user.roles || hasManagerPermission(user.roles))){
+      return true;
+    }
     return false;
   },
 

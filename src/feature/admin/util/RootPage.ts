@@ -97,7 +97,8 @@ const pagesCanUse = {
     return hasAdminPermission(userPermission) ||
            isVendor(userPermission) ||
            isProducer(userPermission) ||
-           hasSalesPermission(userPermission)
+           hasSalesPermission(userPermission)||
+           hasManagerPermission(userPermission)
   },
 
   products: user => {

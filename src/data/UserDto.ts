@@ -53,7 +53,7 @@ const UserDto = {
   },
 
   async canDelete(user){ 
-    if (hasAdminPermission(user.roles)){
+    if (hasAdminPermission(user.roles) || hasOwnerPermission(user.roles)){
       return true;
     }
     return false;
