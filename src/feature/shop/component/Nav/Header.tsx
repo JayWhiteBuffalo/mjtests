@@ -4,8 +4,11 @@ import {Image} from '@nextui-org/react'
 import icon from '../../../../../app/icon.png'
 import { siteName } from '@/feature/shared/component/Site';
 import { Logo } from '@/feature/shared/component/Site';
+import {AvatarDropdown} from '@/feature/admin/component/Navbar'
 
-export const Header = () => {
+export const Header = ({user}) => {
+ console.log(user)
+
 
     return(
         <>
@@ -26,9 +29,14 @@ export const Header = () => {
                         </a>
                     </div> */}
                     <div>
-                        <a href='/auth'>
-                            <button>Subscriber Login</button>
-                        </a>
+                        {user.loggedIn ? (
+                                <AvatarDropdown user={user}/>
+                        ) : (                
+                            <a href='/auth'>
+                                <button className='px-6 py-2 border-1 border-black rounded-xl'>Login</button>
+                            </a>)
+                    }
+
                     </div>
                 </div>
             </div>
