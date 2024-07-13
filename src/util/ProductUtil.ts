@@ -90,12 +90,12 @@ export const ProductUtil = {
           return [terpene.name, terps[terpene.name]]
         }
 
-        const aliasValues = (terpene.aliases ?? [])
-          .map(name => terps[name])
-          .filter(x => x != null)
-        if (aliasValues.length !== 0) {
-          return [terpene.name, aliasValues[0]]
-        }
+        // const aliasValues = (terpene.aliases ?? [])
+        //   .map(name => terps[name])
+        //   .filter(x => x != null)
+        // if (aliasValues.length !== 0) {
+        //   return [terpene.name, aliasValues[0]]
+        // }
 
         const includeValues = (terpene.includes ?? [])
           .map(name => terps[name])
