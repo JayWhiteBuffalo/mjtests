@@ -425,7 +425,13 @@ const ProductListPane = ({filter, products, mode, setProductId}) => (
           <ProductList filter={filter} products={products} mode={mode} setProductId={setProductId} />
         ))
         .orPending(() => (
-          <div className="flex justify-center">
+          <div
+          className={clsx(
+            `ProductList ${mode}`,
+            ' w-full h-full min-h-max',
+            'productListLoadingPanel'
+            
+          )}>
             <Spinner size="xl" className="mt-6" />
           </div>
         ))}

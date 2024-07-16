@@ -42,6 +42,38 @@ export const FilteredProductStore = new (class extends FluxFieldStore {
   }
 })()
 
+// export const FilteredProducerStore = new (class extends FluxFieldStore {
+// constructor() {
+//   super({})
+//   this.fetcher = new SerialFetcher((filter, signal) => {
+//     const query = ProductFilterUtil.toQuery(filter)
+//     const url = UrlUtil.makeUrl('/api/producer', query)
+//     return fetch(url, {signal})
+//   })
+
+//   FilterStore.subscribe(this.notify.bind(this))
+// }
+
+// get() {
+//   const filter = FilterStore.get()
+//   if (!ObjectUtil.deepEquals(filter, this.value.filter)) {
+//     this.value = {filter, producers: Present.pend}
+
+//     if (typeof window !== 'undefined') {
+//       this.fetcher
+//         .fetch(filter)
+//         .then(jsonOnOk)
+//         .then(products =>
+//           this.set({filter, producers: Present.resolve(products)}),
+//         )
+//     }
+//   }
+
+//   return this.value.producers
+// }
+// })()
+
+
 export const FilteredVendorStore = new ComputedStore(
   [FilteredProductStore],
   productsPresent =>

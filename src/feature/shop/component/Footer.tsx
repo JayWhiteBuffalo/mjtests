@@ -18,7 +18,7 @@ export const FooterLink = ({href, children}) => (
 )
 
 export const FooterNav = () => (
-  <nav className="grid w-full justify-between px-6 py-8 gap-8 sm:flex sm:justify-between md:flex md:grid-cols-1">
+  <nav className="grid w-full justify-between px-6 py-8 gap-8 sm:flex sm:justify-between md:flex md:grid-cols-1 bg-lime-300">
     <Link href="/" className="flex flex-row self-start items-center mr-4">
       <Logo width={40} height={40} className="mr-1" />
       <div className="text-2xl text-gray-800 font-semibold dark:text-gray-white">
@@ -65,7 +65,7 @@ export const FooterIcon = ({href, Icon}) => (
 )
 
 export const FooterBar = () => (
-  <div className="w-full p-6 sm:flex sm:items-center sm:justify-between text-gray-500 dark:text-gray-400">
+  <div className="w-full p-6 sm:flex sm:items-center sm:justify-between text-gray-500 dark:text-gray-400 bg-lime-300">
     <FooterCopyright />
     <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center ">
       <FooterIcon href="#" Icon={BsFacebook} />

@@ -10,9 +10,20 @@
     flex-basis: 0;
     overflow-y: scroll;
   }
- 
-
 }
+
+.productListLoadingPanel{
+  border-radius: 15px;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+  text-align: center;
+  &.isLoading{
+
+  }
+}
+
 
 .ProductList {
   position: relative;

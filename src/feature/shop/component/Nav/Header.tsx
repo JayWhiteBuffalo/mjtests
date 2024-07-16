@@ -12,7 +12,7 @@ export const Header = ({user}) => {
 
     return(
         <>
-        <section className='mb-10 h-28  shadow-lg'>
+        <section className=' h-28  shadow-lg'>
             <div className='flex justify-around items-center bg-lime-300 gap-4 p-6 shadow-lg'>
                 <div className='logo'>
                 <Link href="/" className="flex flex-row self-start items-center mr-4">
@@ -23,11 +23,14 @@ export const Header = ({user}) => {
                 </Link>
                 </div>
                 <div className='w-1/2 flex gap-24 justify-end items-center p-4 text-xl leading-loose'>
-                    {/* <div>
-                        <a href={"/"}>
+                    <div>
+                        <a href={"/contact"}>
                             Contact
                         </a>
-                    </div> */}
+                    </div>
+                    <div>
+                        <Link href="/location">Pick a State</Link>
+                    </div>
                     <div>
                         {user.loggedIn ? (
                                 <AvatarDropdown user={user}/>
