@@ -23,6 +23,7 @@ import {DropdownAdapter} from '@/feature/shared/component/DropdownAdapter'
 import {AutocompleteAdapter} from '@/feature/shared/component/AutocompleteAdapter'
 import {PriceListInput} from '@/feature/admin/product/PriceListInput'
 import { useState } from 'react'
+import {isProducer} from '@/util/Roles'
 
 const BrandTypeaheadStore = new TypeaheadStore('brand')
 const CultivarTypeaheadStore = new TypeaheadStore('cultivar')
@@ -38,7 +39,8 @@ export const Form = ({
   isEmployee,
   publish,
   saveDraft,
-  submitForReview, 
+  submitForReview,
+  user 
 }) => {
   const methods = useForm({
     resolver: nullResolver(),
@@ -119,6 +121,7 @@ export const Form = ({
             />
           </FieldLayout>
 
+        {!isProducer &&
           <FieldLayout label="Brand" error={errors.brand}>
             <AutocompleteAdapter
               allowsCustomValue
@@ -126,6 +129,7 @@ export const Form = ({
               TypeaheadStore={BrandTypeaheadStore}
             />
           </FieldLayout>
+        }
         </section>
 
         <section>
@@ -284,7 +288,16 @@ export const Form = ({
             {product.isDraft ? 'Submit for Review' : 'Save'}
           </Button>
         }
+
+        <Button
+            color="default"
+            onClick={() => window.location.href = '/admin/products'}
+          >
+            Cancel
+          </Button>
         </div>
+
+
 
         <hr className="my-4 border-gray-400" />
         <section>

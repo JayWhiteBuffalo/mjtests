@@ -79,7 +79,7 @@ export const canUseAdmin = user => {
 
 const pagesCanUse = {
   apply: user => {
-    if (user.loggedIn ) {
+    if (user.loggedIn && !hasPermission(user.roles, Permission.VENDOR_EMPLOYEE) ) {
       return true
     }
     return false
@@ -97,7 +97,8 @@ const pagesCanUse = {
     return hasAdminPermission(userPermission) ||
            isVendor(userPermission) ||
            isProducer(userPermission) ||
-           hasSalesPermission(userPermission)
+           hasSalesPermission(userPermission)||
+           hasManagerPermission(userPermission)
   },
 
   products: user => {

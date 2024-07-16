@@ -19,6 +19,7 @@ const deleteUser = async (userId) => {
       window.location.reload();
     } else {
       console.error('Failed to delete user');
+      console.error(response)
     }
   } catch (error) {
     console.error('Error deleting user:', error);
@@ -67,8 +68,8 @@ export const UserTable = ({ users, userPermission, currentUser }) => {
     { key: 'name', label: 'Name', Cell: NameCell },
     { key: 'email', label: 'Email' },
     { key: 'roles', label: 'Roles', Cell: RolesCell },
-    { key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell },
-    { key: 'delete', HeaderCell: ActionHeaderCell, Cell: (props) => <DeleteCell {...props} currentUser={currentUser} onDelete={onDeleteUser} /> },
+    // { key: 'action', HeaderCell: ActionHeaderCell, Cell: ActionCell },
+    { key: 'delete', HeaderCell: ActionHeaderCell, Cell: (props) => <DeleteCell {...props} currentUser={currentUser} onDelete={deleteUser} /> },
   ])
 
   return (

@@ -1,42 +1,43 @@
 'use client'
 import Link from 'next/link'
-import {BlueLink} from '@/feature/shared/component/Link'
-import {Button} from '@nextui-org/react'
-import {TMTable, ActionHeaderCell, makeColumns} from '@/feature/shared/component/Table'
+import { BlueLink } from '@/feature/shared/component/Link'
+import { Button } from '@nextui-org/react'
+import { TMTable, ActionHeaderCell, makeColumns } from '@/feature/shared/component/Table'
 
 const deleteProduct = async (product) => {
   try {
-        const response = await fetch(`/api/products/${product.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-    
-        if (response.ok) {
-          console.log('Product deleted successfully');
-          window.location.reload();
-        } else {
-          console.error('Failed to delete product');
-        }
-      } catch (error) {
-        console.error('Error deleting product:', error);
-      }
-  }
+    const response = await fetch(`/api/products/${product.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-const NameCell = ({item: product}) => (
+    if (response.ok) {
+      console.log('Product deleted successfully');
+      window.location.reload();
+    } else {
+      console.error('Failed to delete product');
+    }
+  } catch (error) {
+    console.error('Error deleting product:', error);
+  }
+}
+
+const NameCell = ({ item: product }) => (
   <BlueLink href={`/admin/products/${product.id}`}>{product.name}</BlueLink>
 )
 
-const ActionCell = ({item: {id, isDraft}, isEmployee}) => {
-  if(!isDraft && isEmployee){
+const ActionCell = ({ item: { id, isDraft }, isEmployee }) => {
+  if ( isEmployee) {
     return null;
-  }
-  return(
-  <BlueLink href={`/admin/products/${id}/edit`} className="font-medium">
-    Edit
-  </BlueLink>
+  } else {
+  return (
+    <BlueLink href={`/admin/products/${id}/edit`} className="font-medium">
+      Edit
+    </BlueLink>
   )
+}
 }
 
 const DeleteCell = ({ item: product }) => (
@@ -61,14 +62,14 @@ const ActionBar = () => (
   </div>
 )
 
-export const ProductTable = ({products, canEdit, isEmployee}) => {
+export const ProductTable = ({ products, canEdit, isEmployee }) => {
   const columns = makeColumns([
-    {key: 'name', label: 'Name', Cell: NameCell},
-    {key: 'vendor.name', label: 'Vendor'},
-    {key: 'productType', label: 'Product Type'},
-    {key: 'isDraft', label: 'Status', Cell: StatusCell},
+    { key: 'name', label: 'Name', Cell: NameCell },
+    { key: 'vendor.name', label: 'Vendor' },
+    { key: 'productType', label: 'Product Type' },
+    { key: 'isDraft', label: 'Status', Cell: StatusCell },
     { key: 'action', HeaderCell: ActionHeaderCell, Cell: ({ item }) => <ActionCell item={item} isEmployee={isEmployee} /> },
-    ...(canEdit ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : []),
+    ...(canEdit ? [{ key: 'actions', label: 'Actions', Cell: DeleteCell }] : []),
   ])
 
   return (
@@ -83,14 +84,14 @@ export const ProductTable = ({products, canEdit, isEmployee}) => {
   )
 }
 
-export const PendingTable = ({pendingProducts, canEdit, isEmployee}) => {
+export const PendingTable = ({ pendingProducts, canEdit, isEmployee }) => {
   const columns = makeColumns([
-    {key: 'name', label: 'Name', Cell: NameCell},
-    {key: 'vendor.name', label: 'Vendor'},
-    {key: 'productType', label: 'Product Type'},
-    {key: 'isDraft', label: 'Status', Cell: StatusCell},
+    { key: 'name', label: 'Name', Cell: NameCell },
+    { key: 'vendor.name', label: 'Vendor' },
+    { key: 'productType', label: 'Product Type' },
+    { key: 'isDraft', label: 'Status', Cell: StatusCell },
     { key: 'action', HeaderCell: ActionHeaderCell, Cell: ({ item }) => <ActionCell item={item} isEmployee={isEmployee} /> },
-    ...(canEdit ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : []),
+    ...(canEdit ? [{ key: 'actions', label: 'Actions', Cell: DeleteCell }] : []),
   ])
 
   return (
@@ -105,14 +106,14 @@ export const PendingTable = ({pendingProducts, canEdit, isEmployee}) => {
   )
 }
 
-export const PublishedTable = ({publishedProducts, canEdit, isEmployee}) => {
+export const PublishedTable = ({ publishedProducts, canEdit, isEmployee }) => {
   const columns = makeColumns([
-    {key: 'name', label: 'Name', Cell: NameCell},
-    {key: 'vendor.name', label: 'Vendor'},
-    {key: 'productType', label: 'Product Type'},
-    {key: 'isDraft', label: 'Status', Cell: StatusCell},
+    { key: 'name', label: 'Name', Cell: NameCell },
+    { key: 'vendor.name', label: 'Vendor' },
+    { key: 'productType', label: 'Product Type' },
+    { key: 'isDraft', label: 'Status', Cell: StatusCell },
     { key: 'action', HeaderCell: ActionHeaderCell, Cell: ({ item }) => <ActionCell item={item} isEmployee={isEmployee} /> },
-    ...(canEdit ? [{key: 'actions', label: 'Actions', Cell: DeleteCell}] : []),
+    ...(canEdit ? [{ key: 'actions', label: 'Actions', Cell: DeleteCell }] : []),
   ])
 
   return (
@@ -126,8 +127,3 @@ export const PublishedTable = ({publishedProducts, canEdit, isEmployee}) => {
     </>
   )
 }
-
-
-
-
-

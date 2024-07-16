@@ -1,3 +1,4 @@
+import {name} from '@cloudinary/url-gen/actions/namedTransformation'
 import ObjectUtil from '@util/ObjectUtil'
 import StringUtil from '@util/StringUtil'
 
@@ -146,6 +147,41 @@ https://cannacon.org/15-terpenes-cannabis-explained/
 */
 const terpenes = [
   {
+    name: 'aromadendrene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'α-bergamotene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'β-bergamotene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'trans-bergamotene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'bisabolene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
     name: 'bisabolol',
     color: '#63C5DA',
     properties: ['anti-inflammatory', 'anti-irritant', 'anti-microbial'],
@@ -159,10 +195,24 @@ const terpenes = [
     scents: 'mint',
   },
   {
+    name: 'cadinene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
     name: 'camphene',
     color: '#4CB043',
     properties: ['anti-oxidant', 'skin leision'],
     scents: 'fir needles, musky earth',
+  },
+  {
+    name: 'camphor',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
   },
   {
     name: 'caryophyllene',
@@ -173,10 +223,45 @@ const terpenes = [
     includes: ['caryophyllene oxide'],
   },
   {
+    name: 'citral',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
     name: 'delta 3-carene',
     color: '#B1560F',
     properties: ['anti-inflammatory', 'bone stimulant'],
     scents: 'pine, rosemary',
+  },
+  {
+    name: 'cedrene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'cedrol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'citronellol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'cymene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
   },
   {
     name: 'eucalyptol',
@@ -185,10 +270,101 @@ const terpenes = [
     scents: 'mint',
   },
   {
+    name: 'eudesmoi',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'eugenoi',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'a-famesene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'famesene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'a-fenchol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'fenchol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'endo-fenchol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'exo-fenchol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'fenchyl alcohol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
     name: 'geraniol',
     color: '#E4A0F7',
     properties: ['anti-cancer', 'anti-oxidant', 'neuroprotectant'],
     scents: 'peach, rose grass',
+  },
+  {
+    name: 'geranyl acetate',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'germacrene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'guaiol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'hexyl hexancate',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
   },
   {
     name: 'humulene',
@@ -196,6 +372,19 @@ const terpenes = [
     properties: ['anti-bacterial', 'anti-inflammatory', 'anti-tumor effects'],
     scents: 'earthy',
     aliases: ['α-humulene', 'α-caryophyllene'],
+  },
+  {
+    name: 'isoborneol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'isopulegol',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
   },
   {
     name: 'limonene',
@@ -216,11 +405,53 @@ const terpenes = [
     scents: 'floral',
   },
   {
+    name: 'menthol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
     name: 'myrcene',
     color: '#6F2DA8',
     properties: ['relaxing', 'sedating'],
     scents: 'citrus, cloves',
     aliases: ['β-myrcene'],
+  },
+  {
+    name: 'nerol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'nerolidol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'ocimene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'octanol',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'phellandrene',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
   },
   {
     name: 'pinene',
@@ -236,6 +467,31 @@ const terpenes = [
     scents: 'balsamic, floral',
   },
   {
+    name: 'pulegone',
+    color: 'green',
+    properties: [ '' ],
+    scents: '',
+    aliases: ' ',
+  },
+  {
+    name: 'sabinene',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
+  },
+  {
+    name: 'santalene',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
+  },
+  {
+    name: 'selinadienes',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
+  },
+  {
     name: 'terpinene',
     color: '#6F2DA8',
     properties: [
@@ -246,6 +502,24 @@ const terpenes = [
     ],
     scents: 'smokey, woody',
     aliases: ['δ-terpinene', 'terpinolene'],
+  },
+  {
+    name: 'terpinen',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
+  },
+  {
+    name: 'terpineol',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
+  },
+  {
+    name: 'thujene',
+    color: '#3944BC',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
   },
   {
     name: 'nerolidol',
@@ -273,12 +547,6 @@ const terpenes = [
     scents: 'wood, pine, rose, fruit',
   },
   {
-    name: 'isopulegol',
-    color: '#3944BC',
-    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
-    scents: 'wood, pine, rose, fruit',
-  },
-  {
     name: 'beta-ocimene',
     color: '#3DED97',
     properties: ['anti-inflammatory', 'decongestant', 'causes coughing'],
@@ -290,6 +558,12 @@ const terpenes = [
   },
   {
     name: 'γ-terpinene',
+  },
+  {
+    name: 'ylangene',
+    color: 'green',
+    properties: ['anti-anxiety', 'anti-convulsant', 'gastoprotective'],
+    scents: 'wood, pine, rose, fruit',
   },
 ]
 

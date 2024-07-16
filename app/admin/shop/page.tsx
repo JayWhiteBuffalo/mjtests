@@ -4,7 +4,7 @@ import {redirect} from 'next/navigation'
 
 export const getRoute = async params => [
   ...(await getParentRoute(params)),
-  getRootPageRouteItem('shop'),
+  getRootPageRouteItem('/'),
 ]
 
 export default () => redirect('/')

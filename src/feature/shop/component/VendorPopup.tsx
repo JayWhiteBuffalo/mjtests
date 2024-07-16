@@ -136,12 +136,16 @@ const VendorHours = ({schedule}) => {
 }
 
 export const VendorRating = ({rating}) => (
+  <>
+  {rating && 
   <div className="flex items-center">
     <Rating value={rating.average} fractions={10} readOnly />
     <p className="ml-2">
       {rating.average.toFixed(1)}/5 ({rating.count} reviews)
     </p>
   </div>
+  }
+  </>
 )
 
 export const VendorPopupContent = ({vendor}) => {

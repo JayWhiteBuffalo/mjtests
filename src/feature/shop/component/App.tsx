@@ -56,7 +56,7 @@ const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({ layout }) => {
+const App = ({ user, layout }) => {
   return(
   <main
     className={clsx(
@@ -65,7 +65,7 @@ const App = ({ layout }) => {
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
-    <Header/>
+    <Header user={user}/>
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
     <section className='w-full h-full flex p-10'>
@@ -79,7 +79,7 @@ const App = ({ layout }) => {
 )
 }
 
-export const AppContainer = ({initial}) => {
+export const AppContainer = ({user, initial}) => {
 
   const [producerToggle, setProducerToggle] = useState(true)
 
@@ -121,5 +121,5 @@ export const AppContainer = ({initial}) => {
   }, [onPopState])
 
   const layout = useFluxStore(LayoutStore)
-  return <App layout={layout} />
+  return <App user={user} layout={layout} />
 }
