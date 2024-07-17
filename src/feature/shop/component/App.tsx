@@ -44,7 +44,7 @@ const AnimatedPane = ({open, className, children}) => {
   )
 }
 
-const FilterPaneWrapper = ({layout}) => (
+export const FilterPaneWrapper = ({layout}) => (
   <AnimatedPane
     className={clsx(
       'FilterPaneWrapper flex-1',
@@ -65,7 +65,7 @@ const App = ({ user, layout }) => {
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
-    <Header user={user}/>
+    {/* <Header user={user}/> */}
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
     <section className='w-full h-full flex p-10'>
@@ -74,7 +74,7 @@ const App = ({ user, layout }) => {
       </div>
     <ProductListPaneContainer />
     </section>
-    <ShopFooter />
+    {/* <ShopFooter /> */}
   </main>
 )
 }
