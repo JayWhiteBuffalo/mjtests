@@ -33,7 +33,10 @@ export const Header = ({user}) => {
                     </div>
                     <div>
                         {user.loggedIn ? (
-                                <AvatarDropdown user={user}/>
+                            <div className='flex gap-4'>                               
+                             <AvatarDropdown user={user}/>
+                             <span>{user.name}</span>
+                            </div>
                         ) : (                
                             <a href='/auth'>
                                 <button className='px-6 py-2 border-1 border-black rounded-xl'>Login</button>
