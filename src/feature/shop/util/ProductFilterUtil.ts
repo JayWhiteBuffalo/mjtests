@@ -40,8 +40,6 @@ export const ProductFilterUtil = {
       filter,
       (key, value) => !ObjectUtil.equals(value, defaultFilter[key]),
     )
-    console.log("DIFF LOG ===================" + JSON.stringify(diff))
-    console.log("FILTER =======================" + JSON.stringify(filter))
     return ObjectUtil.isEmpty(diff)
   },
 

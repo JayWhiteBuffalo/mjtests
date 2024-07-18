@@ -8,7 +8,7 @@ import {useFluxStore} from '@/state/Flux'
 import {VendorSchedule} from '@util/VendorSchedule'
 import {VendorStore} from '@feature/shop/state/DataStore'
 
-const VendorLocation = ({location}) => (
+export const VendorLocation = ({location}) => (
   <address className="VendorPopupLocation">
     {location.address ? (
       <div className="whitespace-pre-line">{location.address}</div>
@@ -16,7 +16,7 @@ const VendorLocation = ({location}) => (
   </address>
 )
 
-const VendorOperatingStatus = ({status}) => {
+export const VendorOperatingStatus = ({status}) => {
   if (status === 'permanentlyClosed') {
     return <div className="text-red-800 font-bold">Permanently Closed</div>
   } else if (status === 'temporarilyClosed') {
@@ -25,7 +25,7 @@ const VendorOperatingStatus = ({status}) => {
     return undefined
   }
 }
-const formatPhone = tel => {
+export const formatPhone = tel => {
   if (tel.startsWith('+1')) {
     return `(${tel.substring(2, 5)}) ${tel.substring(5, 8)}-${tel.substring(8, 12)}`
   } else {
@@ -50,7 +50,7 @@ export const PhoneLink = ({tel}) => (
   </BlueExternalLink>
 )
 
-const VendorContact = ({contact}) => (
+export const VendorContact = ({contact}) => (
   <div className="flex justify-between">
     {contact.url ? <VendorWebsite url={contact.url} /> : undefined}
     {contact.tel ? <PhoneLink tel={contact.tel} /> : undefined}
@@ -97,7 +97,7 @@ export const OpenStatus = ({status}) => {
   }
 }
 
-const VendorHours = ({schedule}) => {
+export const VendorHours = ({schedule, display}) => {
   const nowDayOfWeek = new Date().getDay()
 
   const lines = VendorSchedule.getCurrentWeek(schedule).map(
@@ -122,6 +122,8 @@ const VendorHours = ({schedule}) => {
 
   return (
     <>
+    {display != "row" ? (
+    <>
       <div className="font-bold">Store Hours</div>
       <dl
         className="grid mb-1 leading-tight"
@@ -131,6 +133,22 @@ const VendorHours = ({schedule}) => {
       >
         {lines}
       </dl>
+      </>
+      ): (
+        <>
+        <div className="font-bold">Store Hours</div>
+          <div className='flex items-center justify-evenly'>
+            <dl
+              className="grid mb-1 leading-tight"
+              style={{
+                gridTemplateColumns: '300px 1fr',
+              }}
+            >
+              {lines}
+            </dl>
+          </div>
+        </>
+      )}
     </>
   )
 }

@@ -435,13 +435,6 @@ const SearchBar = () => (
         <ProductListModeSelectorContainer />
       </ErrorBoundary>
     </search>
-    {/* <div className="SearchBarRight flex flex-wrap  gap-4 w-1/2">
-      <ErrorBoundary>
-        <SortDropdownContainer />
-        <ToggleFilterPaneContainer />
-        <ProductListModeSelectorContainer />
-      </ErrorBoundary>
-    </div> */}
   </div>
 )
 

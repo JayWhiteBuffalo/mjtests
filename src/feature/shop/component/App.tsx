@@ -16,6 +16,7 @@ import {usePathname} from 'next/navigation'
 import {Header} from '@/feature/shop/component/Nav/Header'
 import {useRef, useCallback, useState, useEffect} from 'react'
 import ProductDto from '@/data/ProductDto'
+import {VendorListPaneContainer} from '@/feature/shop/component/VendorList'
 
 const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
@@ -44,7 +45,7 @@ const AnimatedPane = ({open, className, children}) => {
   )
 }
 
-export const FilterPaneWrapper = ({layout}) => (
+const FilterPaneWrapper = ({layout}) => (
   <AnimatedPane
     className={clsx(
       'FilterPaneWrapper flex-1',
@@ -56,7 +57,7 @@ export const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({ user, layout }) => {
+const App = ({ user, layout, toggle }) => {
   return(
   <main
     className={clsx(
@@ -65,23 +66,29 @@ const App = ({ user, layout }) => {
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
-    {/* <Header user={user}/> */}
+    {/* <Header  user={user}/> */}
+    
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
     <SearchBarContainer />
     <section className='w-full h-full flex p-10'>
       <div className='relative flex justify-center items-center w-1/3 h-full'>
         <FilterPaneWrapper layout={layout} />
       </div>
+      {toggle === "default" &&
     <ProductListPaneContainer />
+    }
+    {toggle === "vendors" &&
+      <FilterPaneWrapper layout={layout} />
+    }
     </section>
-    {/* <ShopFooter /> */}
+    <ShopFooter />
   </main>
 )
 }
 
 export const AppContainer = ({user, initial}) => {
 
-  const [producerToggle, setProducerToggle] = useState(true)
+  const [toggle, setToggle] = useState("default")
 
   const pathname = usePathname()
 
@@ -121,5 +128,5 @@ export const AppContainer = ({user, initial}) => {
   }, [onPopState])
 
   const layout = useFluxStore(LayoutStore)
-  return <App user={user} layout={layout} />
+  return <App user={user} layout={layout} toggle={toggle} />
 }

@@ -114,7 +114,6 @@ export class Dispatcher {
     if (typeof actionFn === 'function') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((window as any).logFluxAction !== false) {
-        console.info(action)
       }
       actionFn(action)
     } else {
