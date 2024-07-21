@@ -7,8 +7,6 @@ import { Logo } from '@/feature/shared/component/Site';
 import {AvatarDropdown} from '@/feature/admin/component/Navbar'
 
 export const Header = ({user}) => {
- console.log(user)
-
 
     return(
         <>

@@ -8,9 +8,7 @@ import {useFluxStore, dispatch} from '@/state/Flux'
 import {GiPathDistance} from 'react-icons/gi'
 import {
   HiOutlineChevronDoubleUp,
-  HiOutlineChevronDoubleDown,
-  HiOutlineChevronDown,
-  HiLocationMarker,
+  HiOutlineChevronDown
 } from 'react-icons/hi'
 import {LocationTypeaheadStore} from '@feature/shop/state/DataStore'
 import {TbSortAscendingLetters} from 'react-icons/tb'
@@ -424,10 +422,22 @@ const MapKeywordContainer = () => {
   )
 }
 
-const SearchBar = () => (
+const VendorPanelToggle = (setToggle) => {
+
+  
+
+  return (
+    <button onClick={()=>{setToggle('vendors')}} className=" px-4 shadow-neu flex-1 basis-40 neu-input">
+      Vendors
+    </button>
+  )
+}
+
+const SearchBar = (setToggle) => (
   <div className="searchBarCont">
     <search className="flex flex-wrap gap-4 ">
       <ErrorBoundary>
+        <VendorPanelToggle setToggle={setToggle}/>
         <FilterKeywordContainer />
         <MapKeywordContainer />
         <SortDropdownContainer />

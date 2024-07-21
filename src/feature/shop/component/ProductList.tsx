@@ -370,7 +370,8 @@ export const ProductItem = ({product, mode, setProductId}: {
   )
 }
 
-const ProductList = ({filter, products, mode, setProductId}: {
+export const 
+ ProductList = ({filter, products, mode, setProductId}: {
   filter: ProductFilter
   products: Product[]
   mode: ProductListMode
@@ -412,7 +413,7 @@ const ProductList = ({filter, products, mode, setProductId}: {
 )
 }
 
-const ProductListPane = ({filter, products, mode, setProductId}) => (
+export const ProductListPane = ({filter, products, mode, setProductId}) => (
   <div
     className={clsx(
       'ProductListPane flex-1 basis-[400px]',

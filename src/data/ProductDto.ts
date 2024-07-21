@@ -72,6 +72,7 @@ const ProductDto = {
     })
   },
 
+
   async getProducerProducts(filter) {
     filter ??= ProductFilterUtil.defaultFilter();
     // Modify the filter to include producerId check
@@ -290,11 +291,25 @@ const ProductDto = {
     });
   
     return draftProducts;
-  }
-  
-  
+  },
 
+async getProductsByVendorId(vendor) {
+  console.log(vendor)
+  const products = await ProductDto.findMany({
+    where: { vendorId: vendor.id}
+
+  })
+    return products;
+  },
 }
+// async function getProductsByVendorId(vendorId: string) {
+//   const options = {
+//     where: {
+//       vendorId,
+//     },
+//   };
+// }
+
 
 
 

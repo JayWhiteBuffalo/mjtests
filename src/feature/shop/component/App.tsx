@@ -57,7 +57,7 @@ const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({ user, layout, toggle }) => {
+const App = ({ user, layout, toggle,setToggle }) => {
   return(
   <main
     className={clsx(
@@ -69,16 +69,16 @@ const App = ({ user, layout, toggle }) => {
     {/* <Header  user={user}/> */}
     
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
-    <SearchBarContainer />
+    <SearchBarContainer setToggle={setToggle} />
     <section className='w-full h-full flex p-10'>
       <div className='relative flex justify-center items-center w-1/3 h-full'>
         <FilterPaneWrapper layout={layout} />
       </div>
       {toggle === "default" &&
-    <ProductListPaneContainer />
-    }
+        <ProductListPaneContainer />
+      }
     {toggle === "vendors" &&
-      <FilterPaneWrapper layout={layout} />
+      <VendorListPaneContainer />
     }
     </section>
     <ShopFooter />
@@ -88,7 +88,7 @@ const App = ({ user, layout, toggle }) => {
 
 export const AppContainer = ({user, initial}) => {
 
-  const [toggle, setToggle] = useState("default")
+  const [toggle, setToggle] = useState("vendors")
 
   const pathname = usePathname()
 
@@ -128,5 +128,5 @@ export const AppContainer = ({user, initial}) => {
   }, [onPopState])
 
   const layout = useFluxStore(LayoutStore)
-  return <App user={user} layout={layout} toggle={toggle} />
+  return <App user={user} layout={layout} toggle={toggle} setToggle={setToggle} />
 }

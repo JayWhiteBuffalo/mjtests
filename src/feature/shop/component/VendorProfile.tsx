@@ -4,10 +4,16 @@ import {OpenStatus, VendorContact, VendorHours, VendorOperatingStatus, VendorRat
 import {VendorSchedule} from '@util/VendorSchedule'
 import type {Vendor} from '@prisma/client'
 import icon from '@/public/icon.png'
+import {useEffect} from 'react'
+import {ProductItem, ProductList, ProductListPane} from '@/feature/shop/component/ProductList'
+import {ErrorBoundary} from 'react-error-boundary'
+import clsx from 'clsx'
 
 
-export const VendorProfile = ({vendor}) => {
+export const VendorProfile = ({vendor, products}) => {
 
+console.log("Products + ++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + JSON.stringify(products))
+let mode = 'full'
 
   if (!vendor) {
     return <div>Vendor not found</div>;
@@ -15,7 +21,7 @@ export const VendorProfile = ({vendor}) => {
 
   return (
     <>
-      <main className='w-full max-h-screen flex flex-col gap-4'>
+      <main className='w-full flex flex-col gap-4'>
         <header className='w-full flex justify-center items-center'>
           <h1 className='border-1 border-black w-5/6 p-4 text-center'>
             {vendor.name || 'Vendor name Unavailable'}
@@ -120,11 +126,24 @@ export const VendorProfile = ({vendor}) => {
           <div className='w-full flex justify-center items-center'>
             <h2 className='border-1 border-black w-5/6 p-4 text-center'>Current Menu</h2>
           </div>
-          <div className='w-full flex justify-center items-center'>
-            <h3 className='w-5/6 p-4 text-center'> Search found # results, showing # on this page</h3>
-          </div>
-          <div>
-            <span> Product Cards Here </span>
+          <div className='w-full flex flex-co justify-center items-center'>
+            <ul
+              className={clsx(
+                `ProductList ${mode}`,
+                'grid p-2 min-h-0 justify-center relative',
+                mode === 'full' ? 'gap-3' : undefined,
+              )}
+            >
+              {products.map(product => (
+                <>
+                {product.id &&
+                <ErrorBoundary key={product.id}>
+                  <ProductItem mode={mode} product={product}/>
+                </ErrorBoundary>
+                }
+                </>
+              ))}
+            </ul>
           </div>
         </section>
       </main>

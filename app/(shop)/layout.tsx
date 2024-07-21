@@ -17,8 +17,10 @@ const Layout = ({children}) =>
   <main className='relative mt-16'>
     {children}
   </main>
-  <FooterNav/>
-  <FooterBar/>
+  <section className='relative'>
+    <FooterNav/>
+    <FooterBar/>
+  </section>
 </Providers>
 
 export default Layout
