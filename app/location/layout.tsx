@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'The biggest weed market in Oklahoma',
 }
 
-const user = await UserDto.getCurrent(); // Ensure this works with async if necessary
+const user = UserDto.getCurrent();
 
 const Layout = ({children}) => 
 <Providers>

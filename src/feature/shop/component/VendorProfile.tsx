@@ -13,7 +13,7 @@ import clsx from 'clsx'
 export const VendorProfile = ({vendor, products}) => {
 
 console.log("Products + ++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + JSON.stringify(products))
-let mode = 'full'
+const mode = 'full'
 
   if (!vendor) {
     return <div>Vendor not found</div>;
@@ -138,7 +138,7 @@ let mode = 'full'
                 <>
                 {product.id &&
                 <ErrorBoundary key={product.id}>
-                  <ProductItem mode={mode} product={product}/>
+                  <ProductItem mode={mode} product={product} setProductId={setProductId}/>
                 </ErrorBoundary>
                 }
                 </>

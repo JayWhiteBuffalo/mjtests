@@ -41,7 +41,7 @@ import {
   VendorHours,
   VendorContact,
 } from './VendorPopup'
-import {type Product, type Vendor} from '@prisma/client'
+import {type Producer, type Product, type Vendor} from '@prisma/client'
 import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
 import TerpsDetails from '@/feature/shop/component/TerpDetails'
@@ -56,16 +56,16 @@ const emDash = '—'
 
 
 
-const VendorNameButton = ({vendor}: {
-  vendor: Vendor
+const ProducerNameButton = ({producer}: {
+  producer: Producer
 }) => (
   <Popover placement="top" shouldCloseOnInteractOutside={() => true}>
     <PopoverTrigger>
-      <BlueButton>{vendor.name}</BlueButton>
+      <BlueButton>{producer.name}</BlueButton>
     </PopoverTrigger>
     <PopoverContent>
       <ErrorBoundary>
-        <VendorPopupContentContainer vendorId={vendor.id} />
+        <VendorPopupContentContainer producerId={producer.id} />
       </ErrorBoundary>
     </PopoverContent>
   </Popover>
@@ -73,8 +73,8 @@ const VendorNameButton = ({vendor}: {
 
 
 
-export const VendorItem = ({vendor, mode}: {
-    vendor: Vendor
+export const ProducerItem = ({producer, mode}: {
+    producer: Producer
   mode: ProductListMode
 }) => {
 
@@ -89,7 +89,7 @@ export const VendorItem = ({vendor, mode}: {
       <div className=''>
             <div  className='grid grid-cols-4  '>
                 <div className='col-span-1 '>
-                    {vendor.mainImageRefId ? (
+                    {producer.mainImageRefId ? (
                         <div
                             className={clsx(
                                 'relative',
@@ -97,10 +97,10 @@ export const VendorItem = ({vendor, mode}: {
                             )}
                             >
                             <Image
-                                alt="Vendor"
+                                alt="Producer"
                                 className="mx-auto object-contain"
                                 fill={true}
-                                publicId={vendor.mainImageRefId}
+                                publicId={producer.mainImageRefId}
                                 sizes="360px"
                             />
                         </div>
@@ -124,26 +124,26 @@ export const VendorItem = ({vendor, mode}: {
 
                 <div className='col-span-3 grid grid-row-2 w-full text-large'>
                     <div className='flex flex-col gap-1 p-4 '>
-                    {mode === 'full' && vendor.name ? (
-                        <h1 className='text-3xl'>{vendor.name}</h1>
+                    {mode === 'full' && producer.name ? (
+                        <h1 className='text-3xl'>{producer.name}</h1>
                     ) : undefined}
 
                                 
-                    {mode === 'full' && vendor.rating ? (
-                            <VendorRating rating={vendor.rating} />
-                        ) : undefined}
+                    {/* {mode === 'full' && producer.rating ? (
+                            <ProducerRating rating={producer.rating} />
+                        ) : undefined} */}
 
-                    {vendor.contact ? <VendorContact contact={vendor.contact} /> : undefined}
+                    {/* {producer.contact ? <ProducerContact contact={producer.contact} /> : undefined} */}
 
-                    {mode == 'full' && vendor.location ? (
-                        <span>{vendor.location.address}</span>
-                    ) : undefined}
+                    {/* {mode == 'full' && producer.location ? (
+                        <span>{producer.location.address}</span>
+                    ) : undefined} */}
                     {/* 
                         {mode == 'full' && vendor.operatingStatus ? (
                         <span>{vendor.operatingStatus}</span>
                     ) : undefined} */}
                             <div>
-                                <Link href={`/vendors/${vendor.id}`}>
+                                <Link href={`/producers/${producer.id}`}>
                                 Details
                                 </Link>
                             </div>
@@ -152,9 +152,9 @@ export const VendorItem = ({vendor, mode}: {
                     <div>
 
                     {/* {vendor.rating ? <VendorRating rating={vendor.rating} /> : undefined} */}
-                    {VendorSchedule.hasSchedule(vendor.schedule) ? (
+                    {/* {VendorSchedule.hasSchedule(vendor.schedule) ? (
                     <VendorHours display="row" schedule={vendor.schedule} />
-                    ) : undefined}
+                    ) : undefined} */}
                     </div>
 
                 </div>
@@ -178,19 +178,22 @@ export const VendorItem = ({vendor, mode}: {
   )
 }
 
-const VendorList = ({filter, vendors, mode} : {
+const ProducerList = ({filter, producers, mode} : {
   filter: ProductFilter
-  vendors: Vendor[]
+  producers: Producer[]
   mode: ProductListMode
 
 
+
 }) => {
+    
+  console.log(producers)
   return(
   <>
-    {vendors.length !== 0 ? (
+    {producers.length !== 0 ? (
       <p>
-        {vendors.length}
-        {vendors.length === 1 ? 'vendor ' : 'vendors '}
+        {producers.length}
+        {producers.length === 1 ? 'producer ' : 'producers '}
         match your filter criteria
       </p>
     ) : undefined}
@@ -201,17 +204,17 @@ const VendorList = ({filter, vendors, mode} : {
         mode === 'full' ? 'gap-3' : undefined,
       )}
     >
-      {vendors.map(vendor => (
+      {producers.map(producer => (
         <>
-        {vendor.id &&
-        <ErrorBoundary key={vendor.id}>
-          <VendorItem mode={mode} vendor={vendor} />
+        {producer.id &&
+        <ErrorBoundary key={producer.id}>
+          <ProducerItem mode={mode} producer={producer} />
         </ErrorBoundary>
         }
         </>
       ))}
     </ul>
-    {vendors.length === 0 ? (
+    {producers.length === 0 ? (
       <p className="text-gray-400 italic my-2 text-center">
         No vendors match your filter criteria
       </p>
@@ -220,7 +223,7 @@ const VendorList = ({filter, vendors, mode} : {
 )
 }
 
-const VendorListPane = ({filter, vendors, mode}) => (
+const ProducerListPane = ({filter, producers, mode}) => (
   <div
     className={clsx(
       'ProductListPane flex-1 basis-[400px]',
@@ -228,9 +231,9 @@ const VendorListPane = ({filter, vendors, mode}) => (
     )}
   >
     <ErrorBoundary>
-      {vendors
-        .then(vendors => (
-          <VendorList filter={filter} vendors = {vendors} mode={mode} />
+      {producers
+        .then(producers => (
+          <ProducerList filter={filter} producers={producers} mode={mode} />
         ))
         .orPending(() => (
           <div
@@ -247,7 +250,7 @@ const VendorListPane = ({filter, vendors, mode}) => (
   </div>
 )
 
-export const VendorListPaneContainer = () => {
+export const ProducerListPaneContainer = () => {
 
 //   const [seeProducers, setSeeProducer] = useState(true)
 
@@ -266,7 +269,8 @@ export const VendorListPaneContainer = () => {
 
 //   const products = useFluxStore(FilteredProductStore)
   //  let products = useFluxStore(FilteredProducerStore)
-  const vendors = useFluxStore(FilteredVendorStore)
+  const producers = useFluxStore(FilteredProducerStore)
+  console.log("PRODUCER ++++++++++++++++++++++++++++++++++++++++++" + JSON.stringify(producers))
   const layout = useFluxStore(LayoutStore)
 //   const [singleProductOpen, setSingleProductOpen] = useState(false);
 //   const [productId, setProductId] = useState(null);
@@ -292,10 +296,10 @@ export const VendorListPaneContainer = () => {
       <SingleProduct product={productId} togglePanel={toggleProductPanel}/>
       </>
     ) : ( */}
-      <VendorListPane 
+      <ProducerListPane 
       filter={filter}
       mode={layout.productListMode}
-      vendors={vendors}
+      producers={producers}
       //setProductId={setProductId}
       // producer={producer}
     />

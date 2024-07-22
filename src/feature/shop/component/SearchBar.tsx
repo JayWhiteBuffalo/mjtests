@@ -8,7 +8,9 @@ import {useFluxStore, dispatch} from '@/state/Flux'
 import {GiPathDistance} from 'react-icons/gi'
 import {
   HiOutlineChevronDoubleUp,
-  HiOutlineChevronDown
+  HiOutlineChevronDoubleDown,
+  HiOutlineChevronDown,
+  HiLocationMarker,
 } from 'react-icons/hi'
 import {LocationTypeaheadStore} from '@feature/shop/state/DataStore'
 import {TbSortAscendingLetters} from 'react-icons/tb'
@@ -422,12 +424,12 @@ const MapKeywordContainer = () => {
   )
 }
 
-const VendorPanelToggle = (setToggle) => {
+const VendorPanelToggle = ({updatePane}) => {
 
   
 
   return (
-    <button onClick={()=>{setToggle('vendors')}} className=" px-4 shadow-neu flex-1 basis-40 neu-input">
+    <button onClick={()=>updatePane('vendors')} className=" px-4 shadow-neu flex-1 basis-40 neu-input">
       Vendors
     </button>
   )

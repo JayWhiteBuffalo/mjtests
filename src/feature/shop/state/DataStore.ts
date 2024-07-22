@@ -89,6 +89,43 @@ export const FilteredVendorStore = new ComputedStore(
     }),
 )
 
+export const FilteredProducerStore = new ComputedStore(
+  //[FilteredProductStore],
+  // productsPresent =>
+  //   productsPresent.then(products => {
+  //     // const byName = ObjectUtil.map(products, (_, product) => [
+  //     //   product.producer.name,
+  //     //   product.producer
+  //     //])
+  //     //return ArrayUtil.sortBy(Object.values(byName), producer => [
+  //      // producer.name
+  //    // ]) 
+  //    let producers = []
+  //    products.map((products) => {
+  //     if(products.producerId != null){
+  //       producers.push(products)
+  //      }
+  //    })
+
+  //    return producers
+
+  //   }
+  // ),
+  [FilteredProductStore],
+  productsPresent =>
+    productsPresent.then(products => {
+      const byName = ObjectUtil.map(products, (_, product) => [
+        product.producer,
+        product.producer,
+      ])
+      return ArrayUtil.sortBy(Object.values(byName), producer => [
+        producer.distance ?? Infinity,
+        producer.name,
+      ])
+    }
+)
+)
+
 
 export const ProducerStore = new RecordStore('producer')
 
