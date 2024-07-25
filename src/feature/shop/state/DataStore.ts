@@ -42,37 +42,6 @@ export const FilteredProductStore = new (class extends FluxFieldStore {
   }
 })()
 
-// export const FilteredProducerStore = new (class extends FluxFieldStore {
-// constructor() {
-//   super({})
-//   this.fetcher = new SerialFetcher((filter, signal) => {
-//     const query = ProductFilterUtil.toQuery(filter)
-//     const url = UrlUtil.makeUrl('/api/producer', query)
-//     return fetch(url, {signal})
-//   })
-
-//   FilterStore.subscribe(this.notify.bind(this))
-// }
-
-// get() {
-//   const filter = FilterStore.get()
-//   if (!ObjectUtil.deepEquals(filter, this.value.filter)) {
-//     this.value = {filter, producers: Present.pend}
-
-//     if (typeof window !== 'undefined') {
-//       this.fetcher
-//         .fetch(filter)
-//         .then(jsonOnOk)
-//         .then(products =>
-//           this.set({filter, producers: Present.resolve(products)}),
-//         )
-//     }
-//   }
-
-//   return this.value.producers
-// }
-// })()
-
 
 export const FilteredVendorStore = new ComputedStore(
   [FilteredProductStore],
@@ -89,45 +58,39 @@ export const FilteredVendorStore = new ComputedStore(
     }),
 )
 
-export const FilteredProducerStore = new ComputedStore(
-  //[FilteredProductStore],
-  // productsPresent =>
-  //   productsPresent.then(products => {
-  //     // const byName = ObjectUtil.map(products, (_, product) => [
-  //     //   product.producer.name,
-  //     //   product.producer
-  //     //])
-  //     //return ArrayUtil.sortBy(Object.values(byName), producer => [
-  //      // producer.name
-  //    // ]) 
-  //    let producers = []
-  //    products.map((products) => {
-  //     if(products.producerId != null){
-  //       producers.push(products)
-  //      }
-  //    })
 
-  //    return producers
+// export const ProducerStore = new RecordStore('producer')
 
-  //   }
-  // ),
-  [FilteredProductStore],
-  productsPresent =>
-    productsPresent.then(products => {
-      const byName = ObjectUtil.map(products, (_, product) => [
-        product.producer,
-        product.producer,
-      ])
-      return ArrayUtil.sortBy(Object.values(byName), producer => [
-        producer.distance ?? Infinity,
-        producer.name,
-      ])
-    }
-)
-)
+// export const FilteredProducerStore = new ComputedStore(
+//   [FilteredProductStore],
+//   async (productsPresent) => {
+//     try {
+//       const products = await productsPresent
+//       if (!products) {
+//         console.error('No products found')
+//         return []
+//       }
+
+//       // Get unique producerIds from products
+//       const producerIds = Array.from(new Set(products.map(product => product.producerId)))
+      
+//       // Fetch producer details from ProducerStore using producerIds
+//       const producerPromises = producerIds.map(producerId => ProducerStore.fetch(producerId))
+//       const producers = await Promise.all(producerPromises)
+
+//       console.log(producers)
+
+//       // Sort producers alphabetically by name
+//       return ArrayUtil.sortBy(producers, producer => producer.name)
+//     } catch (error) {
+//       console.error('Error computing producers:', error)
+//       return []
+//     }
+//   }
+// )
 
 
-export const ProducerStore = new RecordStore('producer')
+//export const ProducerStore = new RecordStore('producer')
 
 export const ProducerTypeaheadStore = new TypeaheadStore('producer')
 

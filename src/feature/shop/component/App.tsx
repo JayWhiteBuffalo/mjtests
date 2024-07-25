@@ -60,7 +60,7 @@ const FilterPaneWrapper = ({layout}) => (
 
 const App = ({ user, layout}) => {
 
-  const [toggle, setToggle] = useState("producers")
+  const [toggle, setToggle] = useState("default")
 
   const updatePane = (value) => {
     setToggle(value)
@@ -88,8 +88,8 @@ const App = ({ user, layout}) => {
     {toggle === "vendors" &&
       <VendorListPaneContainer />
     }
-    {toggle === "producers" && 
-    <ProducerListPaneContainer/>}
+    {/* {toggle === "producers" && 
+    <ProducerListPaneContainer/>} */}
     </section>
     <ShopFooter />
   </main>

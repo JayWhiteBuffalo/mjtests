@@ -463,6 +463,8 @@ export const ProductListPaneContainer = () => {
   const [singleProductOpen, setSingleProductOpen] = useState(false);
   const [productId, setProductId] = useState(null);
 
+  console.log("PRODUCTS ++++++++++++++++++++++++" + JSON.stringify(products))
+
   useEffect(() => {
     if (productId !== null) {
       setSingleProductOpen(true);

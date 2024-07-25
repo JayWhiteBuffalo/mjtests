@@ -435,11 +435,11 @@ const VendorPanelToggle = ({updatePane}) => {
   )
 }
 
-const SearchBar = (setToggle) => (
+const SearchBar = (updatePane) => (
   <div className="searchBarCont">
     <search className="flex flex-wrap gap-4 ">
       <ErrorBoundary>
-        <VendorPanelToggle setToggle={setToggle}/>
+        <VendorPanelToggle updatePane={updatePane}/>
         <FilterKeywordContainer />
         <MapKeywordContainer />
         <SortDropdownContainer />
