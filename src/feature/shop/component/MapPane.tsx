@@ -4,6 +4,7 @@ import {ErrorBoundary} from '@/feature/shared/component/Error'
 import {LayoutStore} from '@feature/shop/state/UIStore'
 import {Spinner} from '@nextui-org/react'
 import {useFluxStore} from '@/state/Flux'
+import './Map.css'
 
 const MapLoading = () => (
   <div className="w-full h-full flex flex-col items-center justify-center">
@@ -25,7 +26,7 @@ export const MapPaneContainer = () => {
     
     <div
       className={clsx(
-        'mt-12 relative flex-0 basis-[500px] shadow-xl max-w-3xl left-24',
+        'mt-12 relative flex-0 basis-[500px] shadow-xl max-w-3xl left-24 mapPaneCont',
         layout.expandMapPane ? 'basis-[75vh]' : undefined,
       )}
     >

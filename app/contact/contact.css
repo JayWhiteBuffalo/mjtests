@@ -6,6 +6,28 @@
     padding: 3rem 0rem;
 }
 
+.contactCardCont{
+    display: flex;
+    flex-direction: column;
+    flex-wrap:wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+}
+
+.contact-card-section {
+    border-radius: 0.75rem;  /* rounded-xl */
+    background-color: #e2e8f0;  /* bg-slate-200 */
+    border: 1px solid #6b7280;  /* border-gray-500 */
+    width: 50%;  /* w-1/2 */
+    height: fit-content;  /* h-fit */
+    padding: 1.5rem;  /* p-6 */
+    display: flex;  /* flex */
+    flex-direction: column;  /* flex-col */
+    align-items: stretch;  /* items-stretch */
+    justify-content: space-evenly;  /* justify-evenly */
+  }
+
 .contact-card{
     display: flex;
     flex-direction: column;
@@ -34,3 +56,96 @@
 .contact-card h3{
     padding-left: 1.5rem;
 }
+
+
+@media only screen and (max-width: 420px) {
+    .contact-main{
+        padding: 3rem
+    }
+    .contact-card-section{
+        width: auto;
+    }
+    .contact-card ul {
+        padding: 0rem;
+    }
+    .contact-card ul li{
+        align-items: start;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .contact-main{
+        padding: 3rem
+    }
+    .contact-card-section{
+        width: auto;
+    }
+    .contact-card ul {
+        padding: 0rem;
+    }
+    .contact-card ul li{
+        align-items: start;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .contact-main{
+        padding: 3rem
+    }
+    .contact-card-section{
+        width: auto;
+    }
+    .contact-card ul {
+        padding: 0rem;
+    }
+    .contact-card ul li{
+        align-items: start;
+    }
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .contact-main{
+        padding: 3rem
+    }
+    .contact-card-section{
+        width: auto;
+    }
+    .contact-card ul {
+        padding: 0rem;
+    }
+    .contact-card ul li{
+        align-items: start;
+    }
+    .contactCardCont{
+        max-width: 70dvw ;
+    }
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .contact-main{
+        padding: 3rem
+    }
+    .contact-card-section{
+        width: auto;
+    }
+    .contact-card ul {
+        padding: 0rem;
+    }
+    .contact-card ul li{
+        align-items: start;
+        width: 70dvw;
+    }
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+

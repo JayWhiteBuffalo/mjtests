@@ -18,6 +18,7 @@ import {useRef, useCallback, useState, useEffect} from 'react'
 import ProductDto from '@/data/ProductDto'
 import {VendorListPaneContainer} from '@/feature/shop/component/VendorList'
 import {ProducerListPaneContainer} from '@/feature/shop/component/ProducerList'
+import useViewport from '@/feature/shop/state/ViewPort'
 
 const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
@@ -61,10 +62,11 @@ const FilterPaneWrapper = ({layout}) => (
 const App = ({ user, layout}) => {
 
   const [toggle, setToggle] = useState("default")
-
+  const {viewport} = useViewport();
   const updatePane = (value) => {
-    setToggle(value)
-  }
+    console.log("updatePane called with value:", value); // Debugging log
+    setToggle(value);
+  };
 
   return(
   <main
@@ -74,24 +76,36 @@ const App = ({ user, layout}) => {
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
-    {/* <Header  user={user}/> */}
     
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
-    <SearchBarContainer updatePane={updatePane} />
+    <SearchBarContainer updatePane={updatePane} toggle={toggle} />
     <section className='w-full h-full flex p-10'>
-      <div className='relative flex justify-center items-center w-1/3 h-full'>
+      <div className={clsx(
+        'h-full relative flex justify-center items-center ',
+        {
+      'w-1/3 ' : viewport === 'largeDesktop' ,
+      'w-full' : viewport === 'mobile' 
+        }
+    )}
+      >
         <FilterPaneWrapper layout={layout} />
       </div>
-      {toggle === "default" &&
+      {toggle === "default" && !layout.showFilterPane && viewport === 'mobile' &&
         <ProductListPaneContainer />
       }
+      {
+        toggle === "default" && viewport === 'desktop'  &&
+        <ProductListPaneContainer />
+      }
+      {
+        toggle === "default" && viewport === 'largeDesktop'  &&
+        <ProductListPaneContainer />
+      }
+      
     {toggle === "vendors" &&
       <VendorListPaneContainer />
     }
-    {/* {toggle === "producers" && 
-    <ProducerListPaneContainer/>} */}
     </section>
-    <ShopFooter />
   </main>
 )
 }

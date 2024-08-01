@@ -8,9 +8,12 @@ import {useEffect} from 'react'
 import {ProductItem, ProductList, ProductListPane} from '@/feature/shop/component/ProductList'
 import {ErrorBoundary} from 'react-error-boundary'
 import clsx from 'clsx'
-
+import useViewport from '@/feature/shop/state/ViewPort'
 
 export const VendorProfile = ({vendor, products}) => {
+
+  
+  const {viewport} = useViewport();
 
 console.log("Products + ++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + JSON.stringify(products))
 const mode = 'full'
@@ -31,7 +34,11 @@ const mode = 'full'
           <div className='w-5/6 h-48 bg-slate-300'></div>
         </div>
         <div className='flex items-center justify-center'>
-          <section className='grid grid-cols-3 w-5/6 gap-6 '>
+          <section className={clsx({
+                                    'grid grid-cols-3 w-5/6 gap-6': viewport === 'desktop',
+                                    'flex flex-col gap-6 px-12': viewport === 'mobile',
+                                    }
+                                    )}>
             <div className='col-span-1 flex flex-col gap-3'>
               <div className='w-full h-48 bg-slate-400'>
               {vendor.mainImageRefId ? (
@@ -138,7 +145,7 @@ const mode = 'full'
                 <>
                 {product.id &&
                 <ErrorBoundary key={product.id}>
-                  <ProductItem mode={mode} product={product} setProductId={setProductId}/>
+                  <ProductItem mode={mode} product={product}/>
                 </ErrorBoundary>
                 }
                 </>

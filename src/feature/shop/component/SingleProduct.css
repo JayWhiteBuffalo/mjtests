@@ -22,6 +22,12 @@
                 -6px -6px 18px #aeaec025,
                 inset -6px -6px 6px #aeaec025,
                 inset 6px 6px 6px #fff;
+
+    &&.mobile{
+        padding: 0rem;
+        flex: 0rem
+
+    }
 }
 
 .singleProductCont{
@@ -30,11 +36,18 @@
     display: flex;
     flex-direction: column;
     gap: 4;
+    &&.mobile{
+
+    }
 }
 
 .productCardHead{
     display: grid;
     grid-template-columns: 2fr .1fr 2fr;
+    &&.mobile{
+    display: block ;
+
+    }
 }
 
 .productImageContainer{

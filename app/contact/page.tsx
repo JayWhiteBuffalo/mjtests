@@ -11,10 +11,7 @@ import './contact.css'
 
 export const Card = ({ children }) => (
   <section
-    className={clsx(
-      'rounded-xl bg-slate-200 border-gray-500 border',
-      'w-1/2 h-fit p-6 flex flex-col items-stretch justify-evenly',
-    )}
+    className='contact-card-section'
   >
 {children}
   </section>
@@ -29,12 +26,12 @@ const Page = async () => {
             Are you a MRB (Marijuana-Related Business) looking to post your products on our website?
           </span>
         </div>
-        <div className="my-8">
+        {/* <div className="my-8">
           <span className="text-xl font-bold">
             Please select a state/province/country to continue!
           </span>
-        </div>
-        <div className="flex gap-12 flex-row flex-wrap items-center justify-center">
+        </div> */}
+        <div className="contactCardCont">
           <Card>
             <div className='contact-card'>
               <h1>

@@ -287,11 +287,11 @@ flagsToUrl(flags) {
           name: ProductFilterUtil.flagsToPrisma(filter.vendors),
         },
       },
-      producer: {
-        is: {
-          name: ProductFilterUtil.flagsToPrisma(filter.producers),
-        }
-      }
+      // producer: {
+      //   is: {
+      //     name: ProductFilterUtil.flagsToPrisma(filter.producers),
+      //   }
+      // }
       //weight: ProductFilterUtil.rangeToPrisma(filter.weight),
     }
 

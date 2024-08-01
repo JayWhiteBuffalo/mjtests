@@ -34,12 +34,12 @@ const Page = async () => {
 
   return (
       <main className="flex flex-col items-center h-screen bg-slate-100">
-        <div className="my-8">
+        <div className="my-8 px-8">
           <span className="text-xl font-bold">
             Are you a MRB (Marijuana-Related Business) looking to post your products on our website?
           </span>
         </div>
-        <div className="my-8">
+        <div className="my-8 px-8">
           <span className="text-xl font-bold">
             Please select a state/province/country to continue!
           </span>

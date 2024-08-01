@@ -41,6 +41,7 @@ import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
 import TerpsDetails from '@/feature/shop/component/TerpDetails'
 import SingleProduct from '@/feature/shop/component/SingleProduct'
+import useViewport from '@/feature/shop/state/ViewPort'
 
 const emDash = '—'
 
@@ -258,8 +259,13 @@ export const TerpItem = ({enabled = false, terpName, value}: {
   )
 }
 
-export const PriceList = ({priceList}) => (
-  <ul className="flex flex-row flex-wrap justify-center gap-4">
+export const PriceList = ({priceList, viewport}) => (
+  <ul className={clsx(
+    {
+      'flex': viewport === 'mobile',
+      'flex flex-row flex-wrap justify-center gap-4': viewport !== 'mobile',
+    }
+    )}>
     {priceList.map(({price, weight, weightUnit}) => (
       <li key={weight} className="w-[40%] text-center">
         {weight} {weightUnit} = ${price}
@@ -277,15 +283,24 @@ export const ProductItem = ({product, mode, setProductId}: {
     ([_, x]) => -x,
   )
 
+  const {viewport} = useViewport();
+
   return (
     <li
       className={clsx(
-        `Product ${mode}`,
+        `Product ${mode} ${viewport}`,
         'p-4 text-base transition flex flex-col mb-8 neu-product-card',
       )}
     >
       <div>
-        <div className={clsx('grid grid-cols-8 gap-8 p-2',`productCard ${mode}`)}>
+        <div className={clsx(
+          
+          `productCard ${mode} ${viewport}`,
+          {
+            '': viewport === 'mobile',
+            'grid grid-cols-8 gap-8 p-2': viewport !== 'mobile',
+          }
+          )}>
           <div  className='col-span-2'>
 
           {product.mainImageRefId ? (
@@ -340,7 +355,7 @@ export const ProductItem = ({product, mode, setProductId}: {
         
         {product.priceList != undefined &&
           <div>
-            <PriceList priceList={product.priceList} />
+            <PriceList priceList={product.priceList} viewport={viewport} />
           </div>
           }
           </>
@@ -362,7 +377,7 @@ export const ProductItem = ({product, mode, setProductId}: {
         {mode === 'full' && (
         <div className="flex flex-col gap-4">
           {terpEntries.length ? (
-              <TerpsDetails terpEntries={terpEntries} />
+              <TerpsDetails terpEntries={terpEntries} viewport={viewport} />
           ) : null}
         </div>
       )}
@@ -442,28 +457,15 @@ export const ProductListPane = ({filter, products, mode, setProductId}) => (
 
 export const ProductListPaneContainer = () => {
 
-//   const [seeProducers, setSeeProducer] = useState(true)
-
-//   const getStatus = () => {
-//   if(seeProducers === true){
-//     const products = useFluxStore(FilteredProductStore)
-//     return products
-//   } else {
-//     const products = useFluxStore(FilteredProductStore)
-//     return products
-//   }
-// }
-
   const filter = useFluxStore(FilterStore)
 
 
   const products = useFluxStore(FilteredProductStore)
-  //  let products = useFluxStore(FilteredProducerStore)
   const layout = useFluxStore(LayoutStore)
   const [singleProductOpen, setSingleProductOpen] = useState(false);
   const [productId, setProductId] = useState(null);
 
-  console.log("PRODUCTS ++++++++++++++++++++++++" + JSON.stringify(products))
+  const viewport = useViewport();
 
   useEffect(() => {
     if (productId !== null) {
@@ -484,7 +486,7 @@ export const ProductListPaneContainer = () => {
     <>
     {singleProductOpen && productId != null? (
       <>
-      <SingleProduct product={productId} togglePanel={toggleProductPanel}/>
+      <SingleProduct product={productId} togglePanel={toggleProductPanel} viewport={viewport}/>
       </>
     ) : (
       <ProductListPane 
@@ -492,7 +494,6 @@ export const ProductListPaneContainer = () => {
       mode={layout.productListMode}
       products={products}
       setProductId={setProductId}
-      // producer={producer}
     />
     )
   }
