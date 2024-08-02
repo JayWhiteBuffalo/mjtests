@@ -30,15 +30,23 @@ jobs:
         name: nextjs-build
         path: .next
 
-  deploy:
+    deploy:
     runs-on: ubuntu-latest
+
     needs: build
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Download production artifacts
       uses: actions/download-artifact@v2
       with:
         name: nextjs-build
+        path: .next
+
+    - name: Ensure .next directory exists
+      run: ls -la .next
 
     - name: Deploy to EC2
       uses: appleboy/scp-action@v0.1.0
@@ -46,11 +54,19 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./.next/*"   # Transfer the built artifacts
-        target: "/home/ec2-user/lmjtm-prod/"
+        source: "./.next/*"  # Ensure this path matches where the artifact is downloaded
+        target: "/home/ec2-user/lmjtm-prod/.next"
         port: 22
         timeout: 30s
         debug: true
+        command_timeout: 10m
+        use_insecure_cipher: false
+        rm: false
+        strip_components: 0
+        overwrite: false
+        proxy_port: 22
+        proxy_timeout: 30s
+        proxy_use_insecure_cipher: false
 
     - name: Copy other necessary files
       uses: appleboy/scp-action@v0.1.0
@@ -62,9 +78,18 @@ jobs:
         target: "/home/ec2-user/lmjtm-prod"
         port: 22
         timeout: 30s
+        debug: true
+        command_timeout: 10m
+        use_insecure_cipher: false
+        rm: false
+        strip_components: 0
+        overwrite: false
+        proxy_port: 22
+        proxy_timeout: 30s
+        proxy_use_insecure_cipher: false
 
-    - name: SSH into EC2 and install dependencies
-      uses: appleboy/ssh-action@master
+    - name: SSH into EC2 and run commands
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
