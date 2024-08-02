@@ -50,11 +50,10 @@ jobs:
     - name: Test SSH Connection
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          echo "SSH connection successful"
+        key: key.pem
+        script: echo "SSH connection successful"
 
     - name: Deploy to EC2 (Next.js Build Files)
       uses: appleboy/scp-action@v0.1.0
