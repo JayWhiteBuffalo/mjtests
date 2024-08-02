@@ -1,4 +1,4 @@
-name: CI
+name: Deploy Next.js Application
 
 on:
   push:
@@ -46,6 +46,15 @@ jobs:
 
     - name: Ensure .next directory exists
       run: ls -la .next
+
+    - name: Test SSH Connection
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          echo "SSH connection successful"
 
     - name: Deploy to EC2 (Next.js Build Files)
       uses: appleboy/scp-action@v0.1.0
