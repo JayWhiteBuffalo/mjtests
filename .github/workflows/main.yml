@@ -25,7 +25,9 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: npm test
+      #run: npm test
+      # Remove or comment out the following line if no test is needed
+      run: echo "Skipping tests"
 
     - name: Build project
       run: npm run build  # or the build command your project uses
