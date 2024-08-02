@@ -50,7 +50,7 @@ jobs:
     - name: Deploy to EC2 (Next.js Build Files)
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ec2-user@ec2-3-145-166-99.us-east-2.compute.amazonaws.com
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "./.next/*"
@@ -70,7 +70,7 @@ jobs:
     - name: Copy other necessary files (e.g., package.json)
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ec2-user@ec2-3-145-166-99.us-east-2.compute.amazonaws.com
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "./package.json"
@@ -90,7 +90,7 @@ jobs:
     - name: SSH into EC2 and run commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ec2-user@ec2-3-145-166-99.us-east-2.compute.amazonaws.com
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
