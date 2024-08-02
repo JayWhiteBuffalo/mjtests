@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20'
+        node-version: '16'
 
     - name: Install dependencies
       run: npm install
@@ -47,13 +47,13 @@ jobs:
     - name: Ensure .next directory exists
       run: ls -la .next
 
-    - name: Deploy to EC2
+    - name: Deploy to EC2 (Next.js Build Files)
       uses: appleboy/scp-action@v0.1.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./.next/*"  # Ensure this path matches where the artifact is downloaded
+        source: "./.next/*"
         target: "/home/ec2-user/lmjtm-prod/.next"
         port: 22
         timeout: 30s
@@ -67,13 +67,13 @@ jobs:
         proxy_timeout: 30s
         proxy_use_insecure_cipher: false
 
-    - name: Copy other necessary files
+    - name: Copy other necessary files (e.g., package.json)
       uses: appleboy/scp-action@v0.1.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./*"  # Ensure all necessary files including package.json are transferred
+        source: "./package.json"
         target: "/home/ec2-user/lmjtm-prod"
         port: 22
         timeout: 30s
@@ -95,5 +95,6 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd /home/ec2-user/lmjtm-prod
+          ls -la .next
           npm install --production
           npm run start
