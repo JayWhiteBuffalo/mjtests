@@ -47,6 +47,10 @@ jobs:
     - name: Ensure .next directory exists
       run: ls -la .next
 
+    - name: ECHO SECRET 
+      run: | 
+        echo ${{ secrets.EC2_SSH_KEY }}
+
     - name: Test SSH Connection
       uses: appleboy/ssh-action@v0.1.4
       with:
