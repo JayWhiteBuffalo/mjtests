@@ -19,18 +19,19 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # or any version your project requires
+        node-version: '18'
 
     - name: Install dependencies
       run: npm install
 
     - name: Run tests
-      #run: npm test
-      # Remove or comment out the following line if no test is needed
       run: echo "Skipping tests"
 
     - name: Build project
-      run: npm run build  # or the build command your project uses
+      run: npm run build
+
+    - name: List build directory
+      run: ls -la .next
 
     - name: Deploy to server
       env:
@@ -40,5 +41,5 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
-        scp -i key.pem -o StrictHostKeyChecking=no ./next/* $USERNAME@$HOST:/path/to/deploy
+        scp -i key.pem -o StrictHostKeyChecking=no .next/* $USERNAME@$HOST:/path/to/deploy
         ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'cd /path/to/deploy && npm install --production && pm2 restart your-app'
