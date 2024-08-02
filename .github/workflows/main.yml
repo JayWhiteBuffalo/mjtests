@@ -50,11 +50,11 @@ jobs:
     - name: Deploy to EC2 (Next.js Build Files)
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ec2-user@ec2-3-145-166-99.us-east-2.compute.amazonaws.com
+        host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./*"
-        target: "/home/ec2-user/lmjtm-prod/"
+        source: "./.next/*"
+        target: "/home/ec2-user/lmjtm-prod/.next"
         port: 22
         timeout: 30s
         debug: true
