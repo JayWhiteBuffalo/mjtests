@@ -63,11 +63,6 @@ jobs:
       with:
         name: next-build
 
-    - name: Create deployment directory
-      run: |
-        echo "$SSH_PRIVATE_KEY" > key.pem
-        chmod 600 key.pem
-        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'mkdir -p /treemap'
 
     - name: Deploy to server
       run: |
