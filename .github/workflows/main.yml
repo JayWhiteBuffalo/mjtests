@@ -1,0 +1,61 @@
+name: Deploy Next.js Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build
+
+    - name: Upload production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: nextjs-build
+        path: .next
+
+    - name: Deploy to EC2
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+      - name: Download production artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: nextjs-build
+          path: .next
+
+      - name: Copy files via SSH
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ".next/*"
+          target: "/home/ec2-user/TREEMAP-THREE/.next"
+
+      - name: SSH into EC2 and run commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/TREEMAP-THREE
+            npm install --production
+            pm2 restart your-app
