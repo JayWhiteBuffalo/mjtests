@@ -16,6 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          .next/cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -30,6 +40,16 @@ jobs:
     - name: Build project
       run: npm run build
 
+    - name: Create deployment directory
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USERNAME: ubuntu
+      run: |
+        echo "$SSH_PRIVATE_KEY" > key.pem
+        chmod 600 key.pem
+        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'mkdir -p /treemap'
+
     - name: List build directory
       run: ls -la .next
 
@@ -41,5 +61,5 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
-        scp -i key.pem -o StrictHostKeyChecking=no .next/* $USERNAME@$HOST:/path/to/deploy
-        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'cd /path/to/deploy && npm install --production && pm2 restart your-app'
+        scp -i key.pem -o StrictHostKeyChecking=no .next/* $USERNAME@$HOST:/treemap
+        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'cd /treemap && npm install --production && pm2 restart treemap'
