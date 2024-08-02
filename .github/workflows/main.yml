@@ -33,7 +33,7 @@ jobs:
     - name: Deploy to server
       env:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        HOST: ${{ secrets.HOST }}
+        HOST: ${{ secrets.EC2_HOST }}
         USERNAME: ubuntu
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
