@@ -46,8 +46,8 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: ".next/*"  # Transfer the built artifacts
-        target: "/home/ec2-user/lmjtm-prod/.next"
+        source: "./"  # Transfer the built artifacts
+        target: "/home/ec2-user/lmjtm-prod/"
         port: 22
         timeout: 30s
 
