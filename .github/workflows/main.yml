@@ -47,9 +47,10 @@ jobs:
     - name: Ensure .next directory exists
       run: ls -la .next
 
-    - name: ECHO SECRET 
-      run: | 
-        echo ${{ secrets.EC2_SSH_KEY }}
+    - name: Set up SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+        chmod 600 key.pem
 
     - name: Test SSH Connection
       uses: appleboy/ssh-action@v0.1.4
@@ -59,52 +60,34 @@ jobs:
         key: key.pem
         script: echo "SSH connection successful"
 
-    - name: Deploy to EC2 (Next.js Build Files)
+    - name: Deploy Next.js Build Files
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ec2-user@ec2-3-145-166-99.us-east-2.compute.amazonaws.com
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./.next/*"
+        key: key.pem
+        source: ".next/*"
         target: "/home/ec2-user/lmjtm-prod/.next"
         port: 22
-        timeout: 30s
         debug: true
-        command_timeout: 10m
-        use_insecure_cipher: false
-        rm: false
-        strip_components: 0
-        overwrite: false
-        proxy_port: 22
-        proxy_timeout: 30s
-        proxy_use_insecure_cipher: false
 
     - name: Copy other necessary files (e.g., package.json)
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./package.json"
+        key: key.pem
+        source: "package.json"
         target: "/home/ec2-user/lmjtm-prod"
         port: 22
-        timeout: 30s
         debug: true
-        command_timeout: 10m
-        use_insecure_cipher: false
-        rm: false
-        strip_components: 0
-        overwrite: false
-        proxy_port: 22
-        proxy_timeout: 30s
-        proxy_use_insecure_cipher: false
 
     - name: SSH into EC2 and run commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ec2-3-145-166-99.us-east-2.compute.amazonaws.com
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
+        key: key.pem
         script: |
           cd /home/ec2-user/lmjtm-prod
           ls -la .next
