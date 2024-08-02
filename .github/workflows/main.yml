@@ -46,8 +46,20 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./"  # Transfer the built artifacts
+        source: "./.next/*"   # Transfer the built artifacts
         target: "/home/ec2-user/lmjtm-prod/"
+        port: 22
+        timeout: 30s
+        debug: true
+
+    - name: Copy other necessary files
+      uses: appleboy/scp-action@v0.1.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "./*"  # Ensure all necessary files including package.json are transferred
+        target: "/home/ec2-user/lmjtm-prod"
         port: 22
         timeout: 30s
 
