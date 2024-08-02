@@ -33,23 +33,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+
     steps:
     - name: Download production artifacts
       uses: actions/download-artifact@v2
       with:
         name: nextjs-build
-        path: .next
 
-    - name: Copy files via SSH
-      uses: appleboy/scp-action@v0.1.4
+    - name: Deploy to EC2
+      uses: appleboy/scp-action@v0.1.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: ".next/*"
+        source: ".next/*"  # Transfer the built artifacts
         target: "/home/ec2-user/lmjtm-prod/.next"
+        port: 22
+        timeout: 30s
 
-    - name: SSH into EC2 and run commands
+    - name: SSH into EC2 and install dependencies
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -58,4 +60,4 @@ jobs:
         script: |
           cd /home/ec2-user/lmjtm-prod
           npm install --production
-          pm2 restart treemap
+          npm run start
