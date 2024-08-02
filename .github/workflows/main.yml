@@ -11,7 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    outputs:
+      build-path: ${{ steps.build.outputs.path }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -38,26 +40,36 @@ jobs:
       run: echo "Skipping tests"
 
     - name: Build project
+      id: build
       run: npm run build
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: next-build
+        path: .next
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      HOST: ${{ secrets.EC2_HOST }}
+      USERNAME: ubuntu
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: next-build
+
     - name: Create deployment directory
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        HOST: ${{ secrets.EC2_HOST }}
-        USERNAME: ubuntu
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
         ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'mkdir -p /treemap'
 
-    - name: List build directory
-      run: ls -la .next
-
     - name: Deploy to server
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        HOST: ${{ secrets.EC2_HOST }}
-        USERNAME: ubuntu
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
