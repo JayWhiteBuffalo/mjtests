@@ -48,27 +48,7 @@ jobs:
 
     - name: List build directory
       run: ls -la .next
-
-    - name: Cleanup old artifacts
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const artifacts = await github.rest.actions.listArtifactsForRepo({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-          });
-          const oldArtifacts = artifacts.data.artifacts.filter(artifact => {
-            const createdAt = new Date(artifact.created_at);
-            const daysOld = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
-            return daysOld > 7; // Change the number of days as needed
-          });
-          for (const artifact of oldArtifacts) {
-            await github.rest.actions.deleteArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: artifact.id,
-            });
-          }
+      
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
