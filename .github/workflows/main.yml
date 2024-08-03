@@ -109,7 +109,7 @@ jobs:
           if pm2 list | grep -q treemap; then
             pm2 restart treemap
           else
-            pm2 start server.js --name treemap
+             pm2 start npm --name treemap -- start -- -p 80
           fi
         '
 
