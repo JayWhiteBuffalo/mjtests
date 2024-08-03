@@ -101,8 +101,8 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
-        scp -i key.pem -o StrictHostKeyChecking=no -r .next/* $USERNAME@$HOST:/treemap
-        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'cd /treemap && npm install --production && pm2 restart treemap'
+        scp -i key.pem -o StrictHostKeyChecking=no -r next-build/* $USERNAME@$HOST:~/treemap
+        ssh -i key.pem -o StrictHostKeyChecking=no $USERNAME@$HOST 'cd ~/treemap && npm install --production && pm2 restart treemap'
 
     - name: Clean up
       run: rm -f key.pem
