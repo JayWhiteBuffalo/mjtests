@@ -424,10 +424,31 @@ const MapKeywordContainer = () => {
   )
 }
 
-const SearchBar = () => (
+const VendorPanelToggle = ({updatePane, toggle}) => {
+
+  const handleButtonClick = () => {
+    if(toggle === "vendors"){
+      updatePane("default");
+    } else {
+    console.log("Button clicked"); // Debugging log
+    updatePane("vendors");
+    }
+  };
+
+  
+
+  return (
+    <button onClick={handleButtonClick} className="vendorFilterButton shadow-neu flex-1 basis-40 neu-input">
+      Vendors
+    </button>
+  )
+}
+
+const SearchBar = ({updatePane, toggle}) => (
   <div className="searchBarCont">
     <search className="flex flex-wrap gap-4 ">
       <ErrorBoundary>
+        <VendorPanelToggle updatePane={updatePane} toggle={toggle}/>
         <FilterKeywordContainer />
         <MapKeywordContainer />
         <SortDropdownContainer />
@@ -435,13 +456,6 @@ const SearchBar = () => (
         <ProductListModeSelectorContainer />
       </ErrorBoundary>
     </search>
-    {/* <div className="SearchBarRight flex flex-wrap  gap-4 w-1/2">
-      <ErrorBoundary>
-        <SortDropdownContainer />
-        <ToggleFilterPaneContainer />
-        <ProductListModeSelectorContainer />
-      </ErrorBoundary>
-    </div> */}
   </div>
 )
 

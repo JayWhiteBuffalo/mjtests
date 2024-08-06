@@ -16,6 +16,9 @@ import {usePathname} from 'next/navigation'
 import {Header} from '@/feature/shop/component/Nav/Header'
 import {useRef, useCallback, useState, useEffect} from 'react'
 import ProductDto from '@/data/ProductDto'
+import {VendorListPaneContainer} from '@/feature/shop/component/VendorList'
+import {ProducerListPaneContainer} from '@/feature/shop/component/ProducerList'
+import useViewport from '@/feature/shop/state/ViewPort'
 
 const AnimatedPane = ({open, className, children}) => {
   const animRef = useRef()
@@ -56,7 +59,15 @@ const FilterPaneWrapper = ({layout}) => (
   </AnimatedPane>
 )
 
-const App = ({ layout }) => {
+const App = ({ user, layout}) => {
+
+  const [toggle, setToggle] = useState("default")
+  const {viewport} = useViewport();
+  const updatePane = (value) => {
+    console.log("updatePane called with value:", value); // Debugging log
+    setToggle(value);
+  };
+
   return(
   <main
     className={clsx(
@@ -65,23 +76,41 @@ const App = ({ layout }) => {
       layout.pinMapPane ? 'pinMapPane overflow-hidden h-screen' : undefined,
     )}
   >
-    <Header/>
+    
     {layout.showMapPane ? <MapPaneContainer /> : undefined}
-    <SearchBarContainer />
+    <SearchBarContainer updatePane={updatePane} toggle={toggle} />
     <section className='w-full h-full flex p-10'>
-      <div className='relative flex justify-center items-center w-1/3 h-full'>
+      <div className={clsx(
+        'h-full relative flex justify-center items-center ',
+        {
+      'w-1/3 ' : viewport === 'largeDesktop' ,
+      'w-full' : viewport === 'mobile' 
+        }
+    )}
+      >
         <FilterPaneWrapper layout={layout} />
       </div>
-    <ProductListPaneContainer />
+      {toggle === "default" && !layout.showFilterPane && viewport === 'mobile' &&
+        <ProductListPaneContainer />
+      }
+      {
+        toggle === "default" && viewport === 'desktop'  &&
+        <ProductListPaneContainer />
+      }
+      {
+        toggle === "default" && viewport === 'largeDesktop'  &&
+        <ProductListPaneContainer />
+      }
+      
+    {toggle === "vendors" &&
+      <VendorListPaneContainer />
+    }
     </section>
-    <ShopFooter />
   </main>
 )
 }
 
-export const AppContainer = ({initial}) => {
-
-  const [producerToggle, setProducerToggle] = useState(true)
+export const AppContainer = ({user, initial}) => {
 
   const pathname = usePathname()
 
@@ -121,5 +150,5 @@ export const AppContainer = ({initial}) => {
   }, [onPopState])
 
   const layout = useFluxStore(LayoutStore)
-  return <App layout={layout} />
+  return <App user={user} layout={layout} />
 }

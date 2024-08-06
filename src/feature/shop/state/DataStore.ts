@@ -42,6 +42,7 @@ export const FilteredProductStore = new (class extends FluxFieldStore {
   }
 })()
 
+
 export const FilteredVendorStore = new ComputedStore(
   [FilteredProductStore],
   productsPresent =>
@@ -58,7 +59,38 @@ export const FilteredVendorStore = new ComputedStore(
 )
 
 
-export const ProducerStore = new RecordStore('producer')
+// export const ProducerStore = new RecordStore('producer')
+
+// export const FilteredProducerStore = new ComputedStore(
+//   [FilteredProductStore],
+//   async (productsPresent) => {
+//     try {
+//       const products = await productsPresent
+//       if (!products) {
+//         console.error('No products found')
+//         return []
+//       }
+
+//       // Get unique producerIds from products
+//       const producerIds = Array.from(new Set(products.map(product => product.producerId)))
+      
+//       // Fetch producer details from ProducerStore using producerIds
+//       const producerPromises = producerIds.map(producerId => ProducerStore.fetch(producerId))
+//       const producers = await Promise.all(producerPromises)
+
+//       console.log(producers)
+
+//       // Sort producers alphabetically by name
+//       return ArrayUtil.sortBy(producers, producer => producer.name)
+//     } catch (error) {
+//       console.error('Error computing producers:', error)
+//       return []
+//     }
+//   }
+// )
+
+
+//export const ProducerStore = new RecordStore('producer')
 
 export const ProducerTypeaheadStore = new TypeaheadStore('producer')
 

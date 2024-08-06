@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import {AuditingSection} from '@/feature/admin/component/AuditingSection'
 import {BlueExternalLink} from '@/feature/shared/component/Link'
-import {Button} from '@nextui-org/react'
+import {Avatar, Button} from '@nextui-org/react'
 import {Image} from '@/feature/shared/component/Image'
 import {None, Unknown, InfoSection} from '@/feature/shared/component/InfoSection'
 import {PhoneLink} from '@/feature/shop/component/VendorPopup'
@@ -94,11 +94,13 @@ export const ProducerPane = ({producer, canEdit}) => (
       {producer.mainImageRefId ? (
         <>
           <p>Logo</p>
-          <div className="w-24 h-18">
+          <div className="w-24 h-24">
             <Image
+            height='100'
+            width='100'
               alt="Logo of producer"
-              className="object-cover"
-              fill={true}
+              className="object-contain"
+              // fill={true}
               publicId={producer.mainImageRefId}
             />
           </div>

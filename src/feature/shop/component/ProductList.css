@@ -10,9 +10,20 @@
     flex-basis: 0;
     overflow-y: scroll;
   }
- 
-
 }
+
+.productListLoadingPanel{
+  border-radius: 15px;
+  box-shadow: 6px 6px 18px #fff,
+              -6px -6px 18px #aeaec025,
+              inset -6px -6px 6px #aeaec025,
+              inset 6px 6px 6px #fff;
+  text-align: center;
+  &.isLoading{
+
+  }
+}
+
 
 .ProductList {
   position: relative;
@@ -33,6 +44,7 @@
     @media (width < 500px) {
       & {
         grid-template-columns: 1fr;
+        padding: 0rem;
       }
     }
 
@@ -71,8 +83,11 @@
     display: flex;
     /* border: none;
     border-bottom: 1px solid grey; */
-    max-width: 65vw;
+    max-width: 65dvw;
     padding: 1rem;
+  }
+  &.mobile{
+    max-width: 80dvw;
   }
 
   &.full:hover {
@@ -145,3 +160,53 @@
   padding: 4px 8px 8px;
   border-top-width: 3px;
 }
+
+
+
+@media only screen and (max-width: 420px) {
+  .Product {
+    &.full {
+      max-width: 80vw;
+      padding: 0rem;
+    }
+  }
+  .productCard{
+    &.compact{
+      width: 100%;
+    }
+  }
+  .ProductListPane {
+  min-width: 80vw;
+  }
+  .ProductList{
+    &.compact{
+      min-width: 80vw;
+    }
+  }
+  
+}
+
+@media only screen and (max-width: 600px) {
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+

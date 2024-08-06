@@ -1,6 +1,7 @@
 import ProductDto from '@data/ProductDto'
 import {AppContainer} from '@feature/shop/component/App'
 import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
+import UserDto from '@/data/UserDto'
 
 
 export const generateStaticParams = () => ({searchParams: {}})
@@ -16,8 +17,9 @@ const Page = async ({searchParams: query}) => {
   const strains = extractUniqueStrains(allProducts)
   const dropDownData = {strains, stores, brands}
   const initial = {query, filter, products, producerProducts, dropDownData} 
+  const user = await UserDto.getCurrent()
 
-  return <AppContainer initial={initial} />
+  return <AppContainer user={user} initial={initial} />
 
 
 // Helper function to extract unique brands from products and producerProducts

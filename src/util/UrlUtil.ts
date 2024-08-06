@@ -21,4 +21,18 @@ export const UrlUtil = {
     }
     return result
   },
-}
+
+  getVendorId(url: string) {
+    const { pathname } = new URL(url);
+    const parts = pathname.split('/');
+    return parts.length > 2 && parts[1] === 'vendors' ? parts[2] : null;
+  },
+
+  getCurrentUrl() {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return null;
+  }
+};
+

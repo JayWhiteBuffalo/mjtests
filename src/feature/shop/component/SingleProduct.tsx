@@ -11,7 +11,7 @@ import {Divider} from '@nextui-org/react'
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 
-const SingleProduct =({product, togglePanel}) => {
+const SingleProduct =({product, togglePanel, viewport}) => {
 
     const terpEntries = ArrayUtil.sortBy(
       Object.entries(product.terps || []),
@@ -133,7 +133,9 @@ const TerpsDetailPane = ({ terpEntries }) => {
 
     return(
 
-        <section className=' singleProductSection'>
+        <section className={clsx(
+                            `singleProductSection ${viewport}`,
+        )}>
             <div className='singleProductCont '>
                 <button className='closeButton' onClick={togglePanel}>
                     <FaArrowLeftLong className='w-8 h-6 hover:scale-110'/>

@@ -9,7 +9,7 @@ import {ProductUtil} from '@util/ProductUtil'
 import {VendorUtil} from '@util/VendorUtil'
 import {nanoid} from 'nanoid'
 import {custom} from 'zod'
-import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer } from '@/util/Roles'
+import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer, hasEmployeePermission } from '@/util/Roles'
 import {ProducerUtil} from '@/util/ProducerUtil'
 
 const ProductDto = {
@@ -35,7 +35,7 @@ const ProductDto = {
     if (!product) {
       return false
     }
-    if (await VendorDto.canEdit(user, product.vendorId)) {
+    if (product.vendorId != null && await VendorDto.canEdit(user, product.vendorId)) {
       return true
     }
     return false
@@ -59,6 +59,9 @@ const ProductDto = {
     if(hasAdminPermission(user.roles)) {
       return true;
     }
+    if(hasOwnerPermission(user.roles || hasManagerPermission(user.roles))){
+      return true;
+    }
     return false;
   },
 
@@ -68,6 +71,7 @@ const ProductDto = {
       include: {},
     })
   },
+
 
   async getProducerProducts(filter) {
     filter ??= ProductFilterUtil.defaultFilter();
@@ -287,11 +291,25 @@ const ProductDto = {
     });
   
     return draftProducts;
-  }
-  
-  
+  },
 
+async getProductsByVendorId(vendor) {
+  console.log(vendor)
+  const products = await ProductDto.findMany({
+    where: { vendorId: vendor.id}
+
+  })
+    return products;
+  },
 }
+// async function getProductsByVendorId(vendorId: string) {
+//   const options = {
+//     where: {
+//       vendorId,
+//     },
+//   };
+// }
+
 
 
 

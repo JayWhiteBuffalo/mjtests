@@ -6,7 +6,7 @@ export const Card = ({children}) => (
   <section
     className={clsx(
       'rounded-xl bg-slate-200 border-gray-500 border',
-      'w-72 p-6 flex flex-col items-stretch',
+      'w-2/5 h-full *:p-6 flex flex-col items-center justify-center',
     )}
   >
     {children}
@@ -18,12 +18,12 @@ const Page = async () => (
     <div className="my-8">
       <span className="text-xl font-bold">Sell with us!</span>
     </div>
-    <div className="flex gap-12 flex-row flex-wrap">
+    <div className="flex gap-12 flex-row flex-wrap items-center justify-center">
       <Card>
         <header>
           <h2 className="font-bold">For Dispensaries</h2>
         </header>
-        <ul className="flex-1 list-disc ml-4 my-4 space-y-2">
+        <ul className="flex-1 list-disc ml-4 my-4 space-y-2 ">
           <li>
             Differentiate your products from your competitors with the test
             results of your products!

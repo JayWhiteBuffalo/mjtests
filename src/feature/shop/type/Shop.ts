@@ -19,6 +19,7 @@ export type ProductFilter = {
   subspecies: FlagObject<Subspecies>
   cultivars: FlagObject<string>
   vendors: FlagObject<string>
+  producers: FlagObject<string>
   location: LocationFilter
 }
 

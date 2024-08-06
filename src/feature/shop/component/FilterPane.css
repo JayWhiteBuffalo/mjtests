@@ -13,6 +13,8 @@
 @media (width < 616px) {
   .FilterPane {
     grid-template-columns: 1fr;
+    max-width: 95vw;
+    width: 85vw;
   }
 }
 

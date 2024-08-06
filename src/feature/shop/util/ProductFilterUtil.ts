@@ -40,8 +40,6 @@ export const ProductFilterUtil = {
       filter,
       (key, value) => !ObjectUtil.equals(value, defaultFilter[key]),
     )
-    console.log("DIFF LOG ===================" + JSON.stringify(diff))
-    console.log("FILTER =======================" + JSON.stringify(filter))
     return ObjectUtil.isEmpty(diff)
   },
 
@@ -63,6 +61,7 @@ export const ProductFilterUtil = {
       (ObjectUtil.isEmpty(filter.cultivars) ||
         filter.cultivars[product.cultivar]) &&
       (ObjectUtil.isEmpty(filter.vendors) || filter.vendors[product.vendor]) &&
+      (ObjectUtil.isEmpty(filter.producers) || filter.producers[product.producer]) &&
       ProductFilterUtil.testTerpFilter(filter.terps, product.normalizedTerps) &&
       ProductFilterUtil.testLocationFilter(filter.location, product) &&
       ProductFilterUtil.testFlagsFilter(filter.flags, product)
@@ -145,6 +144,7 @@ export const ProductFilterUtil = {
       subspecies: ProductFilterUtil.flagsFromUrl(query.subspecies),
       terps: ProductFilterUtil.terpsFromUrl(query),
       vendors: ProductFilterUtil.flagsFromUrl(query.vendors),
+      producers: ProductFilterUtil.flagsFromUrl(query.producers),
       weight: ProductFilterUtil.rangeFromUrl(query.weight),
     }
   },
@@ -169,6 +169,7 @@ export const ProductFilterUtil = {
         filter.sortBy !== defaultFilter.sortBy ? filter.sortBy : undefined,
       subspecies: ProductFilterUtil.flagsToUrl(filter.subspecies),
       vendors: ProductFilterUtil.flagsToUrl(filter.vendors),
+      producers: ProductFilterUtil.flagsToUrl(filter.producers),
       weight: ProductFilterUtil.rangeToUrl(filter.weight),
     }
   },
@@ -286,6 +287,11 @@ flagsToUrl(flags) {
           name: ProductFilterUtil.flagsToPrisma(filter.vendors),
         },
       },
+      // producer: {
+      //   is: {
+      //     name: ProductFilterUtil.flagsToPrisma(filter.producers),
+      //   }
+      // }
       //weight: ProductFilterUtil.rangeToPrisma(filter.weight),
     }
 
@@ -344,6 +350,7 @@ flagsToUrl(flags) {
               {brand: {contains: keyword, mode: 'insensitive'}},
               {cultivar: {contains: keyword, mode: 'insensitive'}},
               {vendor: {is: {name: {contains: keyword, mode: 'insensitive'}}}},
+              {producer: {is: {name: {contains: keyword, mode: 'insensitive'}}}},
             ],
           },
         ]
