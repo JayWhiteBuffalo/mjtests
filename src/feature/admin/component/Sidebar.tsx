@@ -17,7 +17,7 @@ const Item = ({children, href, Icon}) => (
 export const AdminSidebar = ({user, className, ...rest}) => (
   <nav
     aria-label="Sidebar navigation"
-    className={clsx('bg-gray-50 dark:bg-gray-800 px-3 py-4 hidden', className)}
+    className={clsx('bg-gray-50 dark:bg-gray-800 px-3 py-4', className)}
     {...rest}
   >
     <ul className="top-12 sticky">
