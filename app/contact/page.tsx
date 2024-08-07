@@ -40,6 +40,7 @@ const Page = async () => {
               <ul>
                 <li>
                   <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -48,6 +49,7 @@ const Page = async () => {
                 </li>
                 <li>
                   <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -56,6 +58,7 @@ const Page = async () => {
                 </li>
                 <li>
                   <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -64,6 +67,7 @@ const Page = async () => {
                 </li>
                 <li>
                   <Image
+                      alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -80,6 +84,7 @@ const Page = async () => {
               <ul>
                 <li> 
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -87,6 +92,7 @@ const Page = async () => {
                     setting an appointment for an onboarding specialist to visit your dispensary and help you with the process of starting your 1-month free trail?</li>
                 <li> 
                 <Image
+                  alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -94,6 +100,7 @@ const Page = async () => {
                     an inaccurately working feature of our website?</li>
                 <li> 
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -101,6 +108,7 @@ const Page = async () => {
                     suggestions for new features?</li>
                 <li>
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -108,6 +116,7 @@ const Page = async () => {
                      a change to your business information (location, phone number, license number, etc)?</li>
                 <li>
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -123,6 +132,7 @@ const Page = async () => {
               <ul>
                 <li> 
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -130,6 +140,7 @@ const Page = async () => {
                     an inaccurately working feature of our website?</li>
                 <li>
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -137,6 +148,7 @@ const Page = async () => {
                      suggestions for new features?</li>
                 <li>
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}
@@ -144,6 +156,7 @@ const Page = async () => {
                      A change to our business information (location, phone number, license number, etc)?</li>
                 <li>
                 <Image
+                    alt='bulletpoint'
                     src={icon}
                     width={30}
                     height={30}

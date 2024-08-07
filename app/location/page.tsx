@@ -1,11 +1,7 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import { Button } from '@nextui-org/react';
-import { NavBar } from '@/feature/shared/component/NavBar';
-import { Header } from '@/feature/shop/component/Nav/Header';
-import UserDto from '@/data/UserDto';
-import { stateData } from '@/util/StateData';
 import Image from 'next/image';
+import { stateData } from '@/util/StateData';
 
 export const Card = ({ i }) => (
   <section
@@ -31,25 +27,24 @@ export const Card = ({ i }) => (
 );
 
 const Page = async () => {
-
   return (
-      <main className="flex flex-col items-center h-screen bg-slate-100">
-        <div className="my-8 px-8">
-          <span className="text-xl font-bold">
-            Are you a MRB (Marijuana-Related Business) looking to post your products on our website?
-          </span>
-        </div>
-        <div className="my-8 px-8">
-          <span className="text-xl font-bold">
-            Please select a state/province/country to continue!
-          </span>
-        </div>
-        <div className="flex gap-12 flex-row flex-wrap">
-          {stateData.map((item, i) => (
-            <Card key={i} i={i} />
-          ))}
-        </div>
-      </main>
+    <main className="flex flex-col items-center h-screen bg-slate-100">
+      <div className="my-8 px-8">
+        <span className="text-xl font-bold">
+          Are you a MRB (Marijuana-Related Business) looking to post your products on our website?
+        </span>
+      </div>
+      <div className="my-8 px-8">
+        <span className="text-xl font-bold">
+          Please select a state/province/country to continue!
+        </span>
+      </div>
+      <div className="flex gap-12 flex-row flex-wrap">
+        {stateData.map((item, i) => (
+          <Card key={i} i={i} />
+        ))}
+      </div>
+    </main>
   );
 };
 

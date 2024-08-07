@@ -9,14 +9,18 @@ export const metadata: Metadata = {
   description: 'The biggest weed market in Oklahoma',
 }
 
-const user = UserDto.getCurrent(); // Ensure this works with async if necessary
 
-const Layout = ({children}) => 
+
+const Layout = async ({ children }) => {
+
+  const user = await UserDto.getCurrent(); // Ensure this works with async if necessary
+
 <Providers>
   <Header user={user}/>
   {children}
   <FooterNav/>
   <FooterBar/>
 </Providers>
+};
 
 export default Layout
