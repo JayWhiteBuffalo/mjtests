@@ -3,22 +3,35 @@ import ArrayUtil from '@util/ArrayUtil'
 import ProducerDto from '@data/ProducerDto'
 import VendorDto from '@data/VendorDto'
 import UserDto from '@data/UserDto'
-import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
-import {prisma} from '@/db'
-import {ProductUtil} from '@util/ProductUtil'
-import {VendorUtil} from '@util/VendorUtil'
-import {nanoid} from 'nanoid'
-import {custom} from 'zod'
-import { hasAdminPermission, hasSalesPermission, hasManagerPermission, hasOwnerPermission, isVendor, isProducer, hasEmployeePermission } from '@/util/Roles'
-import {ProducerUtil} from '@/util/ProducerUtil'
+import { ProductFilterUtil } from '@/feature/shop/util/ProductFilterUtil'
+import { prisma } from '@/db'
+import { ProductUtil } from '@util/ProductUtil'
+import { VendorUtil } from '@util/VendorUtil'
+import { nanoid } from 'nanoid'
+import { custom } from 'zod'
+import {
+  hasAdminPermission,
+  hasSalesPermission,
+  hasManagerPermission,
+  hasOwnerPermission,
+  isVendor,
+  isProducer,
+  hasEmployeePermission,
+} from '@/util/Roles'
+import { ProducerUtil } from '@/util/ProducerUtil'
 
 const ProductDto = {
   async canSee(user, productId) {
-    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)) {
+    if (
+      hasAdminPermission(user.roles) ||
+      hasSalesPermission(user.roles) ||
+      isVendor(user.roles) ||
+      isProducer(user.roles)
+    ) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
-    if (user.vendors.some(edge => edge.vendorId === product.vendorId)) {
+    if (user.vendors.some((edge) => edge.vendorId === product.vendorId)) {
       return true
     }
     if (!product.isDraft) {
@@ -28,94 +41,111 @@ const ProductDto = {
   },
 
   async canEdit(user, productId) {
-    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
+    if (
+      hasAdminPermission(user.roles) ||
+      hasSalesPermission(user.roles) ||
+      hasOwnerPermission(user.roles) ||
+      hasManagerPermission(user.roles)
+    ) {
       return true
     }
     const product = await ProductDto._getRaw(productId)
     if (!product) {
       return false
     }
-    if (product.vendorId != null && await VendorDto.canEdit(user, product.vendorId)) {
+    if (
+      product.vendorId != null &&
+      (await VendorDto.canEdit(user, product.vendorId))
+    ) {
       return true
     }
     return false
   },
 
   async canUseEdit(user) {
-    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || hasOwnerPermission(user.roles) || hasManagerPermission(user.roles)) {
+    if (
+      hasAdminPermission(user.roles) ||
+      hasSalesPermission(user.roles) ||
+      hasOwnerPermission(user.roles) ||
+      hasManagerPermission(user.roles)
+    ) {
       return true
     }
     return false
   },
 
   async canCreate(user) {
-    if (hasAdminPermission(user.roles) || hasSalesPermission(user.roles) || isVendor(user.roles) || isProducer(user.roles)) {
+    if (
+      hasAdminPermission(user.roles) ||
+      hasSalesPermission(user.roles) ||
+      isVendor(user.roles) ||
+      isProducer(user.roles)
+    ) {
       return true
     }
     return false
   },
 
   async canDelete(user) {
-    if(hasAdminPermission(user.roles)) {
-      return true;
+    if (hasAdminPermission(user.roles)) {
+      return true
     }
-    if(hasOwnerPermission(user.roles || hasManagerPermission(user.roles))){
-      return true;
+    if (
+      hasOwnerPermission(user.roles || hasManagerPermission(user.roles))
+    ) {
+      return true
     }
-    return false;
+    return false
   },
 
   async _getRaw(productId) {
     return await prisma.product.findUnique({
-      where: {id: productId},
+      where: { id: productId },
       include: {},
     })
   },
 
-
   async getProducerProducts(filter) {
-    filter ??= ProductFilterUtil.defaultFilter();
-    // Modify the filter to include producerId check
-    filter.producerId = { not: null };
-  
+    filter ??= ProductFilterUtil.defaultFilter()
+    filter.producerId = { not: null }
+
     let products = await ProductDto.findMany({
       ...ProductFilterUtil.toPrisma(filter),
-      where: { producerId: {not: null}},
-      include: { vendor: true, producer:true, imageRefs: true },
-    });
-  
+      where: { producerId: { not: null } },
+      include: { vendor: true, producer: true, imageRefs: true },
+    })
+
     for (const product of products) {
-      ProducerUtil.populate(product.producer);
-      ProducerUtil.populateDistance(product.producer, filter.location.center);
-      ProductUtil.populateFlags(product);
+      ProducerUtil.populate(product.producer)
+      ProducerUtil.populateDistance(product.producer, filter.location.center)
+      ProductUtil.populateFlags(product)
     }
-  
+
     if (filter.flags.openNow) {
-      products = products.filter((product) => product.flags.openNow);
+      products = products.filter((product) => product.flags.openNow)
     }
-  
+
     if (filter.location.distance != null) {
       products = products.filter((product) =>
-        ProductFilterUtil.testLocationFilter(filter.location, product)
-      );
+        ProductFilterUtil.testLocationFilter(filter.location, product),
+      )
     }
-  
+
     if (filter.sortBy === 'distance') {
       ArrayUtil.sortInPlaceBy(products, (x) => [
         x.producer.distance ?? Infinity,
         x.name,
-      ]);
+      ])
     }
-  
-    return products;
+
+    return products
   },
-  
 
   async getProducts(filter) {
     filter ??= ProductFilterUtil.defaultFilter()
     let products = await ProductDto.findMany({
       ...ProductFilterUtil.toPrisma(filter),
-      include: {vendor: true, imageRefs: true},
+      include: { vendor: true, imageRefs: true },
     })
 
     for (const product of products) {
@@ -125,17 +155,17 @@ const ProductDto = {
     }
 
     if (filter.flags.openNow) {
-      products = products.filter(product => product.flags.openNow)
+      products = products.filter((product) => product.flags.openNow)
     }
 
     if (filter.location.distance != null) {
-      products = products.filter(product =>
+      products = products.filter((product) =>
         ProductFilterUtil.testLocationFilter(filter.location, product),
       )
     }
 
     if (filter.sortBy === 'distance') {
-      ArrayUtil.sortInPlaceBy(products, x => [
+      ArrayUtil.sortInPlaceBy(products, (x) => [
         x.vendor.distance ?? Infinity,
         x.name,
       ])
@@ -152,7 +182,7 @@ const ProductDto = {
     return await ProductDto._getRaw(productId)
   },
 
-  async getUserByProductId(productId){
+  async getUserByProductId(productId) {
     const product = await ProducerDto.get(productId)
     const user = await prisma.user.findUnique({
       where: { id: product.createdById },
@@ -160,7 +190,7 @@ const ProductDto = {
         roles: true,
       },
     })
-  
+
     if (!user) {
       throw new Error('User not found')
     }
@@ -170,14 +200,14 @@ const ProductDto = {
   async findMany(options = {}) {
     let extraOrderBy
     if (options.orderBy?.normalizedTerps) {
-      options = {...options}
+      options = { ...options }
       extraOrderBy = options.orderBy
       delete options.orderBy
     }
-    options.orderBy ??= {name: 'asc'}
+    options.orderBy ??= { name: 'asc' }
     const user = await UserDto.getCurrent()
     const rawProducts = await prisma.product.findMany(options)
-    const products = await ArrayUtil.asyncFilter(rawProducts, raw =>
+    const products = await ArrayUtil.asyncFilter(rawProducts, (raw) =>
       ProductDto.canSee(user, raw.id),
     )
     return ProductFilterUtil.applyTerpeneSort(products, extraOrderBy)
@@ -201,11 +231,11 @@ const ProductDto = {
 
     if (productId) {
       await prisma.product.update({
-        where: {id: productId},
+        where: { id: productId },
         data: {
           ...product,
           updatedById: user.id,
-          version: {increment: 1},
+          version: { increment: 1 },
         },
       })
       return productId
@@ -226,50 +256,48 @@ const ProductDto = {
     }
   },
 
-  async delete(productId){
-
-    //Checks to see if Current User has permission to delete
+  async delete(productId) {
     const user = await UserDto.getCurrent()
-    if (!await ProductDto.canDelete(user)) {
-      throw new Error('Permission denied');
+    if (!(await ProductDto.canDelete(user))) {
+      throw new Error('Permission denied')
     }
-    //Checks to see if product exists
     const currentProduct = await ProductDto._getRaw(productId)
     if (!currentProduct) {
       throw new Error('Product not found')
     }
 
     return await prisma.$transaction(async (prisma) => {
-      try{
-      // Delete associated Product records
-      await prisma.product.delete({ where: { id: productId } }) 
-      
-      console.log(`Product with ID ${productId} successfully deleted.`);
-    } catch (error) {
-      console.error('Error deleting Product and associated records:', error);
-      throw new Error('Error deleting Product and associated records');
-    }
-    });
+      try {
+        await prisma.product.delete({ where: { id: productId } })
+
+        console.log(`Product with ID ${productId} successfully deleted.`)
+      } catch (error) {
+        console.error('Error deleting Product and associated records:', error)
+        throw new Error('Error deleting Product and associated records')
+      }
+    })
   },
 
-  async  getDraftsCreatedByEmployees (userId) {
-    // Retrieve the user and their associated producers or vendors
+  async getDraftsCreatedByEmployees(userId) {
     const userWithAssociations = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         userOnVendor: true,
         userOnProducer: true,
       },
-    });
-  
+    })
+
     if (!userWithAssociations) {
-      throw new Error('User not found');
+      throw new Error('User not found')
     }
-  
-    const vendorIds = userWithAssociations.userOnVendor.map(assoc => assoc.vendorId);
-    const producerIds = userWithAssociations.userOnProducer.map(assoc => assoc.producerId);
-  
-    // Retrieve drafts created by employees for the retrieved vendors or producers
+
+    const vendorIds = userWithAssociations.userOnVendor.map(
+      (assoc) => assoc.vendorId,
+    )
+    const producerIds = userWithAssociations.userOnProducer.map(
+      (assoc) => assoc.producerId,
+    )
+
     const draftProducts = await prisma.product.findMany({
       where: {
         isDraft: true,
@@ -280,37 +308,26 @@ const ProductDto = {
         createdBy: {
           roles: {
             some: {
-              id: { in: ['employeeRoleId1', 'employeeRoleId2'] } // Adjust according to your employee role IDs
-            }
-          }
-        }
+              id: { in: ['employeeRoleId1', 'employeeRoleId2'] },
+            },
+          },
+        },
       },
       include: {
         createdBy: true,
       },
-    });
-  
-    return draftProducts;
+    })
+
+    return draftProducts
   },
 
-async getProductsByVendorId(vendor) {
-  console.log(vendor)
-  const products = await ProductDto.findMany({
-    where: { vendorId: vendor.id}
-
-  })
-    return products;
+  async getProductsByVendorId(vendor) {
+    console.log(vendor)
+    const products = await ProductDto.findMany({
+      where: { vendorId: vendor.id },
+    })
+    return products
   },
 }
-// async function getProductsByVendorId(vendorId: string) {
-//   const options = {
-//     where: {
-//       vendorId,
-//     },
-//   };
-// }
-
-
-
 
 export default ProductDto
