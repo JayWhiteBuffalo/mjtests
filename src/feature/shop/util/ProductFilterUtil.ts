@@ -68,6 +68,12 @@ export const ProductFilterUtil = {
     )
   },
 
+  applyFilters(allProducts: Product[], filter: ProductFilter): Product[] {
+    return allProducts.filter(product =>
+      ProductFilterUtil.testProductFilter(filter, product)
+    );
+  },
+
   testTerpFilter(filterTerps: TerpFilters, productTerps) {
     for (const terpName in filterTerps) {
       if (
