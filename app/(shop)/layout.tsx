@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const Layout = ({children}) => 
 <Providers>
-  {/* <Header user={user}/> */}
+  <Header/>
   <main className='relative mt-16'>
     {children}
   </main>

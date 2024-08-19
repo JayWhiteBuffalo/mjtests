@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 }
 
 export const RootLayout = ({children}: {children: ReactNode}) => (
+
   <html lang="en" suppressHydrationWarning>
     <head>
       <ColorSchemeScript />

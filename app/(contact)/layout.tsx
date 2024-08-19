@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import {Providers} from './Providers'
 import {Header} from '@/feature/shop/component/Nav/Header'
 import {FooterBar, FooterNav} from '@/feature/shop/component/Footer'
-import UserDto from '@/data/UserDto'
+
 
 export const metadata: Metadata = {
   title: 'Treemap Weed Marketplace',
@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }) => 
 
- // const user = UserDto.getCurrent(); // Ensure this works with async if necessary
+
 
 <Providers>
-  {/* <Header user={user}/> */}
+  <Header/>
   {children}
   <FooterNav/>
   <FooterBar/>

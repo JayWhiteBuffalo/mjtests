@@ -50,7 +50,7 @@ export default function MobileNav({ user }) {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          {user.loggedIn ? (
+          {user != null ? (
             <div className='flex gap-4'>
               <AvatarDropdown user={user} />
               <span>{user.name}</span>

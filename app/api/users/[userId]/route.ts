@@ -1,10 +1,12 @@
 import UserDto from '@data/UserDto'
 
-export const GET = async (request, {params}) => {
+// GET method to fetch a user by ID
+export const GET = async (request, { params }) => {
   const user = await UserDto.get(params.userId)
-  return Response.json(user, {status: user ? 200 : 404})
+  return new Response(JSON.stringify(user), { status: user ? 200 : 404 })
 }
 
+// DELETE method to delete a user by ID
 export const DELETE = async (request, { params }) => {
   const { userId } = params;
 
