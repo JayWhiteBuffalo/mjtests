@@ -2,8 +2,8 @@ import ProductDto from '@data/ProductDto'
 import {getRootPageRouteItem} from '@/feature/admin/util/RootPage'
 import {getRoute as getParentRoute} from '../page'
 import {makeMain} from '@/feature/admin/util/Main'
-import {ProductTable} from '@feature/admin/product/Table'
-import { Permission, hasPermission, hasRole, hasAdminPermission, isVendor, isProducer, hasEmployeePermission } from '@/util/Roles'
+// import {ProductTable} from '@feature/admin/product/Table'
+import {hasAdminPermission, isVendor, isProducer, hasEmployeePermission } from '@/util/Roles'
 import { TabTable } from '@/feature/admin/product/TabTable'
 
 export const getRoute = async params => [

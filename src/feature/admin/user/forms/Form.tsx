@@ -2,8 +2,7 @@
 
 import {AutocompleteAdapter} from '@/feature/shared/component/AutocompleteAdapter'
 import {FieldLayout, FormErrors, nullResolver} from '@/feature/shared/component/Form'
-import {TypeaheadStore} from '@/state/TypeaheadStore'
-import {Permission, hasAdminPermission, hasOwnerPermission, hasRole, isProducer, isVendor} from '@/util/Roles'
+import {hasAdminPermission, hasOwnerPermission, hasRole, isProducer, isVendor} from '@/util/Roles'
 import {OptionsDropdown} from '@mantine/core'
 import {Button, Input, Select, SelectItem} from '@nextui-org/react'
 import {subscribe} from 'diagnostics_channel'

@@ -1,12 +1,5 @@
 
 
-// HEADER
-// MAP
-// SEARCH PANEL
-// FILTER PANEL
-// VENDOR ITEM LIST
-// FOOTER
-import UserDto from '@/data/UserDto'
 import VendorDto from '@/data/VendorDto'
 import {FilterPaneWrapper} from '@/feature/shop/component/App'
 import {MapPaneContainer} from '@/feature/shop/component/MapPane'

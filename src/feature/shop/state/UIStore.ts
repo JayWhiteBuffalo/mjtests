@@ -17,7 +17,7 @@ export const RouteStore = new (class extends FluxFieldStore<ShopRoute> {
       ...this.value.query,
       ...query,
     })
-    window.history.replaceState(null, '', url.toString())
+    window?.history?.replaceState(null, '', url.toString())
   }
 })()
 

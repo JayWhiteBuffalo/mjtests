@@ -1,56 +1,29 @@
 import './ProductList.css'
-import ArrayUtil from '@util/ArrayUtil'
 import clsx from 'clsx'
-import MathUtil from '@util/MathUtil'
 import {BlueButton} from '@feature/shared/component/Link'
 import {ErrorBoundary} from '@feature/shared/component/Error'
-import {FilteredProducerStore, FilteredProductStore, FilteredVendorStore} from '../state/DataStore'
+import {FilteredVendorStore} from '../state/DataStore'
 import {FilterStore, LayoutStore} from '../state/UIStore'
-import {useState, useRef, useEffect} from 'react'
 import {Image} from '@feature/shared/component/Image'
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
   Spinner,
-  Chip,
-  Button,
   Link,
 } from '@nextui-org/react'
-import {ProductFilterUtil} from '@/feature/shop/util/ProductFilterUtil'
-import {TerpeneSelectorItem} from '@feature/shared/component/TerpeneSelector'
-import {Treemap} from '@/Treemap'
-import {
-  useFloating,
-  useClick,
-  useDismiss,
-  useInteractions,
-  flip,
-  offset,
-  shift,
-  FloatingArrow,
-  arrow,
-} from '@floating-ui/react'
 import {useFluxStore} from '@/state/Flux'
 import {
   VendorPopupContentContainer,
-  OpenStatus,
   VendorRating,
-  VendorLocation,
-  VendorOperatingStatus,
   VendorHours,
   VendorContact,
 } from './VendorPopup'
 import {type Product, type Vendor} from '@prisma/client'
 import type {ProductFilter} from '@/feature/shop/type/Shop'
 import type {ProductListMode} from '@/feature/shop/type/Ui'
-import TerpsDetails from '@/feature/shop/component/TerpDetails'
-import SingleProduct from '@/feature/shop/component/SingleProduct'
 import icon from '@/public/icon.png'
-import {name} from '@cloudinary/url-gen/actions/namedTransformation'
-import {Average} from 'next/font/google'
 import {VendorSchedule} from '@util/VendorSchedule'
-import {redirect} from 'next/dist/server/api-utils'
 
 const emDash = '—'
 

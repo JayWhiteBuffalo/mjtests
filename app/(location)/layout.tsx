@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 
 
 
-const Layout = async ({children}) => {
+const Layout = async ({children}) => 
 
-  const user = await UserDto.getCurrent();
+  //const user = await UserDto.getCurrent();
 
 <Providers>
-  <Header user={user}/>
+  {/* <Header user={user}/> */}
   {children}
   <FooterNav/>
   <FooterBar/>
 </Providers>
-}
+
 export default Layout

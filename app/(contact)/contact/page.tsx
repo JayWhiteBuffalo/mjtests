@@ -1,10 +1,4 @@
-import clsx from 'clsx';
-import Link from 'next/link';
-import { Button } from '@nextui-org/react';
-import { NavBar } from '@/feature/shared/component/NavBar';
-import { Header } from '@/feature/shop/component/Nav/Header';
-import UserDto from '@/data/UserDto';
-import { stateData } from '@/util/StateData';
+
 import Image from 'next/image';
 import icon from '@/public/icon.png'
 import './contact.css'

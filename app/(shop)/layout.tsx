@@ -9,11 +9,11 @@ export const metadata: Metadata = {
   description: 'The biggest weed market in Oklahoma',
 }
 
-const user = UserDto.getCurrent();
+// const user = UserDto.getCurrent();
 
 const Layout = ({children}) => 
 <Providers>
-  <Header user={user}/>
+  {/* <Header user={user}/> */}
   <main className='relative mt-16'>
     {children}
   </main>
